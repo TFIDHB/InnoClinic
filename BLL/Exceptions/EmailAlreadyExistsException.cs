@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BLL.Exceptions
+﻿namespace BLL.Exceptions
 {
     public class EmailAlreadyExistsException : Exception
     {
-        public EmailAlreadyExistsException() : base("User with this email already exists") { }
+        public EmailAlreadyExistsException() : base(BllMessages.EmailExists) { }
     }
 }
