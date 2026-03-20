@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace InnoClinic.Auth.API.Migrations
+namespace DAL.Migrations
 {
     [DbContext(typeof(AuthDbContext))]
-    [Migration("20260318132103_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260320110558_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
