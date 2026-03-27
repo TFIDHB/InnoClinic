@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DAL.Interfaces
 {
-    public interface IUserRepository: IRepository<User>
+    public interface IUserRepository: IRepository<User, int>
     {
         Task<bool> ExistsByEmailAsync(string email);
     }

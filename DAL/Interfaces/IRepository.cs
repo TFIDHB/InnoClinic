@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace DAL.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<TEntity, TId> where TEntity : class
     {
-        Task<T?> GetByIdAsync(int id);
-        Task CreateAsync(T entity);
-        Task DeleteAsync(int id);
-        Task UpdateAsync(T entity);
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<TEntity?> GetByIdAsync(TId id);
+        Task CreateAsync(TEntity entity);
+        Task DeleteAsync(TId id);
+        Task UpdateAsync(TEntity entity);
+        Task<IEnumerable<TEntity>> GetAllAsync();
 
     }
 }

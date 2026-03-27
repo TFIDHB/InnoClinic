@@ -8,40 +8,39 @@ using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
-    public class BasicRepository<T> : IRepository<T> where T : class
+    public class BasicRepository<TEntity, TId> : IRepository<TEntity, TId> where TEntity : class
     {
         private readonly AuthDbContext _context;
-        protected readonly DbSet<T> DbSet;
+        protected readonly DbSet<TEntity> DbSet;
 
         public BasicRepository(AuthDbContext context){
             _context = context;
-            DbSet = context.Set<T>();
+            DbSet = context.Set<TEntity>();
         }
-        public async Task CreateAsync(T entity)
+        public async Task CreateAsync(TEntity entity)
         {
             await DbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(TId id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null) { 
                 DbSet.Remove(entity);
-                await _context.SaveChangesAsync();
             }
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync() => 
-            await DbSet.ToListAsync();
+        public async Task<IEnumerable<TEntity>> GetAllAsync() => 
+            await DbSet.AsNoTracking().ToListAsync();
 
-        public async Task<T?> GetByIdAsync(int id) => 
-            await DbSet.FindAsync(id);
-
-        public async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(TEntity entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            DbSet.Update(entity);
+        }
+
+        public async Task<TEntity?> GetByIdAsync(TId id)
+        {
+           return await DbSet.FindAsync(id);
         }
     }
 }

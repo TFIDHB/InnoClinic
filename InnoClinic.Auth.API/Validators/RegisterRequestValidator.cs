@@ -14,11 +14,6 @@ namespace InnoClinic.Auth.API.Validators
             RuleFor(request => request.Password)
                 .NotEmpty().WithMessage(ApiMessages.PasswordRequired)
                 .Length(6, 15);
-
-            RuleFor(request => request.RePassword)
-                .NotEmpty().WithMessage(ApiMessages.RePasswordRequired)
-                .Length(6,15)
-                .Equal(request => request.Password).WithMessage(ApiMessages.PasswordsMismatch);
         }
     }
 }

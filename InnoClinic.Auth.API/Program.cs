@@ -1,10 +1,13 @@
+using BLL.AutoMapper;
 using BLL.Interfaces;
 using BLL.Services;
 using DAL;
 using DAL.Interfaces;
+using DAL.Patterns;
 using DAL.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using InnoClinic.Auth.API.Extensions;
 using InnoClinic.Auth.API.Middleware;
 using InnoClinic.Auth.API.Validators;
 using Microsoft.EntityFrameworkCore;
@@ -24,8 +27,11 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
     )
 );
 
+builder.Services.AddAutoMapper(typeof(UserMapper));
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped(typeof(IRepository<>), typeof(BasicRepository<>));
+builder.Services.AddScoped(typeof(IRepository<,>), typeof(BasicRepository<,>));
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
@@ -38,11 +44,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseAppSwagger();
 }
 
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
