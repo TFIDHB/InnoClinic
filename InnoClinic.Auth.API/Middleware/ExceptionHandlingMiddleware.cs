@@ -34,6 +34,8 @@ namespace InnoClinic.Auth.API.Middleware
             var (statusCode, message) = exception switch
             {
                 EmailAlreadyExistsException => (400, exception.Message),
+                InvalidPasswordException => (400, exception.Message),
+                UserNotFoundException => (400, exception.Message),
                 ArgumentNullException _ => (400, "Wrong request parameters"),
                 ArgumentException _ => (400, exception.Message),
                 KeyNotFoundException _ => (404, exception.Message),

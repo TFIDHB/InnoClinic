@@ -21,6 +21,7 @@ namespace InnoClinic.Auth.API.Extensions
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddAutoMapper(typeof(UserMapper));
             return services;
         }

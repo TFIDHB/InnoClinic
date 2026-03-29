@@ -22,5 +22,12 @@ namespace InnoClinic.Auth.API.Controllers
             await _authService.RegisterAsync(dto);
             return Ok();
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
+        {
+            var result = await _authService.LoginAsync(dto);
+            return Ok(result);
+        }
     }
 }

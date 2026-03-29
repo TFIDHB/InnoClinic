@@ -1,6 +1,7 @@
 using BLL.AutoMapper;
 using BLL.Interfaces;
 using BLL.Services;
+using BLL.Settings;
 using DAL;
 using DAL.Interfaces;
 using DAL.Repositories;
@@ -25,6 +26,9 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
         builder.Configuration.GetConnectionString("AuthConnection")
     )
 );
+
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("JwtSettings"));
 
 builder.Services.AddRepositories();
 builder.Services.AddServices();

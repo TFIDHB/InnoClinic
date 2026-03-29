@@ -17,5 +17,11 @@ namespace DAL.Repositories
 
         public async Task<bool> ExistsByEmailAsync(string email) =>
             await DbSet.AnyAsync(e => e.Email == email);
+
+        public async Task<User?> GetByEmailAsync(string email) =>
+          await DbSet.FirstOrDefaultAsync(e => e.Email == email);
+
+        public async Task<User?> GetByRefreshTokenAsync(string refreshToken) =>
+    await DbSet.FirstOrDefaultAsync(e => e.RefreshToken == refreshToken);
     }
 }

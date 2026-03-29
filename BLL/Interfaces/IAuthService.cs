@@ -10,5 +10,6 @@ namespace BLL.Interfaces
     public interface IAuthService
     {
         Task RegisterAsync(RegisterRequestDto dto);
+        Task<AuthTokenDto> LoginAsync(LoginRequestDto dto);
     }
 }

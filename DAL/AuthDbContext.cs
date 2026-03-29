@@ -20,6 +20,7 @@ namespace DAL
                 entity.HasIndex(e => e.Email).IsUnique();
                 entity.Property(e => e.Email).IsRequired();
                 entity.Property(e => e.PasswordHash).IsRequired();
+                entity.Property(e => e.RefreshToken);
             }
             );
         }
