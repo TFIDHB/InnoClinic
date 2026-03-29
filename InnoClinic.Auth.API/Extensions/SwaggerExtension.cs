@@ -6,7 +6,6 @@
         {
             app.UseSwagger();
             app.UseSwaggerUI();
-
             return app;
 
         }

@@ -21,23 +21,19 @@ namespace InnoClinic.Auth.API.Middleware
             {
                 await _next(context);
             }
-            catch (EmailAlreadyExistsException ex) {
-                _logger.LogWarning(ex, "Email already exists: {Message}", ex.Message);
-                await HandleExceptionAsync(context, ex);
-            }
             catch (Exception ex)
             {
-                _logger.LogWarning(ex, "Unknown error occured: {Message}", ex.Message);
                 await HandleExceptionAsync(context, ex);
             }
         }
 
-        private static async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
 
             var (statusCode, message) = exception switch
             {
+                EmailAlreadyExistsException => (400, exception.Message),
                 ArgumentNullException _ => (400, "Wrong request parameters"),
                 ArgumentException _ => (400, exception.Message),
                 KeyNotFoundException _ => (404, exception.Message),
@@ -45,6 +41,7 @@ namespace InnoClinic.Auth.API.Middleware
                 _ => (500, "Server error")
             };
 
+            _logger.LogWarning(exception, "Unknown error occured: {Message}", exception.Message);
             context.Response.StatusCode = statusCode;
 
             var response = new

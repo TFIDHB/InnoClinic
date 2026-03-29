@@ -3,7 +3,6 @@ using BLL.Interfaces;
 using BLL.Services;
 using DAL;
 using DAL.Interfaces;
-using DAL.Patterns;
 using DAL.Repositories;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -27,16 +26,9 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
     )
 );
 
-builder.Services.AddAutoMapper(typeof(UserMapper));
-
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped(typeof(IRepository<,>), typeof(BasicRepository<,>));
-
-builder.Services.AddScoped<IAuthService, AuthService>();
-
-builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<RegisterRequestValidator>();
+builder.Services.AddRepositories();
+builder.Services.AddServices();
+builder.Services.AddValidation();
 
 var app = builder.Build();
 
