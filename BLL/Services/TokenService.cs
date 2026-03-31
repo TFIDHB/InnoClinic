@@ -1,24 +1,18 @@
 ﻿using BLL.Interfaces;
-using DAL.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.Identity.Client;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using BLL.Settings;
+using DAL.Entities;
 using Microsoft.Extensions.Options;
-using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace BLL.Services
 {
     public class TokenService : ITokenService
     {
         private readonly JwtSettings _jwtSettings;
-
         public TokenService(IOptions<JwtSettings> jwtSettings)
         {
             _jwtSettings = jwtSettings.Value;
@@ -45,7 +39,6 @@ namespace BLL.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
         public string GenerateRefreshToken()
         {
             var randBytes = RandomNumberGenerator.GetBytes(64);

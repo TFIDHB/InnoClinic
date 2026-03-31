@@ -1,15 +1,7 @@
-using BLL.AutoMapper;
-using BLL.Interfaces;
-using BLL.Services;
 using BLL.Settings;
 using DAL;
-using DAL.Interfaces;
-using DAL.Repositories;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using InnoClinic.Auth.API.Extensions;
 using InnoClinic.Auth.API.Middleware;
-using InnoClinic.Auth.API.Validators;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

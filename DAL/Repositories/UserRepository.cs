@@ -1,11 +1,6 @@
 ﻿using DAL.Entities;
 using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -14,14 +9,11 @@ namespace DAL.Repositories
         public UserRepository(AuthDbContext context) : base(context)
         {
         }
-
         public async Task<bool> ExistsByEmailAsync(string email) =>
             await DbSet.AnyAsync(e => e.Email == email);
-
         public async Task<User?> GetByEmailAsync(string email) =>
           await DbSet.FirstOrDefaultAsync(e => e.Email == email);
-
         public async Task<User?> GetByRefreshTokenAsync(string refreshToken) =>
-    await DbSet.FirstOrDefaultAsync(e => e.RefreshToken == refreshToken);
+            await DbSet.FirstOrDefaultAsync(e => e.RefreshToken == refreshToken);
     }
 }

@@ -1,12 +1,12 @@
-﻿using Azure.Core;
-using BLL.DTOs;
+﻿using BLL.DTOs;
 using FluentValidation;
 
 namespace InnoClinic.Auth.API.Validators
 {
     public class RegisterRequestValidator : AbstractValidator<RegisterRequestDto>
     {
-        public RegisterRequestValidator() {
+        public RegisterRequestValidator()
+        {
             RuleFor(request => request.Email)
                 .NotEmpty().WithMessage(ApiMessages.EmailRequired)
                 .EmailAddress().WithMessage(ApiMessages.EmailInvalid);

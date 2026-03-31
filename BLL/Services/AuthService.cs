@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using BLL.AutoMapper;
 using BLL.DTOs;
 using BLL.Exceptions;
 using BLL.Interfaces;
@@ -15,8 +14,8 @@ namespace BLL.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public AuthService(IUserRepository userRepository, 
-            IUnitOfWork unitOfWork, 
+        public AuthService(IUserRepository userRepository,
+            IUnitOfWork unitOfWork,
             IMapper mapper,
             ITokenService tokenService)
         {
@@ -57,10 +56,12 @@ namespace BLL.Services
             var accessToken = _tokenService.GenerateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
-            user.RefreshToken = refreshToken;
+            var refreshTokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken);
+            user.RefreshToken = refreshTokenHash;
             user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
             await _userRepository.UpdateAsync(user);
+            await _unitOfWork.SaveChangesAsync();
 
             return new AuthTokenDto
             {
