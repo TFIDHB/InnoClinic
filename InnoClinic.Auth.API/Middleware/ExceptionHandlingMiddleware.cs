@@ -33,12 +33,14 @@ namespace InnoClinic.Auth.API.Middleware
 
             var (statusCode, message) = exception switch
             {
-                EmailAlreadyExistsException => (400, exception.Message),
-                ArgumentNullException _ => (400, "Wrong request parameters"),
-                ArgumentException _ => (400, exception.Message),
-                KeyNotFoundException _ => (404, exception.Message),
-                InvalidOperationException _ => (400, exception.Message),
-                _ => (500, "Server error")
+                EmailAlreadyExistsException => ((int)HttpStatusCode.BadRequest, exception.Message),
+                InvalidPasswordException => ((int)HttpStatusCode.BadRequest, exception.Message),
+                UserNotFoundException => ((int)HttpStatusCode.NotFound, exception.Message),
+                ArgumentNullException _ => ((int)HttpStatusCode.BadRequest, "Wrong request parameters"),
+                ArgumentException _ => ((int)HttpStatusCode.BadRequest, exception.Message),
+                KeyNotFoundException _ => ((int)HttpStatusCode.NotFound, exception.Message),
+                InvalidOperationException _ => ((int)HttpStatusCode.BadRequest, exception.Message),
+                _ => ((int)HttpStatusCode.InternalServerError, "Server error")
             };
 
             _logger.LogWarning(exception, "Unknown error occured: {Message}", exception.Message);

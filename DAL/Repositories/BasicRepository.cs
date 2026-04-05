@@ -1,10 +1,5 @@
 ﻿using DAL.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -13,7 +8,8 @@ namespace DAL.Repositories
         private readonly AuthDbContext _context;
         protected readonly DbSet<TEntity> DbSet;
 
-        public BasicRepository(AuthDbContext context){
+        public BasicRepository(AuthDbContext context)
+        {
             _context = context;
             DbSet = context.Set<TEntity>();
         }
@@ -25,12 +21,13 @@ namespace DAL.Repositories
         public async Task DeleteAsync(TId id)
         {
             var entity = await GetByIdAsync(id);
-            if (entity != null) { 
+            if (entity != null)
+            {
                 DbSet.Remove(entity);
             }
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync() => 
+        public async Task<IEnumerable<TEntity>> GetAllAsync() =>
             await DbSet.AsNoTracking().ToListAsync();
 
         public async Task UpdateAsync(TEntity entity)
@@ -40,7 +37,7 @@ namespace DAL.Repositories
 
         public async Task<TEntity?> GetByIdAsync(TId id)
         {
-           return await DbSet.FindAsync(id);
+            return await DbSet.FindAsync(id);
         }
     }
 }

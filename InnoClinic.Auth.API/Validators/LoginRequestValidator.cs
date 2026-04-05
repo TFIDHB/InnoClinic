@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace InnoClinic.Auth.API.Validators
 {
-    public class RegisterRequestValidator : AbstractValidator<RegisterRequestDto>
+    public class LoginRequestValidator : AbstractValidator<LoginRequestDto>
     {
-        public RegisterRequestValidator()
+        public LoginRequestValidator()
         {
             RuleFor(request => request.Email)
                 .NotEmpty().WithMessage(ApiMessages.EmailRequired)
