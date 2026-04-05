@@ -28,5 +28,12 @@ namespace InnoClinic.Auth.API.Controllers
             var result = await _authService.LoginAsync(dto);
             return Ok(result);
         }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] LogOutRequestDto dto)
+        {
+            await _authService.LogoutAsync(dto); 
+            return Ok();
+        }
     }
 }

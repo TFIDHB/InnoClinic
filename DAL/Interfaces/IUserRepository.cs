@@ -7,5 +7,6 @@ namespace DAL.Interfaces
         Task<bool> ExistsByEmailAsync(string email);
         Task<User?> GetByEmailAsync(string email);
         Task<User?> GetByRefreshTokenAsync(string refreshToken);
+        Task<User?> GetByRefreshTokenIdAsync(string refreshTokenId);
     }
 }

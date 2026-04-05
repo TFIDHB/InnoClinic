@@ -15,5 +15,7 @@ namespace DAL.Repositories
           await DbSet.FirstOrDefaultAsync(e => e.Email == email);
         public async Task<User?> GetByRefreshTokenAsync(string refreshToken) =>
             await DbSet.FirstOrDefaultAsync(e => e.RefreshToken == refreshToken);
+        public async Task<User?> GetByRefreshTokenIdAsync(string refreshTokenId) =>
+            await DbSet.FirstOrDefaultAsync(e => e.RefreshTokenId == refreshTokenId);
     }
 }

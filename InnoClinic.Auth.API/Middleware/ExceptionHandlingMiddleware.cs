@@ -35,6 +35,7 @@ namespace InnoClinic.Auth.API.Middleware
             {
                 EmailAlreadyExistsException => ((int)HttpStatusCode.BadRequest, exception.Message),
                 InvalidPasswordException => ((int)HttpStatusCode.BadRequest, exception.Message),
+                InvalidTokenException => ((int)HttpStatusCode.BadRequest, exception.Message),
                 UserNotFoundException => ((int)HttpStatusCode.NotFound, exception.Message),
                 ArgumentNullException _ => ((int)HttpStatusCode.BadRequest, "Wrong request parameters"),
                 ArgumentException _ => ((int)HttpStatusCode.BadRequest, exception.Message),

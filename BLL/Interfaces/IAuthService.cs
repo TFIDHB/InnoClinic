@@ -6,5 +6,6 @@ namespace BLL.Interfaces
     {
         Task RegisterAsync(RegisterRequestDto dto);
         Task<AuthTokenDto> LoginAsync(LoginRequestDto dto);
+        Task LogoutAsync(LogOutRequestDto dto);
     }
 }
