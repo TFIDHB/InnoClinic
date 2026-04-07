@@ -4,7 +4,6 @@ using BLL.Exceptions;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using System.Security.Cryptography;
 
 namespace BLL.Services
 {
@@ -56,11 +55,9 @@ namespace BLL.Services
 
             var accessToken = _tokenService.GenerateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken();
-            var refreshTokenId = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
 
             var refreshTokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken);
 
-            user.RefreshTokenId = refreshTokenId;
             user.RefreshToken = refreshTokenHash;
             user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
@@ -71,22 +68,23 @@ namespace BLL.Services
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
-                RefreshTokenId = refreshTokenId
             };
         }
 
-        public async Task LogoutAsync(LogOutRequestDto dto)
+        public async Task LogoutAsync(LogOutRequestDto dto, int userId)
         {
-            var user = await _userRepository.GetByRefreshTokenIdAsync(dto.RefreshTokenId);
+            var user = await _userRepository.GetByIdAsync(userId);
 
-            if (user == null ||
-                user.RefreshTokenExpiry < DateTime.UtcNow ||
+            if (user == null) { 
+                throw new UserNotFoundException();
+            }
+
+            if (user.RefreshTokenExpiry < DateTime.UtcNow ||
                 !BCrypt.Net.BCrypt.Verify(dto.RefreshToken, user.RefreshToken))
             {
                 throw new InvalidTokenException();
             }
 
-            user.RefreshTokenId = null;
             user.RefreshToken = null;
             user.RefreshTokenExpiry = null;
 
