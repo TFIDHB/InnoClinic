@@ -79,6 +79,15 @@ namespace BLL {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The token is invalid.
+        /// </summary>
+        public static string InvalidToken {
+            get {
+                return ResourceManager.GetString("InvalidToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User with this email doesn&apos;t exist.
         /// </summary>
         public static string UserNotFound {

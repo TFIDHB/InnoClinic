@@ -1,6 +1,8 @@
 ﻿using BLL.DTOs;
 using BLL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace InnoClinic.Auth.API.Controllers
 {
@@ -27,6 +29,20 @@ namespace InnoClinic.Auth.API.Controllers
         {
             var result = await _authService.LoginAsync(dto);
             return Ok(result);
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout([FromBody] LogOutRequestDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null) {
+                return Unauthorized();
+            }
+
+            await _authService.LogoutAsync(dto, int.Parse(userId)); 
+            return Ok();
         }
     }
 }

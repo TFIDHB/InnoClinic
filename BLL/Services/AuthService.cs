@@ -57,6 +57,7 @@ namespace BLL.Services
             var refreshToken = _tokenService.GenerateRefreshToken();
 
             var refreshTokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken);
+
             user.RefreshToken = refreshTokenHash;
             user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
@@ -66,8 +67,28 @@ namespace BLL.Services
             return new AuthTokenDto
             {
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
             };
+        }
+
+        public async Task LogoutAsync(LogOutRequestDto dto, int userId)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+
+            if (user == null) { 
+                throw new UserNotFoundException();
+            }
+
+            if (user.RefreshTokenExpiry < DateTime.UtcNow ||
+                !BCrypt.Net.BCrypt.Verify(dto.RefreshToken, user.RefreshToken))
+            {
+                throw new InvalidTokenException();
+            }
+
+            user.RefreshToken = null;
+            user.RefreshTokenExpiry = null;
+
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
