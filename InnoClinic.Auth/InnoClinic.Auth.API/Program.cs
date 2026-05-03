@@ -1,7 +1,7 @@
 using BLL.Settings;
 using DAL;
 using InnoClinic.Auth.API.Extensions;
-using InnoClinic.Auth.API.Middleware;
+using InnoClinic.Shared.Middleware;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,7 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseAppSwagger();
 }
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using InnoClinic.Shared.Exceptions;
+using System.Net;
 
 namespace BLL.Exceptions
 {
-    public class InvalidTokenException : Exception
+    public class InvalidTokenException : BasicException
     {
-        public InvalidTokenException() : base(BllMessages.InvalidToken) { }
+        public InvalidTokenException() : base(BllMessages.InvalidToken, HttpStatusCode.BadRequest) { }
     }
 }

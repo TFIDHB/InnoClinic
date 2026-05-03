@@ -17,9 +17,8 @@ namespace InnoClinic.Auth.API.Extensions
     {
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IAuthUnitOfWork, AuthUnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped(typeof(IRepository<,>), typeof(BasicRepository<,>));
             return services;
         }
         public static IServiceCollection AddServices(this IServiceCollection services)
