@@ -1,4 +1,5 @@
 ﻿using DAL.Entities;
+using InnoClinic.Shared.Interfaces;
 
 namespace DAL.Interfaces
 {

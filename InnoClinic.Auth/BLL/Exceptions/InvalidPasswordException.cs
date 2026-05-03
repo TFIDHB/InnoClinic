@@ -1,7 +1,10 @@
-﻿namespace BLL.Exceptions
+﻿using InnoClinic.Shared.Exceptions;
+using System.Net;
+
+namespace BLL.Exceptions
 {
-    public class InvalidPasswordException : Exception
+    public class InvalidPasswordException : BasicException
     {
-        public InvalidPasswordException() : base(BllMessages.InvalidPassword) { }
+        public InvalidPasswordException() : base(BllMessages.InvalidPassword, HttpStatusCode.BadRequest) { }
     }
 }

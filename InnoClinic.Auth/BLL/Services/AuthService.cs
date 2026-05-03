@@ -11,11 +11,11 @@ namespace BLL.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IAuthUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public AuthService(IUserRepository userRepository,
-            IUnitOfWork unitOfWork,
+            IAuthUnitOfWork unitOfWork,
             IMapper mapper,
             ITokenService tokenService)
         {

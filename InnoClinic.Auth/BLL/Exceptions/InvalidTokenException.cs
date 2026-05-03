@@ -1,7 +1,10 @@
-﻿namespace BLL.Exceptions
+﻿using InnoClinic.Shared.Exceptions;
+using System.Net;
+
+namespace BLL.Exceptions
 {
-    public class InvalidTokenException : Exception
+    public class InvalidTokenException : BasicException
     {
-        public InvalidTokenException() : base(BllMessages.InvalidToken) { }
+        public InvalidTokenException() : base(BllMessages.InvalidToken, HttpStatusCode.BadRequest) { }
     }
 }
