@@ -1,7 +1,7 @@
 using Application.Extensions;
 using Infrastructure.Extensions;
 using InnoClinic.Appointments.Extensions;
-using InnoClinic.Appointments.Middleware;
+using InnoClinic.Shared.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,7 +22,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseAppSwagger();
 }
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

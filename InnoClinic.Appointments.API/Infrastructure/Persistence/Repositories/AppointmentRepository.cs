@@ -1,12 +1,10 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
+using InnoClinic.Shared.Repositories;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class AppointmentRepository : BasicRepository<Appointment, Guid>, IAppointmentRepository
+    public class AppointmentRepository(AppointmentDbContext context) : BaseRepository<Appointment, Guid>(context), IAppointmentRepository
     {
-        public AppointmentRepository(AppointmentDbContext context) : base(context)
-        {
-        }
     }
 }
