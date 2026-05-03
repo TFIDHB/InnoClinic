@@ -9,19 +9,11 @@ namespace Infrastructure.Persistence
         {
 
         }
-
         public DbSet<Appointment> Appointments { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Appointment>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Date).HasColumnType("date");
-                entity.Property(e => e.Time).HasColumnType("time");
-
-                entity.Property(e => e.CreatedAt).HasDefaultValueSql("CURRENT_TIMESTAMP");
-            });
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppointmentDbContext).Assembly);
         }
     }
 }

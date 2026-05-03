@@ -8,6 +8,5 @@ namespace Infrastructure.Persistence.Repositories
         public AppointmentRepository(AppointmentDbContext context) : base(context)
         {
         }
-
     }
 }

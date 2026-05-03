@@ -6,6 +6,5 @@
         Sheduled,
         Cancelled,
         Completed
-
     }
 }

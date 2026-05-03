@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace InnoClinic.Appointments.Extensions
 {
@@ -14,6 +15,19 @@ namespace InnoClinic.Appointments.Extensions
                     Version = "v1",
                 });
 
+                var apiXmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var apiXmlPath = Path.Combine(AppContext.BaseDirectory, apiXmlFile);
+                if (File.Exists(apiXmlPath))
+                {
+                    c.IncludeXmlComments(apiXmlPath);
+                }
+
+                var appXmlPath = Path.Combine(AppContext.BaseDirectory, "Application.xml");
+                if (File.Exists(appXmlPath))
+                {
+                    c.IncludeXmlComments(appXmlPath);
+                }
+
             });
 
             return services;
@@ -25,6 +39,7 @@ namespace InnoClinic.Appointments.Extensions
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "InnoClinic.Appointments v1");
+                c.RoutePrefix = string.Empty;
             });
             return app;
         }

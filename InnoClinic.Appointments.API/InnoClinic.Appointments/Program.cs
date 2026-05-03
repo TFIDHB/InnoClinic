@@ -1,25 +1,18 @@
-using Infrastructure.Persistence;
+using Application.Extensions;
+using Infrastructure.Extensions;
 using InnoClinic.Appointments.Extensions;
 using InnoClinic.Appointments.Middleware;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddPresentation();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
-builder.Services.AddAppSwagger();
 
-builder.Services.AddDbContext<AppointmentDbContext>(options =>
-{
-    options.UseNpgsql(builder.Configuration.GetConnectionString("AppointmentsConnection"));
-});
-
-builder.Services.AddRepositories();
-builder.Services.AddServices();
-builder.Services.AddValidators();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 

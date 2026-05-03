@@ -1,26 +1,25 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Appointments.Controllers
 {
+    //[Authorize]
     [ApiController]
-    [Route("api/appointments")]
-    public class AppointmentController : ControllerBase
+    [Route("api/v1/appointments")]
+    public class AppointmentController(IAppointmentService appointmentService) : ControllerBase
     {
-        private readonly IAppointmentService _appointmentService;
-
-        public AppointmentController(IAppointmentService appointmentService)
-        {
-            _appointmentService = appointmentService;
-        }
 
         [HttpPost("createAppointment")]
+        [ProducesResponseType(typeof(AppointmentResponseDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequestDto dto)
         {
-            var result = await _appointmentService.CreateAsync(dto);
-            return Ok(result);
+            var result = await appointmentService.CreateAsync(dto);
+            return CreatedAtAction(nameof(CreateAppointment), new { id = result.Id }, result);
         }
     }
 }

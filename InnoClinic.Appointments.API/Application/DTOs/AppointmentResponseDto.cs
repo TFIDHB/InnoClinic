@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,6 @@ namespace Application.DTOs
         public Guid OfficeId { get; set; }
         public DateOnly Date { get; set; }
         public TimeOnly Time { get; set; }
-        public string? Status { get; set; }
+        public AppointmentStatus Status { get; set; }
     }
 }
