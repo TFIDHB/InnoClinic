@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class AppointmentService (IUnitOfWork unitOfWork, IMapper mapper) : IAppointmentService
+    public class AppointmentService (IAppointmentUnitOfWork unitOfWork, IMapper mapper) : IAppointmentService
     {
-        private readonly IUnitOfWork _unitOfWork = unitOfWork;
+        private readonly IAppointmentUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
 
         public async Task<AppointmentResponseDto> CreateAsync(CreateAppointmentRequestDto dto)
