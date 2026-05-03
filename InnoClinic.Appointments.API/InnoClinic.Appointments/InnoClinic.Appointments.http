@@ -1,6 +1,0 @@
-@InnoClinic.Appointments_HostAddress = http://localhost:5202
-
-GET {{InnoClinic.Appointments_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
