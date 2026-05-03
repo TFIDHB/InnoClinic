@@ -13,5 +13,8 @@
 
         /// <example>14:30</example>
         public TimeOnly Time { get; set; }
+
+        /// <example>30</example>
+        public int DurationMinutes { get; set; }
     }
 }

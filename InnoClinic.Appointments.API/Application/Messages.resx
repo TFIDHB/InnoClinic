@@ -123,4 +123,7 @@
   <data name="NotFoundMessage" xml:space="preserve">
     <value>{0} doesn't exist.</value>
   </data>
+  <data name="OverlappingAppointmentException" xml:space="preserve">
+    <value>This time is already taken by another patient.</value>
+  </data>
 </root>

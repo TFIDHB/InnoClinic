@@ -1,23 +1,33 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
-    public class AppointmentService (IAppointmentUnitOfWork unitOfWork, IMapper mapper) : IAppointmentService
+    public class AppointmentService(IAppointmentUnitOfWork unitOfWork, IMapper mapper) : IAppointmentService
     {
         private readonly IAppointmentUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
 
         public async Task<AppointmentResponseDto> CreateAsync(CreateAppointmentRequestDto dto)
         {
+            var newStart = dto.Time;
+            var newEnd = dto.Time.AddMinutes(dto.DurationMinutes);
+
+            var isOverlapping = await _unitOfWork.AppointmentRepository.AnyAsync(a =>
+                a.DoctorId == dto.DoctorId &&
+                a.Date == dto.Date &&
+                newStart < a.Time.Add(a.Duration) &&
+                newEnd > a.Time);
+
+            if (isOverlapping)
+            {
+                throw new OverlappingAppointmentException();
+            }
+
             var appointment = _mapper.Map<Appointment>(dto);
 
             appointment.Status = AppointmentStatus.Created;

@@ -14,6 +14,11 @@ namespace Domain.Entities
         public DateOnly Date { get; set; }
         public TimeOnly Time { get; set; }
 
+        public TimeSpan Duration { get; set; }
+
+        public DateTime StartDateTime => Date.ToDateTime(Time);
+        public DateTime EndDateTime => StartDateTime.Add(Duration);
+
         public AppointmentStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
 

@@ -70,11 +70,20 @@ namespace Application {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to {0} doesn&apos;t exist..
         /// </summary>
         public static string NotFoundMessage {
             get {
                 return ResourceManager.GetString("NotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This time is already taken by another patient..
+        /// </summary>
+        public static string OverlappingAppointmentException {
+            get {
+                return ResourceManager.GetString("OverlappingAppointmentException", resourceCulture);
             }
         }
     }
