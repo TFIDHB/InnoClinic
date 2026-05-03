@@ -11,7 +11,6 @@ namespace InnoClinic.Appointments.Controllers
     [Route("api/v1/appointments")]
     public class AppointmentController(IAppointmentService appointmentService) : ControllerBase
     {
-
         [HttpPost("createAppointment")]
         [ProducesResponseType(typeof(AppointmentResponseDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
