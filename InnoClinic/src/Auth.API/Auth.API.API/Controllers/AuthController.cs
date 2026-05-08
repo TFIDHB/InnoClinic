@@ -18,9 +18,9 @@ namespace InnoClinic.Auth.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto, CancellationToken ct = default)
         {
-            await _authService.RegisterAsync(dto);
+            await _authService.RegisterAsync(dto, ct);
             return Ok();
         }
 

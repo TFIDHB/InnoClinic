@@ -37,8 +37,6 @@ namespace Application.Services
 
             var appointment = _mapper.Map<Appointment>(dto);
 
-            appointment.CreatedAt = DateTime.UtcNow;
-
             await _unitOfWork.AppointmentRepository.CreateAsync(appointment, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 

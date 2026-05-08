@@ -1,4 +1,5 @@
 ﻿using BLL.Settings;
+using InnoClinic.Shared.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,11 +10,13 @@ namespace InnoClinic.Auth.API.Extensions
 {
     public static class PresentationExtensions
     {
-        public static IServiceCollection AddPresentation(this IServiceCollection services)
+        public static IServiceCollection AddPresentation(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllers();
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+            services.AddOpenApi();
+            services.AddAppSwagger("InnoClinic.Auth.API");
             return services;
         }
         public static IServiceCollection AddJwt(this IServiceCollection services, IConfiguration configuration)
