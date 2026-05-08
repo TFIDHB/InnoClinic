@@ -2,7 +2,7 @@
 
 namespace DAL.Repositories
 {
-    public class AuthUnitOfWork(AuthDbContext context) : IAuthUnitOfWork
+    public class AuthUnitOfWork(AuthDbContext context) : IAuthUnitOfWork, IDisposable
     {
         public void Dispose() => context.Dispose();
 

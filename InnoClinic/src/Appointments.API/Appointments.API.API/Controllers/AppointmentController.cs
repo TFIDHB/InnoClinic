@@ -11,14 +11,21 @@ namespace InnoClinic.Appointments.Controllers
     [Route("api/v1/appointments")]
     public class AppointmentController(IAppointmentService appointmentService) : ControllerBase
     {
-        [HttpPost("createAppointment")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAppointment(Guid id)
+        {
+            var result = await appointmentService.GetByIdAsync(id);
+            return Ok(result);
+        }
+
+        [HttpPost]
         [ProducesResponseType(typeof(AppointmentResponseDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequestDto dto)
+        public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentRequestDto dto, CancellationToken ct = default)
         {
-            var result = await appointmentService.CreateAsync(dto);
-            return CreatedAtAction(nameof(CreateAppointment), new { id = result.Id }, result);
+            var result = await appointmentService.CreateAsync(dto, ct);
+            return CreatedAtAction(nameof(GetAppointment), new { id = result.Id }, result);
         }
     }
 }

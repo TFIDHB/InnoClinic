@@ -4,6 +4,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
+using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
 {
@@ -11,8 +12,14 @@ namespace Application.Services
     {
         private readonly IAppointmentUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
+        public async Task<AppointmentResponseDto> GetByIdAsync(Guid id, CancellationToken ct = default)
+        {
+            var appointment = await _unitOfWork.AppointmentRepository.GetByIdAsync(id, ct)
+                ?? throw new NotFoundException(nameof(Appointment));
 
-        public async Task<AppointmentResponseDto> CreateAsync(CreateAppointmentRequestDto dto)
+            return _mapper.Map<AppointmentResponseDto>(appointment);
+        }
+        public async Task<AppointmentResponseDto> CreateAsync(CreateAppointmentRequestDto dto, CancellationToken ct = default)
         {
             var newStart = dto.Time;
             var newEnd = dto.Time.AddMinutes(dto.DurationMinutes);
@@ -21,7 +28,7 @@ namespace Application.Services
                 a.DoctorId == dto.DoctorId &&
                 a.Date == dto.Date &&
                 newStart < a.Time.Add(a.Duration) &&
-                newEnd > a.Time);
+                newEnd > a.Time, ct);
 
             if (isOverlapping)
             {
@@ -30,11 +37,10 @@ namespace Application.Services
 
             var appointment = _mapper.Map<Appointment>(dto);
 
-            appointment.Status = AppointmentStatus.Created;
             appointment.CreatedAt = DateTime.UtcNow;
 
-            await _unitOfWork.AppointmentRepository.CreateAsync(appointment);
-            await _unitOfWork.SaveChangesAsync();
+            await _unitOfWork.AppointmentRepository.CreateAsync(appointment, ct);
+            await _unitOfWork.SaveChangesAsync(ct);
 
             return _mapper.Map<AppointmentResponseDto>(appointment);
         }

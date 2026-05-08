@@ -3,8 +3,8 @@ using System.Net;
 
 namespace BLL.Exceptions
 {
-    public class InvalidPasswordException : BasicException
+    public class InvalidPasswordException : BadRequestException
     {
-        public InvalidPasswordException() : base(BllMessages.InvalidPassword, HttpStatusCode.BadRequest) { }
+        public InvalidPasswordException() : base(BllMessages.InvalidPassword) { }
     }
 }

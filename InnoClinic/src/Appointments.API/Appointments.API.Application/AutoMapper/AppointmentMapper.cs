@@ -14,7 +14,7 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => TimeSpan.FromMinutes(src.DurationMinutes)));
 
             CreateMap<Appointment, AppointmentResponseDto>()
-        .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
         }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace InnoClinic.Shared.Exceptions
 {
-    public class ValidationException : BasicException
+    public class ValidationException : BadRequestException
     {
-        public ValidationException(string message) : base(message, HttpStatusCode.BadRequest) { }
+        public ValidationException(string message) : base(message) { }
     }
 }

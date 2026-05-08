@@ -5,13 +5,10 @@ namespace DAL
 {
     public class AuthDbContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
         public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
         {
-
         }
-
-        public DbSet<User> Users { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(entity =>

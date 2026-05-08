@@ -3,8 +3,8 @@ using System.Net;
 
 namespace BLL.Exceptions
 {
-    public class UserNotFoundException : BasicException
+    public class UserNotFoundException : BadRequestException
     {
-        public UserNotFoundException() : base(BllMessages.UserNotFound, HttpStatusCode.NotFound) { }
+        public UserNotFoundException() : base(BllMessages.UserNotFound) { }
     }
 }

@@ -35,14 +35,9 @@ namespace InnoClinic.Shared.Middleware
 
             var (statusCode, message) = exception switch
             {
-                BasicException basicEx => ((int)basicEx.StatusCode, basicEx.Message),
-
-                ArgumentNullException => ((int)HttpStatusCode.BadRequest, "Wrong request parameters"),
-                ArgumentException => ((int)HttpStatusCode.BadRequest, exception.Message),
-                KeyNotFoundException => ((int)HttpStatusCode.NotFound, exception.Message),
-                InvalidOperationException => ((int)HttpStatusCode.BadRequest, exception.Message),
-
-                _ => ((int)HttpStatusCode.InternalServerError, "Internal Server Error")
+                NotFoundException => (404, exception.Message),
+                BadRequestException => (400, exception.Message),
+                _ => (500, "Internal Server Error")
             };
 
             _logger.LogError(exception, "Error captured by middleware: {Message}", exception.Message);

@@ -3,8 +3,8 @@ using System.Net;
 
 namespace BLL.Exceptions
 {
-    public class EmailAlreadyExistsException : BasicException
+    public class EmailAlreadyExistsException : BadRequestException
     {
-        public EmailAlreadyExistsException() : base(BllMessages.EmailExists, HttpStatusCode.BadRequest) { }
+        public EmailAlreadyExistsException() : base(BllMessages.EmailExists) { }
     }
 }

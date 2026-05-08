@@ -2,10 +2,10 @@
 
 namespace InnoClinic.Shared.Exceptions
 {
-    public class NotFoundException : BasicException
+    public class NotFoundException : Exception
     {
         public NotFoundException(string entityName)
-            : base(string.Format(SharedMessages.NotFoundMessage, entityName), HttpStatusCode.NotFound)
+            : base(string.Format(SharedMessages.NotFoundMessage, entityName))
         {
         }
     }

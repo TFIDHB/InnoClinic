@@ -10,7 +10,6 @@ namespace Domain.Entities
         public Guid DoctorId { get; set; }
         public Guid ServiceId { get; set; }
         public Guid OfficeId { get; set; }
-
         public DateOnly Date { get; set; }
         public TimeOnly Time { get; set; }
 
@@ -21,6 +20,5 @@ namespace Domain.Entities
 
         public AppointmentStatus Status { get; set; }
         public DateTime CreatedAt { get; set; }
-
     }
 }

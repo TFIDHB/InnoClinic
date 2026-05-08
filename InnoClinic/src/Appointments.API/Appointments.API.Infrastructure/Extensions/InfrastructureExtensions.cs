@@ -20,6 +20,5 @@ namespace Infrastructure.Extensions
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             return services;
         }
-
     }
 }

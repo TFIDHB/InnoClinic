@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Infrastructure.Persistence.Repositories
 {
     public class AppointmentUnitOfWork(AppointmentDbContext context, IAppointmentRepository appointments)
-        : IAppointmentUnitOfWork
+        : IAppointmentUnitOfWork, IDisposable
     {
         public IAppointmentRepository AppointmentRepository => appointments;
 

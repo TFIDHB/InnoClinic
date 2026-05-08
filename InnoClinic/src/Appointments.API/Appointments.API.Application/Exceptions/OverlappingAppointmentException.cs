@@ -3,8 +3,8 @@ using System.Net;
 
 namespace Application.Exceptions
 {
-    internal class OverlappingAppointmentException : BasicException
+    internal class OverlappingAppointmentException : BadRequestException
     {
-        public OverlappingAppointmentException() : base(Messages.OverlappingAppointmentException, HttpStatusCode.BadRequest) { }
+        public OverlappingAppointmentException() : base(Messages.OverlappingAppointmentException) { }
     }
 }

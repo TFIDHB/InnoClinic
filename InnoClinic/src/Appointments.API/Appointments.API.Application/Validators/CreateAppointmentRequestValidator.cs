@@ -16,6 +16,10 @@ namespace Application.Validators
                 .NotEmpty();
             RuleFor(x => x.OfficeId)
                 .NotEmpty();
+            RuleFor(x => x.Date)
+                .NotEmpty();
+            RuleFor(x => x.Time)
+                .NotEmpty();
         }
     }
 }
