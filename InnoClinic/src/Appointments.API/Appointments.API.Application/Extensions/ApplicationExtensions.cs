@@ -12,7 +12,7 @@ namespace Application.Extensions
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<IAppointmentService, AppointmentService>();
-            services.AddAutoMapper(typeof(AppointmentMapper).Assembly);
+            services.AddAutoMapper(AssemblyReference.Assembly);
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssembly(AssemblyReference.Assembly);
             return services;

@@ -7,6 +7,7 @@ namespace InnoClinic.Appointments.Extensions
         public static IServiceCollection AddPresentation(this IServiceCollection services) {
             services.AddControllers();
             services.AddAppSwagger("InnoClinic.Appointments.API");
+            services.AddOpenApi();
             return services;
         }
     }

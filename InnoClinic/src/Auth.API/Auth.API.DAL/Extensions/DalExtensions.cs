@@ -11,7 +11,8 @@ namespace DAL.Extensions
         public static IServiceCollection AddInfra(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<AuthDbContext>(opt =>
-            opt.UseSqlServer(configuration.GetConnectionString("AuthConnection")));
+                opt.UseSqlServer(configuration.GetConnectionString("AuthConnection")));
+
             services.AddScoped<IAuthUnitOfWork, AuthUnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
             return services;

@@ -17,9 +17,13 @@ namespace Application.Validators
             RuleFor(x => x.OfficeId)
                 .NotEmpty();
             RuleFor(x => x.Date)
-                .NotEmpty();
+                .NotEmpty()
+                .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
+                .WithMessage("Appointment date cannot be in the past");
             RuleFor(x => x.Time)
-                .NotEmpty();
+                .NotEmpty()
+                .Must(time => time.Hour is >= 8 and <= 19)
+                .WithMessage("Appointment time must be between 08:00 and 20:00");
         }
     }
 }

@@ -7,7 +7,6 @@ using InnoClinic.Shared.Extensions;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPresentation();
-builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 

@@ -9,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddPresentation(builder.Configuration);
 builder.Services.AddBll(builder.Configuration);
 builder.Services.AddInfra(builder.Configuration);
-builder.Services.AddJwt(builder.Configuration);
 
 var app = builder.Build();
 

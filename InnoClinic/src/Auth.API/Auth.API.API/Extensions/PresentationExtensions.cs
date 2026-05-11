@@ -17,6 +17,7 @@ namespace InnoClinic.Auth.API.Extensions
             services.AddValidatorsFromAssembly(typeof(Program).Assembly);
             services.AddOpenApi();
             services.AddAppSwagger("InnoClinic.Auth.API");
+            services.AddJwt(configuration);
             return services;
         }
         public static IServiceCollection AddJwt(this IServiceCollection services, IConfiguration configuration)
