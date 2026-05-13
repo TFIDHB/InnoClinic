@@ -48,14 +48,10 @@ namespace Application.Services
         {
             var appointments = await _unitOfWork.AppointmentRepository.GetByDateAndDoctorAsync(dto.Date, dto.DoctorId, ct);
 
-            var busySlots = appointments
-                .SelectMany(a => Enumerable
-                    .Range(0, (int)a.Duration.TotalMinutes / 10)
-                    .Select(i => a.Time.AddMinutes(i * 10)))
-                .ToHashSet();
+            var busySlots = GetBusySlots(appointments);
 
             var requiredSlots = dto.ServiceType.GetRequiredSlots();
-            var allSlots = GenerateAllSlots();
+            var allSlots = GenerateAllSlots(requiredSlots);
 
             return allSlots
                 .Where(slot => Enumerable
@@ -71,33 +67,50 @@ namespace Application.Services
             var appointments = await _unitOfWork.AppointmentRepository.GetByDateRangeAndDoctorAsync(today, to, dto.DoctorId, ct);
 
             var requiredSlots = dto.ServiceType.GetRequiredSlots();
-            var allSlots = GenerateAllSlots().ToList();
+            var allSlots = GenerateAllSlots(requiredSlots).ToList();
             var result = new List<DateOnly>();
+
+            var appointmentsByDate = appointments
+                .GroupBy(a => a.Date)
+                .ToDictionary(g => g.Key, g => g.ToList());
 
             for (int i = 0; i < 30; i++)
             {
                 var date = today.AddDays(i);
 
-                var busySlots = appointments
-                    .Where(a => a.Date == date)
-                    .SelectMany(a => Enumerable
-                        .Range(0, (int)a.Duration.TotalMinutes / 10)
-                        .Select(j => a.Time.AddMinutes(j * 10)))
-                    .ToHashSet();
+                List<Appointment> apointments;
 
-                var hasFreeSlot = allSlots.Any(slot => Enumerable.Range(0, requiredSlots)
-                    .All(j => !busySlots.Contains(slot.AddMinutes(j * 10))));
+                if (appointmentsByDate.TryGetValue(date, out var list))
+                    apointments = list;
+                else
+                    apointments = [];
 
-                if (hasFreeSlot)
+                var busySlots = GetBusySlots(appointments);
+
+                if (HasFreeSlot(allSlots, busySlots, requiredSlots))
                     result.Add(date);
             }
 
             return result;
         }
-        private static IEnumerable<TimeOnly> GenerateAllSlots()
+        private bool HasFreeSlot(IEnumerable<TimeOnly> allSlots, HashSet<TimeOnly> busySlots, int requiredSlots)
+        {
+            return allSlots.Any(slot => Enumerable
+                .Range(0, requiredSlots)
+                .All(j => !busySlots.Contains(slot.AddMinutes(j * 10))));
+        }
+        private static HashSet<TimeOnly> GetBusySlots(IEnumerable<Appointment> appointments)
+        {
+            return appointments
+                .SelectMany(a => Enumerable
+                    .Range(0, (int)a.Duration.TotalMinutes / 10)
+                    .Select(i => a.Time.AddMinutes(i * 10)))
+                .ToHashSet();
+        }
+        private static IEnumerable<TimeOnly> GenerateAllSlots(int requiredSlots)
         {
             var slot = new TimeOnly(8, 0);
-            var end = new TimeOnly(20, 0);
+            var end = new TimeOnly(20, 0).AddMinutes(-(requiredSlots - 1) * 10);
             while (slot < end)
             {
                 yield return slot;

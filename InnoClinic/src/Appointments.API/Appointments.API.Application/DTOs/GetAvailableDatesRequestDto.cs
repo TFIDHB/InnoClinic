@@ -4,7 +4,7 @@ namespace Application.DTOs
 {
     public class GetAvailableDatesRequestDto
     {
-        public Guid SpecialisationId { get; set; }
+        public Guid SpecializationId { get; set; }
         public Guid ServiceId { get; set; }
         public Guid? DoctorId { get; set; }
 

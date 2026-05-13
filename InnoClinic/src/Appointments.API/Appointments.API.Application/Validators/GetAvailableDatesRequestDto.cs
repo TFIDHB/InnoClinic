@@ -10,7 +10,7 @@ namespace Application.Validators
             RuleFor(x => x.ServiceId)
                 .NotEmpty();
 
-            RuleFor(x => x.SpecialisationId)
+            RuleFor(x => x.SpecializationId)
                 .NotEmpty();
 
             RuleFor(x => x.ServiceType)
