@@ -44,7 +44,6 @@ namespace Application.Services
 
             return _mapper.Map<AppointmentResponseDto>(appointment);
         }
-
         public async Task<IEnumerable<TimeOnly>> GetAvailableSlotsAsync(GetAvailableSlotsRequestDto dto, CancellationToken ct = default)
         {
             var appointments = await _unitOfWork.AppointmentRepository.GetByDateAndDoctorAsync(dto.Date, dto.DoctorId, ct);
@@ -98,7 +97,7 @@ namespace Application.Services
         private static IEnumerable<TimeOnly> GenerateAllSlots()
         {
             var slot = new TimeOnly(8, 0);
-            var end = new TimeOnly(18, 0);
+            var end = new TimeOnly(20, 0);
             while (slot < end)
             {
                 yield return slot;

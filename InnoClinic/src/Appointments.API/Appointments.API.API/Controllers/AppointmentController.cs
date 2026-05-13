@@ -1,7 +1,5 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Appointments.Controllers
