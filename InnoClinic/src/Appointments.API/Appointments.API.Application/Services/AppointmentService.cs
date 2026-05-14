@@ -4,7 +4,6 @@ using Application.Extensions;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
