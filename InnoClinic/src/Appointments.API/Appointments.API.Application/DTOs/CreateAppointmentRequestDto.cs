@@ -1,4 +1,6 @@
-﻿namespace Application.DTOs
+﻿using Domain.Enums;
+
+namespace Application.DTOs
 {
     public class CreateAppointmentRequestDto
     {
@@ -14,7 +16,7 @@
         /// <example>14:30</example>
         public TimeOnly Time { get; set; }
 
-        /// <example>30</example>
-        public int DurationMinutes { get; set; }
+        /// <example>1</example>
+        public ServiceType ServiceType { get; set; }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Application.AutoMapper;
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using Application.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;

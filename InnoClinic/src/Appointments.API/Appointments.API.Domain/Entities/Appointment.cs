@@ -19,6 +19,7 @@ namespace Domain.Entities
         public DateTime EndDateTime => StartDateTime.Add(Duration);
 
         public AppointmentStatus Status { get; set; }
+        public ServiceType ServiceType { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
