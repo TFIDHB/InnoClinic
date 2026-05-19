@@ -2,6 +2,7 @@ using Infrastructure.Extensions;
 using InnoClinic.Shared.Middleware;
 using Application.Extensions;
 using Services.API.Extensions;
+using InnoClinic.Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,11 +15,13 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    app.UseAppSwagger("InnoClinic.Services.API");
 }
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
