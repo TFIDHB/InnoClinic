@@ -11,4 +11,11 @@
     <ProjectReference Include="..\Services.API.Domain\Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+    <Folder Include="AutoMapper\" />
+    <Folder Include="DTOs\" />
+    <Folder Include="Validators\" />
+  </ItemGroup>
+
 </Project>

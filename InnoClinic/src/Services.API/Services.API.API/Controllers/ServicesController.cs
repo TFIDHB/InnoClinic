@@ -2,8 +2,9 @@
 
 namespace Services.API.Controllers
 {
-    [Route("api/[controller]")]
+    //[Authorize]
     [ApiController]
+    [Route("api/v1/services")]
     public class ServicesController : ControllerBase
     {
     }

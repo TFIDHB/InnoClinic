@@ -37,7 +37,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Services
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Services.API\Services.API.Infrastructure\Infrastructure.csproj", "{7A731548-4760-D1B1-5A8A-F7F8452F5FED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.API", "src\Services.API\Services.API.API\Services.API.csproj", "{24529F5B-2EB1-379A-DB74-A3D8C7C9EAF9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InnoClinic.Services.API", "src\Services.API\Services.API.API\InnoClinic.Services.API.csproj", "{24529F5B-2EB1-379A-DB74-A3D8C7C9EAF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
