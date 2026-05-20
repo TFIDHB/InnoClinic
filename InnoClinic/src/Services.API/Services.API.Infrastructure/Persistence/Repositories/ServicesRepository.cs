@@ -4,7 +4,7 @@ using InnoClinic.Shared.Repositories;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class ServicesRepository(ServicesDbContext context): BaseRepository<Service, Guid>(context), IServicesRepository
+    public class ServicesRepository(ServicesDbContext context) : BaseRepository<Service, Guid>(context), IServicesRepository
     {
     }
 }

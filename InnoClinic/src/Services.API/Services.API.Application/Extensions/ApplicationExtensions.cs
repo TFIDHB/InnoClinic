@@ -9,6 +9,7 @@ namespace Application.Extensions
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<IServicesService, ServicesService>();
+            services.AddAutoMapper(AssemblyReference.Assembly);
             return services;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Extensions;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Enums;
@@ -11,7 +12,7 @@ namespace Application.AutoMapper
         {
             CreateMap<CreateAppointmentRequestDto, Appointment>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => AppointmentStatus.Created))
-                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => TimeSpan.FromMinutes(src.DurationMinutes)));
+                .ForMember(dest => dest.Duration, opt => opt.MapFrom(src => TimeSpan.FromMinutes(src.ServiceType.GetRequiredSlots() * 10)));
 
             CreateMap<Appointment, AppointmentResponseDto>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));

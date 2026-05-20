@@ -7,8 +7,9 @@ namespace Services.API.Extensions
         public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
             services.AddControllers();
-            services.AddAppSwagger("InnoClinic.Services.API");
-            services.AddOpenApi();
+            services
+                .AddAppSwagger("InnoClinic.Services.API")
+                .AddOpenApi();
             return services;
         }
     }
