@@ -3,7 +3,9 @@
     public class CreateServiceRequestDto
     {
         public string Name { get; set; }
-        public decimal Price { get; set; }
-        public string ServiceCategory { get; set; }
+        public double Price { get; set; }
+
+        /// <example>a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1</example>
+        public Guid ServiceCategoryId { get; set; }
     }
 }

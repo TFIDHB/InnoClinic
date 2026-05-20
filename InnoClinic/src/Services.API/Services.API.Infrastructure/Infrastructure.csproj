@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Services.API.Application\Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

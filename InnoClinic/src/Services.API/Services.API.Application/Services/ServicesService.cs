@@ -10,6 +10,7 @@ namespace Application.Services
     {
         private readonly IServicesUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
+
         public async Task<ServiceDto> CreateAsync(CreateServiceRequestDto dto, CancellationToken ct = default)
         {
             var service = _mapper.Map<Service>(dto);
@@ -18,6 +19,7 @@ namespace Application.Services
 
             return _mapper.Map<ServiceDto>(service);
         }
+
         public async Task<ServiceDto> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             var service = await _unitOfWork.ServicesRepository.GetByIdAsync(id, ct)
@@ -25,11 +27,13 @@ namespace Application.Services
 
             return _mapper.Map<ServiceDto>(service);
         }
+
         public async Task<IEnumerable<ServiceDto>> GetAllAsync(CancellationToken ct = default)
         {
             var services = await _unitOfWork.ServicesRepository.GetAllAsync(ct);
             return _mapper.Map<IEnumerable<ServiceDto>>(services);
         }
+
         public async Task<ServiceDto> UpdateAsync(Guid id, UpdateServiceRequestDto dto, CancellationToken ct = default)
         {
             var service = await _unitOfWork.ServicesRepository.GetByIdAsync(id, ct)
@@ -41,6 +45,7 @@ namespace Application.Services
 
             return _mapper.Map<ServiceDto>(service);
         }
+
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
         {
             var service = await _unitOfWork.ServicesRepository.GetByIdAsync(id, ct)

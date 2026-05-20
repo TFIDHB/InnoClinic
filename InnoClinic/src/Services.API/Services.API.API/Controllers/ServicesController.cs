@@ -20,7 +20,6 @@ namespace Services.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<ServiceDto>>> GetAllServices(CancellationToken ct = default) 
         {
             var result = await servicesService.GetAllAsync(ct);

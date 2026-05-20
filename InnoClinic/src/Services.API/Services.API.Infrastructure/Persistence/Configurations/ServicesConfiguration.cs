@@ -13,7 +13,10 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.Name).IsRequired();
             builder.Property(e => e.Price).IsRequired();
-            builder.Property(e => e.ServiceCategory).IsRequired();
+
+            builder.Property(e => e.ServiceCategoryId).IsRequired();
+            builder.HasOne<ServiceCategory>().WithMany().HasForeignKey(e => e.ServiceCategoryId);
+
             builder.Property(e => e.Status).IsRequired().HasConversion<string>();
         }
     }
