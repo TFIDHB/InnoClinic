@@ -5,5 +5,6 @@ namespace Application.Interfaces
 {
     public interface IServicesRepository : IRepository<Service, Guid>
     {
+        //future functionality according to US
     }
 }
