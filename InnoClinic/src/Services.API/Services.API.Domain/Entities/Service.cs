@@ -8,6 +8,7 @@ namespace Domain.Entities
         public string Name { get; set; }
         public double Price { get; set; }
         public Guid ServiceCategoryId { get; set; }
+        public ServiceCategory ServiceCategory { get; set; }
         public ServiceStatus Status { get; set; }
     }
 }
