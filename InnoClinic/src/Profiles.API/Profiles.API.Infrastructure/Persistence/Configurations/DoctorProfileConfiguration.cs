@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations
 {
-    public class DoctorProfileConfiguration
+    public class DoctorProfileConfiguration : IEntityTypeConfiguration<DoctorProfile>
     {
         public void Configure(EntityTypeBuilder<DoctorProfile> builder)
         {

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations
 {
-    public class PatientProfileConfiguration
+    public class PatientProfileConfiguration : IEntityTypeConfiguration<PatientProfile>
     {
         public void Configure(EntityTypeBuilder<PatientProfile> builder)
         {
@@ -14,8 +14,8 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(e => e.FirstName).IsRequired();
             builder.Property(e => e.LastName).IsRequired();
             builder.Property(e => e.MiddleName);
-            builder.Property(x => x.PhoneNumber).IsRequired();
-            builder.Property(x => x.IsLinkedToAccount).IsRequired();
+            builder.Property(e => e.PhoneNumber).IsRequired();
+            builder.Property(e => e.IsLinkedToAccount).IsRequired();
         }
     }
 }
