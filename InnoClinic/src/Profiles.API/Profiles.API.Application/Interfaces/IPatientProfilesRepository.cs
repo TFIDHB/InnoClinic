@@ -3,7 +3,7 @@ using InnoClinic.Shared.Interfaces;
 
 namespace Application.Interfaces
 {
-    public interface IProfilesRepository : IRepository<DoctorProfile, Guid>
+    public interface IPatientProfilesRepository : IRepository<PatientProfile, Guid>
     {
         //future functionality according to US
     }

@@ -1,6 +1,6 @@
 ﻿namespace Application.DTOs
 {
-    public class UpdateReceptionistProfileDto
+    public class UpdateReceptionistProfileRequestDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

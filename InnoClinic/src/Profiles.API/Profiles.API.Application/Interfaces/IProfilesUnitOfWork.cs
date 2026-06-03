@@ -1,7 +1,11 @@
-﻿namespace Application.Interfaces
+﻿using InnoClinic.Shared.Interfaces;
+
+namespace Application.Interfaces
 {
-    public interface IProfilesUnitOfWork
+    public interface IProfilesUnitOfWork : IBasicUnitOfWork
     {
-        IProfilesRepository ProfilesRepository { get; }
+        IDoctorProfilesRepository DoctorProfilesRepository { get; }
+        IPatientProfilesRepository PatientProfilesRepository { get; }
+        IReceptionistProfilesRepository ReceptionistProfilesRepository { get; }
     }
 }

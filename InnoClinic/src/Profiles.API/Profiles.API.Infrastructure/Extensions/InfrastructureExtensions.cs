@@ -17,7 +17,7 @@ namespace Infrastructure.Extensions
             });
 
             service.AddScoped<IProfilesUnitOfWork, ProfilesUnitOfWork>();
-            service.AddScoped<IProfilesRepository, ProfilesRepository>();
+            service.AddScoped<IDoctorProfilesRepository, ProfilesRepository>();
             return service;
         }
     }

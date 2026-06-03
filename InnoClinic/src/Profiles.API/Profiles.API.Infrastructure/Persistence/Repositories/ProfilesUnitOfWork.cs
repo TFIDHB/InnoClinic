@@ -3,12 +3,18 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class ProfilesUnitOfWork(ProfilesDbContext context, IServiceProvider provider) : IProfilesUnitOfWork
+    public class ProfilesUnitOfWork(ProfilesDbContext context, IServiceProvider provider) : IProfilesUnitOfWork, IDisposable
     {
-        private IProfilesRepository? _profilesRepository;
+        private IDoctorProfilesRepository? _doctorProfilesRepository;
+        private IPatientProfilesRepository? _patientProfilesRepository;
+        private IReceptionistProfilesRepository? _receptionistProfilesRepository;
 
-        public IProfilesRepository ProfilesRepository =>
-            _profilesRepository ??= provider.GetRequiredService<IProfilesRepository>();
+        public IDoctorProfilesRepository DoctorProfilesRepository =>
+        _doctorProfilesRepository ??= provider.GetRequiredService<IDoctorProfilesRepository>();
+        public IPatientProfilesRepository PatientProfilesRepository =>
+            _patientProfilesRepository ??= provider.GetRequiredService<IPatientProfilesRepository>();
+        public IReceptionistProfilesRepository ReceptionistProfilesRepository =>
+            _receptionistProfilesRepository ??= provider.GetRequiredService<IReceptionistProfilesRepository>();
 
         public async Task<int> SaveChangesAsync(CancellationToken ct = default)
             => await context.SaveChangesAsync(ct);
