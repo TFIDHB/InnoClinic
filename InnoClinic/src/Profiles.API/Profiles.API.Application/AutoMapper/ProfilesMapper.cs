@@ -6,8 +6,8 @@ namespace Application.AutoMapper
 {
     public class ProfilesMapper : Profile
     {
-        public ProfilesMapper() {
-
+        public ProfilesMapper() 
+        {
             CreateMap<DoctorProfile, DoctorProfileDto>();
             CreateMap<CreateDoctorProfileRequestDto, DoctorProfile>();
             CreateMap<UpdateDoctorProfileRequestDto, DoctorProfile>();

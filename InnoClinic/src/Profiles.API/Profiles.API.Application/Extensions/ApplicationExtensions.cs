@@ -19,8 +19,8 @@ namespace Application.Extensions
             services.AddScoped<IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto>
                 , ReceptionistProfileService>();
 
-            services.AddAutoMapper(AssemblyReference.Assembly);
 
+            services.AddAutoMapper(AssemblyReference.Assembly);
             return services;
         }
     }
