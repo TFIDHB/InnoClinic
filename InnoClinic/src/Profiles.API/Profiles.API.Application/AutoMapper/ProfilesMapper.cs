@@ -8,9 +8,7 @@ namespace Application.AutoMapper
     {
         public ProfilesMapper() {
 
-            CreateMap<DoctorProfile, DoctorProfileDto>()
-                .ForMember(dest => dest.Specialization,
-                    opt => opt.MapFrom(src => src.Specialization != null ? src.Specialization.Name : string.Empty));
+            CreateMap<DoctorProfile, DoctorProfileDto>();
             CreateMap<CreateDoctorProfileRequestDto, DoctorProfile>();
             CreateMap<UpdateDoctorProfileRequestDto, DoctorProfile>();
 

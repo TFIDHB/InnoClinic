@@ -12,7 +12,6 @@ namespace Application.DTOs
         public DateOnly? DateOfBirth { get; set; }
         public Guid AccountId { get; set; }
         public Guid SpecializationId { get; set; }
-        public Specialization Specialization { get; set; }
         public Guid OfficeId { get; set; }
         public int CareerStartYear { get; set; }
         public DoctorStatus Status { get; set; }

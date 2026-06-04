@@ -9,16 +9,18 @@ namespace Infrastructure.Extensions
 {
     public static class InfrastructureExtensions
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection service, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            service.AddDbContext<ProfilesDbContext>(options =>
+            services.AddDbContext<ProfilesDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("ProfilesConnection"));
             });
 
-            service.AddScoped<IProfilesUnitOfWork, ProfilesUnitOfWork>();
-            service.AddScoped<IDoctorProfilesRepository, ProfilesRepository>();
-            return service;
+            services.AddScoped<IProfilesUnitOfWork, ProfilesUnitOfWork>();
+            services.AddScoped<IDoctorProfilesRepository, DoctorProfilesRepository>();
+            services.AddScoped<IPatientProfilesRepository, PatientProfilesRepository>();
+            services.AddScoped<IReceptionistProfilesRepository, ReceptionistProfilesRepository>();
+            return services;
         }
     }
 }

@@ -3,6 +3,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using InnoClinic.Shared.Exceptions;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {

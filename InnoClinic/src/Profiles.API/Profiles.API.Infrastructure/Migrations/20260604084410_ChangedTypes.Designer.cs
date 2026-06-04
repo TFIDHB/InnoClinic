@@ -4,6 +4,7 @@ using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ProfilesDbContext))]
-    partial class ProfilesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260604084410_ChangedTypes")]
+    partial class ChangedTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,26 +160,6 @@ namespace Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Specializations");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"),
-                            IsActive = true,
-                            Name = "Therapist"
-                        },
-                        new
-                        {
-                            Id = new Guid("a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2"),
-                            IsActive = true,
-                            Name = "Surgeon"
-                        },
-                        new
-                        {
-                            Id = new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3"),
-                            IsActive = true,
-                            Name = "Ophthalmologist"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.DoctorProfile", b =>
