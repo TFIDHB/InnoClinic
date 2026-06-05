@@ -1,0 +1,114 @@
+﻿using AutoMapper;
+using BLL.DTOs;
+using BLL.Exceptions;
+using BLL.Interfaces;
+using BLL.Services;
+using DAL.Entities;
+using DAL.Interfaces;
+using Moq;
+
+namespace Auth.API.Tests
+{
+    public class AuthServiceTests
+    {
+        private readonly Mock<IAuthUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<ITokenService> _tokenServiceMock;
+        private readonly Mock<IMapper> _mapperMock;
+        private readonly AuthService _authService;
+
+        public AuthServiceTests()
+        {
+            _unitOfWorkMock = new Mock<IAuthUnitOfWork>();
+            _tokenServiceMock = new Mock<ITokenService>();
+            _mapperMock = new Mock<IMapper>();
+
+            _authService = new AuthService(_unitOfWorkMock.Object, _mapperMock.Object, _tokenServiceMock.Object);
+        }
+
+        [Fact]
+        public async Task RegisterAsync_WhenEmailAlreadyExists_ThrowsEmailAlreadyExistsException()
+        {
+            var dto = new RegisterRequestDto { Email = "test@test.com", Password = "123456" };
+            _unitOfWorkMock
+                .Setup(e => e.UserRepository.ExistsByEmailAsync(dto.Email, default))
+                .ReturnsAsync(true);
+
+            await Assert.ThrowsAsync<EmailAlreadyExistsException>(
+                async () => await _authService.RegisterAsync(dto));
+        }
+
+        [Fact]
+        public async Task RegisterAsync_WhenEmailIsNew_CreatesUserAndSavesChanges()
+        {
+            var dto = new RegisterRequestDto { Email = "test@test.com", Password = "123456" };
+            _unitOfWorkMock
+                .Setup(e => e.UserRepository.ExistsByEmailAsync(dto.Email, default))
+                .ReturnsAsync(false);
+            _mapperMock
+                .Setup(e => e.Map<User>(dto))
+                .Returns(new User());
+
+            await _authService.RegisterAsync(dto);
+
+            _unitOfWorkMock.Verify(e => e.UserRepository.CreateAsync(It.IsAny<User>(), default), Times.Once);
+            _unitOfWorkMock.Verify(e => e.SaveChangesAsync(default), Times.Once);
+        }
+
+        [Fact]
+        public async Task LoginAsync_WhenUserNotFound_ThrowsUserNotFoundException() 
+        {
+            var dto = new LoginRequestDto { Email = "test@test.com", Password = "123456" };
+            _unitOfWorkMock
+                .Setup(e => e.UserRepository.GetByEmailAsync(dto.Email, default))
+                .ReturnsAsync((User?)null);
+
+            await Assert.ThrowsAsync<UserNotFoundException>(
+                async () => await _authService.LoginAsync(dto));
+        }
+
+        [Fact]
+        public async Task LoginAsync_WhenPasswordIsIncorrect_ThrowsInvalidPasswordException() 
+        {
+            var dto = new LoginRequestDto { Email = "test@test.com", Password = "123456" };
+            var user = new User {
+                Email = dto.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("correctpassword")
+            };
+            _unitOfWorkMock
+                .Setup(e => e.UserRepository.GetByEmailAsync(dto.Email, default))
+                .ReturnsAsync(user);
+
+            await Assert.ThrowsAsync <InvalidPasswordException> (
+                async () => await _authService.LoginAsync(dto));
+        }
+
+        [Fact]
+        public async Task LoginAsync_WhenCredentialsAreValid_ReturnsAuthTokenDto() 
+        {
+            var dto = new LoginRequestDto { Email = "test@test.com", Password = "123456" };
+            var user = new User
+            {
+                Email = dto.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456")
+            };
+
+            _unitOfWorkMock
+                .Setup(e => e.UserRepository.GetByEmailAsync(dto.Email, default))
+                .ReturnsAsync(user);
+
+            _tokenServiceMock
+                .Setup(e => e.GenerateAccessToken(user))
+                .Returns("access-token");
+
+            _tokenServiceMock
+                .Setup(e => e.GenerateRefreshToken())
+                .Returns("refresh-token");
+
+            var result = await _authService.LoginAsync(dto, default);
+
+            Assert.NotNull(result);
+            Assert.Equal("access-token", result.AccessToken);
+            Assert.Equal("refresh-token", result.RefreshToken);
+        }
+    }
+}
