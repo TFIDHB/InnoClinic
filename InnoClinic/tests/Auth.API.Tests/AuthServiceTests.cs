@@ -110,5 +110,58 @@ namespace Auth.API.Tests
             Assert.Equal("access-token", result.AccessToken);
             Assert.Equal("refresh-token", result.RefreshToken);
         }
+
+        [Fact]
+        public async Task LogoutAsync_WhenUserNotFound_ThrowsUserNotFoundException() 
+        {
+            var dto = new LogOutRequestDto { RefreshToken = "some-token" };
+            var userId = 1;
+            _unitOfWorkMock
+                .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
+                .ReturnsAsync((User?)null);
+
+            await Assert.ThrowsAsync<UserNotFoundException>(
+                async () => await _authService.LogoutAsync(dto, userId));
+        }
+
+        [Fact]
+        public async Task LogoutAsync_WhenTokenIsInvalid_ThrowsTokenIsInvalidException() 
+        {
+            var dto = new LogOutRequestDto { RefreshToken = "wrong-token" };
+            var userId = 1;
+            var user = new User
+            {
+                RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
+                RefreshTokenExpiry = DateTime.UtcNow.AddDays(10)
+            };
+
+            _unitOfWorkMock
+                .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
+                .ReturnsAsync(user);
+
+            await Assert.ThrowsAsync <InvalidTokenException> (
+                async () => await _authService.LogoutAsync(dto, userId));
+        }
+
+        [Fact]
+        public async Task LogoutAsync_WhenTokenIsValid_ClearsRefreshToken() 
+        {
+            var dto = new LogOutRequestDto { RefreshToken = "correct-token" };
+            var userId = 1;
+            var user = new User
+            {
+                RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
+                RefreshTokenExpiry = DateTime.UtcNow.AddDays(10)
+            };
+
+            _unitOfWorkMock
+                .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
+                .ReturnsAsync(user);
+
+            await _authService.LogoutAsync(dto, userId);
+
+            Assert.Null(user.RefreshToken);
+            Assert.Null(user.RefreshTokenExpiry);
+        }
     }
 }
