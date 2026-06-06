@@ -143,6 +143,26 @@ namespace Auth.API.Tests
                 async () => await _authService.LogoutAsync(dto, userId));
         }
 
+
+        [Fact]
+        public async Task LogoutAsync_WhenTokenIsExpired_ThrowsTokenIsInvalidException()
+        {
+            var dto = new LogOutRequestDto { RefreshToken = "correct-token" };
+            var userId = 1;
+            var user = new User
+            {
+                RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
+                RefreshTokenExpiry = DateTime.UtcNow.AddDays(-10)
+            };
+
+            _unitOfWorkMock
+                .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
+                .ReturnsAsync(user);
+
+            await Assert.ThrowsAsync<InvalidTokenException>(
+                async () => await _authService.LogoutAsync(dto, userId));
+        }
+
         [Fact]
         public async Task LogoutAsync_WhenTokenIsValid_ClearsRefreshToken() 
         {
