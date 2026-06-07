@@ -7,6 +7,5 @@
         public string? MiddleName { get; set; }
         public Guid AccountId { get; set; }
         public Guid OfficeId { get; set; }
-        public Guid? PhotoId { get; set; }
     }
 }

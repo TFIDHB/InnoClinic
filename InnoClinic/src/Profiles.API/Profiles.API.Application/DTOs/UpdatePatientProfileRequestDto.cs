@@ -7,6 +7,5 @@
         public string? MiddleName { get; set; }
         public DateOnly? DateOfBirth { get; set; }
         public string PhoneNumber { get; set; }
-        public Guid? PhotoId { get; set; }
     }
 }

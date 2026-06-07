@@ -14,6 +14,7 @@ namespace Application.Services
         public async Task<PatientProfileDto> CreateAsync(CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
             var patientProfile = _mapper.Map<PatientProfile>(dto);
+            patientProfile.IsLinkedToAccount = false;
             await _unitOfWork.PatientProfilesRepository.CreateAsync(patientProfile, ct);
             await _unitOfWork.SaveChangesAsync(ct);
 

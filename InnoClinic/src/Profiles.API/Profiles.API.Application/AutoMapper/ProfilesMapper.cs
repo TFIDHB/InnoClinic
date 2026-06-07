@@ -13,8 +13,7 @@ namespace Application.AutoMapper
             CreateMap<UpdateDoctorProfileRequestDto, DoctorProfile>();
 
             CreateMap<PatientProfile, PatientProfileDto>();
-            CreateMap<CreatePatientProfileRequestDto, PatientProfile>()
-                .ForMember(dest => dest.IsLinkedToAccount, opt => opt.MapFrom(_ => false));
+            CreateMap<CreatePatientProfileRequestDto, PatientProfile>();
             CreateMap<UpdatePatientProfileRequestDto, PatientProfile>();
 
             CreateMap<ReceptionistProfile, ReceptionistProfileDto>();

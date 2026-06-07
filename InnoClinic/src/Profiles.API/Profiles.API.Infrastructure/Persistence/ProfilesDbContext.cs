@@ -10,7 +10,6 @@ namespace Infrastructure.Persistence
         public DbSet<DoctorProfile> DoctorProfiles { get; set; }
         public DbSet<PatientProfile> PatientProfiles { get; set; }
         public DbSet<ReceptionistProfile> ReceptionistProfiles { get; set; }
-        public DbSet<Specialization> Specializations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

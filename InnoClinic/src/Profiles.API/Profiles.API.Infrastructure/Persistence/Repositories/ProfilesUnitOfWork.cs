@@ -8,9 +8,8 @@ namespace Infrastructure.Persistence.Repositories
         private IDoctorProfilesRepository? _doctorProfilesRepository;
         private IPatientProfilesRepository? _patientProfilesRepository;
         private IReceptionistProfilesRepository? _receptionistProfilesRepository;
-
         public IDoctorProfilesRepository DoctorProfilesRepository =>
-        _doctorProfilesRepository ??= provider.GetRequiredService<IDoctorProfilesRepository>();
+            _doctorProfilesRepository ??= provider.GetRequiredService<IDoctorProfilesRepository>();
         public IPatientProfilesRepository PatientProfilesRepository =>
             _patientProfilesRepository ??= provider.GetRequiredService<IPatientProfilesRepository>();
         public IReceptionistProfilesRepository ReceptionistProfilesRepository =>

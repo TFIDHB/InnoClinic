@@ -14,7 +14,6 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(e => e.FirstName).IsRequired();
             builder.Property(e => e.LastName).IsRequired();
             builder.Property(e => e.MiddleName);
-            builder.Property(e => e.PhoneNumber).IsRequired();
             builder.Property(e => e.IsLinkedToAccount).IsRequired();
         }
     }
