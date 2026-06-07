@@ -16,8 +16,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(e => e.MiddleName);
             builder.Property(e => e.CareerStartYear).IsRequired();
             builder.Property(e => e.Status).HasConversion<string>();
-
-            builder.HasOne(e => e.Specialization).WithMany().HasForeignKey(e => e.SpecializationId);
+            builder.Property(e => e.SpecializationId).IsRequired();
         }
     }
 }
