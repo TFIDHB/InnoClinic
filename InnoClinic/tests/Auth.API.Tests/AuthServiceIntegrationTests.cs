@@ -1,6 +1,7 @@
 ﻿
 using AutoMapper;
 using BLL.AutoMapper;
+using BLL.DTOs;
 using BLL.Services;
 using BLL.Settings;
 using DAL;
@@ -59,6 +60,17 @@ namespace Auth.API.Tests
         {
             await _dbContext.DisposeAsync();
             await _sqlContainer.DisposeAsync();
+        }
+
+        [Fact]
+        public async Task RegisterAsync_WhenEmailIsNew_AddUserToDatabase() 
+        { 
+            var dto = new RegisterRequestDto{ Email = "test@test.com", Password = "123456" };
+
+            await _authService.RegisterAsync(dto);
+
+            var user = await _dbContext.Users.FirstOrDefaultAsync(e => e.Email == dto.Email);
+            Assert.NotNull(user);
         }
     }
 }
