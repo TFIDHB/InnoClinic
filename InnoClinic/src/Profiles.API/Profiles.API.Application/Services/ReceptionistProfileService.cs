@@ -8,51 +8,48 @@ namespace Application.Services
 {
     public class ReceptionistProfileService(IProfilesUnitOfWork unitOfWork, IMapper mapper) : IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto>
     {
-        private readonly IProfilesUnitOfWork _unitOfWork = unitOfWork;
-        private readonly IMapper _mapper = mapper;
-
         public async Task<ReceptionistProfileDto> CreateAsync(CreateReceptionistProfileRequestDto dto, CancellationToken ct = default)
         {
-            var receptionistProfile = _mapper.Map<ReceptionistProfile>(dto);
-            await _unitOfWork.ReceptionistProfilesRepository.CreateAsync(receptionistProfile, ct);
-            await _unitOfWork.SaveChangesAsync(ct);
+            var receptionistProfile = mapper.Map<ReceptionistProfile>(dto);
+            await unitOfWork.ReceptionistProfilesRepository.CreateAsync(receptionistProfile, ct);
+            await unitOfWork.SaveChangesAsync(ct);
 
-            return _mapper.Map<ReceptionistProfileDto>(receptionistProfile);
+            return mapper.Map<ReceptionistProfileDto>(receptionistProfile);
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
         {
-            var receptionistProfile = await _unitOfWork.ReceptionistProfilesRepository.GetByIdAsync(id, ct)
+            var receptionistProfile = await unitOfWork.ReceptionistProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(ReceptionistProfile));
 
-            await _unitOfWork.ReceptionistProfilesRepository.DeleteAsync(id, ct);
-            await _unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.ReceptionistProfilesRepository.DeleteAsync(id, ct);
+            await unitOfWork.SaveChangesAsync(ct);
         }
 
         public async Task<IEnumerable<ReceptionistProfileDto>> GetAllAsync(CancellationToken ct = default)
         {
-            var receptionistProfiles = await _unitOfWork.ReceptionistProfilesRepository.GetAllAsync(ct);
-            return _mapper.Map<IEnumerable<ReceptionistProfileDto>>(receptionistProfiles);
+            var receptionistProfiles = await unitOfWork.ReceptionistProfilesRepository.GetAllAsync(ct);
+            return mapper.Map<IEnumerable<ReceptionistProfileDto>>(receptionistProfiles);
         }
 
         public async Task<ReceptionistProfileDto> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
-            var receptionistProfile = await _unitOfWork.ReceptionistProfilesRepository.GetByIdAsync(id, ct)
+            var receptionistProfile = await unitOfWork.ReceptionistProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(ReceptionistProfile));
 
-            return _mapper.Map<ReceptionistProfileDto>(receptionistProfile);
+            return mapper.Map<ReceptionistProfileDto>(receptionistProfile);
         }
 
         public async Task<ReceptionistProfileDto> UpdateAsync(Guid id, UpdateReceptionistProfileRequestDto dto, CancellationToken ct = default)
         {
-            var receptionistProfile = await _unitOfWork.ReceptionistProfilesRepository.GetByIdAsync(id, ct)
+            var receptionistProfile = await unitOfWork.ReceptionistProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(ReceptionistProfile));
 
-            _mapper.Map(dto, receptionistProfile);
-            await _unitOfWork.ReceptionistProfilesRepository.UpdateAsync(receptionistProfile, ct);
-            await _unitOfWork.SaveChangesAsync(ct);
+            mapper.Map(dto, receptionistProfile);
+            await unitOfWork.ReceptionistProfilesRepository.UpdateAsync(receptionistProfile, ct);
+            await unitOfWork.SaveChangesAsync(ct);
 
-            return _mapper.Map<ReceptionistProfileDto>(receptionistProfile);
+            return mapper.Map<ReceptionistProfileDto>(receptionistProfile);
         }
     }
 }
