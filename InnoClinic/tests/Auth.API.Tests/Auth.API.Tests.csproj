@@ -16,7 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Auth.API\Auth.API.API\InnoClinic.Auth.API.csproj" />
     <ProjectReference Include="..\..\src\Auth.API\Auth.API.BLL\BLL.csproj" />
+    <ProjectReference Include="..\..\src\Auth.API\Auth.API.DAL\DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
