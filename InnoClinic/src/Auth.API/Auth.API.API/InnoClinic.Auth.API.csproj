@@ -45,4 +45,8 @@
     </EmbeddedResource>
   </ItemGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="Auth.API.Tests" />
+	</ItemGroup>
+
 </Project>
