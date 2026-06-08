@@ -44,12 +44,11 @@ namespace Auth.API.Tests
                 .ReturnsAsync(false);
             _mapperMock
                 .Setup(e => e.Map<User>(dto))
-                .Returns(new User());
+                .Returns(new User { Email = dto.Email });
 
-            _unitOfWorkMock.Verify(e => e.UserRepository.CreateAsync(It.Is<User>(x => x.Email == dto.Email), default), Times.Once);
             await _authService.RegisterAsync(dto);
 
-            _unitOfWorkMock.Verify(e => e.UserRepository.CreateAsync(It.IsAny<User>(), default), Times.Once);
+            _unitOfWorkMock.Verify(e => e.UserRepository.CreateAsync(It.Is<User>(x => x.Email == dto.Email), default), Times.Once);
             _unitOfWorkMock.Verify(e => e.SaveChangesAsync(default), Times.Once);
         }
 
@@ -147,7 +146,7 @@ namespace Auth.API.Tests
             var user = new User
             {
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
-                RefreshTokenExpiry = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(-10)
+                RefreshTokenExpiry = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             };
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
@@ -165,7 +164,7 @@ namespace Auth.API.Tests
             var user = new User
             {
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
-                RefreshTokenExpiry = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(10)
+                RefreshTokenExpiry = new DateTime(2027, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(10)
             };
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
