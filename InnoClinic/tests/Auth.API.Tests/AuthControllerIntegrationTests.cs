@@ -73,6 +73,19 @@ namespace Auth.API.Tests
         }
 
         [Fact]
+        public async Task Register_WhenEmailAlreadyExists_ReturnsBadRequest()
+        {
+            var email = "duplicate@test.com";
+            var password = "123456";
+            var dto = new RegisterRequestDto { Email = email, Password = password};
+            await _client.PostAsJsonAsync("api/auth/register", dto);
+
+            var result = await _client.PostAsJsonAsync("api/auth/register", dto);
+
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
         public async Task Login_WhenUserCredentalsCorrect_ReturnsOkAndToken()
         {
             var email = "login@test.com";
@@ -90,6 +103,32 @@ namespace Auth.API.Tests
         }
 
         [Fact]
+        public async Task Login_WhenUserDoesNotExist_ReturnsBadRequest()
+        {
+            var email = "doesnotexist@test.com";
+            var password = "123456";
+            var loginDto = new LoginRequestDto { Email = email, Password = password };
+
+            var result = await _client.PostAsJsonAsync("api/auth/login", loginDto);
+
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task Login_WhenPasswordIsIncorrect_ReturnsBadRequest()
+        {
+            var email = "doesnotexist@test.com";
+            var password = "123456";
+            var registerDto = new RegisterRequestDto { Email = email, Password = password };
+            await _client.PostAsJsonAsync("api/auth/register", registerDto);
+            var loginDto = new LoginRequestDto { Email = email, Password = "wrong-password" };
+
+            var result = await _client.PostAsJsonAsync("api/auth/login", loginDto);
+
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
         public async Task Logout_WhenUserIsAuthorized_ReturnsOk() 
         {
             var email = "logout@test.com";
@@ -98,8 +137,8 @@ namespace Auth.API.Tests
             var registerDto = new RegisterRequestDto {Email = email, Password = password };
             await _client.PostAsJsonAsync("api/auth/register", registerDto);
             var loginDto = new LoginRequestDto {Email = email, Password = password };
-            var registerResult = await _client.PostAsJsonAsync("api/auth/login", loginDto);
-            var tokens = await registerResult.Content.ReadFromJsonAsync<AuthTokenDto>();
+            var loginResult = await _client.PostAsJsonAsync("api/auth/login", loginDto);
+            var tokens = await loginResult.Content.ReadFromJsonAsync<AuthTokenDto>();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokens.AccessToken);
             var logoutDto = new LogOutRequestDto { RefreshToken = tokens.RefreshToken };
 
@@ -108,6 +147,7 @@ namespace Auth.API.Tests
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
 
+        [Fact]
         public async Task Logout_WhenUserIsUnauthorized_ReturnsBadRequest()
         {
             _client.DefaultRequestHeaders.Authorization = null;
@@ -115,7 +155,26 @@ namespace Auth.API.Tests
 
             var result = await _client.PostAsJsonAsync("api/auth/logout", logoutDto);
 
-            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task Logout_WhenRefreshTokenIsInvalid_ReturnsBadRequest()
+        {
+            var email = "invalidrefreshtoken@test.com";
+            var password = "123456";
+
+            var registerDto = new RegisterRequestDto { Email = email, Password = password };
+            await _client.PostAsJsonAsync("api/auth/register", registerDto);
+            var loginDto = new LoginRequestDto { Email = email, Password = password };
+            var loginResult = await _client.PostAsJsonAsync("api/auth/login", loginDto);
+            var tokens = await loginResult.Content.ReadFromJsonAsync<AuthTokenDto>();
+            _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokens.AccessToken);
+            var logoutDto = new LogOutRequestDto { RefreshToken = "wrong-refresh-token" };
+
+            var result = await _client.PostAsJsonAsync("api/auth/logout", logoutDto);
+
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
     }
 }
