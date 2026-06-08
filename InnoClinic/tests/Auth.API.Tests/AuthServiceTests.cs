@@ -129,7 +129,6 @@ namespace Auth.API.Tests
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
                 RefreshTokenExpiry = DateTime.UtcNow.AddDays(10)
             };
-
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
                 .ReturnsAsync(user);
@@ -149,7 +148,6 @@ namespace Auth.API.Tests
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
                 RefreshTokenExpiry = DateTime.UtcNow.AddDays(-10)
             };
-
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
                 .ReturnsAsync(user);
@@ -168,7 +166,6 @@ namespace Auth.API.Tests
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
                 RefreshTokenExpiry = DateTime.UtcNow.AddDays(10)
             };
-
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
                 .ReturnsAsync(user);
