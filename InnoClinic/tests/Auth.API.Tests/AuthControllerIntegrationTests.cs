@@ -1,7 +1,5 @@
-﻿using Azure;
-using BLL.DTOs;
+﻿using BLL.DTOs;
 using DAL;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +13,8 @@ namespace Auth.API.Tests
     {
         private readonly MsSqlContainer _sqlContainer;
         private HttpClient _client;
+        private WebApplicationFactory<Program> _factory;
+
         public AuthControllerIntegrationTests()
         {
             _sqlContainer = new MsSqlBuilder()
@@ -31,25 +31,29 @@ namespace Auth.API.Tests
         {
             await _sqlContainer.StartAsync();
 
-            var factory = new WebApplicationFactory<Program>()
+            _factory = new WebApplicationFactory<Program>()
                 .WithWebHostBuilder(builder =>
                 {
-                    builder.ConfigureServices(services => 
+                    builder.ConfigureServices(services =>
                     {
                         var descriptor = services.SingleOrDefault(e => e.ServiceType == typeof(DbContextOptions<AuthDbContext>));
+                        if (descriptor != null)
+                        {
+                            services.Remove(descriptor);
+                        }
 
                         services.AddDbContext<AuthDbContext>(opt => opt.UseSqlServer(_sqlContainer.GetConnectionString()));
                     });
                 });
 
-            _client = factory.CreateClient();
-            using var scope = factory.Services.CreateScope();
+            _client = _factory.CreateClient();
+            using var scope = _factory.Services.CreateScope();
             var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
             await db.Database.MigrateAsync();
         }
 
         [Fact]
-        public async Task Register_WhenUserDataIsValid_ReturnsOk() 
+        public async Task Register_WhenUserDataIsValid_ReturnsOk()
         {
             var email = "test@test.com";
             var password = "123456";
@@ -58,6 +62,10 @@ namespace Auth.API.Tests
             var result = await _client.PostAsJsonAsync("api/auth/register", dto);
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            using var scope = _factory.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+            var userInDb = await db.Users.FirstOrDefaultAsync(e => e.Email == email);
+            Assert.NotNull(userInDb);
         }
 
         [Fact]
@@ -77,7 +85,7 @@ namespace Auth.API.Tests
         {
             var email = "duplicate@test.com";
             var password = "123456";
-            var dto = new RegisterRequestDto { Email = email, Password = password};
+            var dto = new RegisterRequestDto { Email = email, Password = password };
             await _client.PostAsJsonAsync("api/auth/register", dto);
 
             var result = await _client.PostAsJsonAsync("api/auth/register", dto);
@@ -93,7 +101,7 @@ namespace Auth.API.Tests
 
             var registerDto = new RegisterRequestDto { Email = email, Password = password };
             await _client.PostAsJsonAsync("api/auth/register", registerDto);
-            var loginDto = new LoginRequestDto {Email = email, Password = password };
+            var loginDto = new LoginRequestDto { Email = email, Password = password };
 
             var result = await _client.PostAsJsonAsync("api/auth/login", loginDto);
 
@@ -117,7 +125,7 @@ namespace Auth.API.Tests
         [Fact]
         public async Task Login_WhenPasswordIsIncorrect_ReturnsBadRequest()
         {
-            var email = "doesnotexist@test.com";
+            var email = "wrongpassword@test.com";
             var password = "123456";
             var registerDto = new RegisterRequestDto { Email = email, Password = password };
             await _client.PostAsJsonAsync("api/auth/register", registerDto);
@@ -129,14 +137,14 @@ namespace Auth.API.Tests
         }
 
         [Fact]
-        public async Task Logout_WhenUserIsAuthorized_ReturnsOk() 
+        public async Task Logout_WhenUserIsAuthorized_ReturnsOk()
         {
             var email = "logout@test.com";
             var password = "123456";
 
-            var registerDto = new RegisterRequestDto {Email = email, Password = password };
+            var registerDto = new RegisterRequestDto { Email = email, Password = password };
             await _client.PostAsJsonAsync("api/auth/register", registerDto);
-            var loginDto = new LoginRequestDto {Email = email, Password = password };
+            var loginDto = new LoginRequestDto { Email = email, Password = password };
             var loginResult = await _client.PostAsJsonAsync("api/auth/login", loginDto);
             var tokens = await loginResult.Content.ReadFromJsonAsync<AuthTokenDto>();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokens.AccessToken);
@@ -145,6 +153,11 @@ namespace Auth.API.Tests
             var result = await _client.PostAsJsonAsync("api/auth/logout", logoutDto);
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            using var scope = _factory.Services.CreateScope();
+            var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+            var userInDb = await db.Users.FirstOrDefaultAsync(e => e.Email == email);
+            Assert.Null(userInDb.RefreshToken);
+            Assert.Null(userInDb.RefreshTokenExpiry);
         }
 
         [Fact]
