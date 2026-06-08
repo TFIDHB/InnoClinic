@@ -15,13 +15,11 @@ namespace Auth.API.Tests
         private readonly Mock<ITokenService> _tokenServiceMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly AuthService _authService;
-
         public AuthServiceTests()
         {
             _unitOfWorkMock = new Mock<IAuthUnitOfWork>();
             _tokenServiceMock = new Mock<ITokenService>();
             _mapperMock = new Mock<IMapper>();
-
             _authService = new AuthService(_unitOfWorkMock.Object, _mapperMock.Object, _tokenServiceMock.Object);
         }
 
@@ -72,7 +70,7 @@ namespace Auth.API.Tests
             var dto = new LoginRequestDto { Email = "test@test.com", Password = "123456" };
             var user = new User {
                 Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("correctpassword")
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("incorrect-password")
             };
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByEmailAsync(dto.Email, default))
@@ -91,15 +89,12 @@ namespace Auth.API.Tests
                 Email = dto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456")
             };
-
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByEmailAsync(dto.Email, default))
                 .ReturnsAsync(user);
-
             _tokenServiceMock
                 .Setup(e => e.GenerateAccessToken(user))
                 .Returns("access-token");
-
             _tokenServiceMock
                 .Setup(e => e.GenerateRefreshToken())
                 .Returns("refresh-token");
