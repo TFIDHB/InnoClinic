@@ -7,7 +7,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Testcontainers.MsSql;
 
-namespace Auth.API.Tests
+namespace Auth.API.Tests.Integration_Tests
 {
     public class AuthControllerIntegrationTests : IAsyncLifetime
     {

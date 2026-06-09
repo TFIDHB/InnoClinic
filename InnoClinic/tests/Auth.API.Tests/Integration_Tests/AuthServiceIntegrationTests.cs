@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Testcontainers.MsSql;
 
-namespace Auth.API.Tests
+namespace Auth.API.Tests.Integration_Tests
 {
     public class ServiceAssemblyResult
     {

@@ -4,7 +4,7 @@ using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.MsSql;
 
-namespace Auth.API.Tests
+namespace Auth.API.Tests.Integration_Tests
 {
     public class UserRepositoryIntegrationTests : IAsyncLifetime
     {
