@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
 
-namespace Auth.API.Tests
+namespace Auth.API.Tests.Unit
 {
     public class AuthControllerTests
     {
@@ -45,7 +45,7 @@ namespace Auth.API.Tests
         }
 
         [Fact]
-        public async Task Logout_WhenUserIsAuthorized_ReturnsUnauthorized() 
+        public async Task Logout_WhenUserIsUnauthorized_ReturnsUnauthorized() 
         {
             SetUserClaims(null);
             var dto = new LogOutRequestDto { RefreshToken = "some-token" };
