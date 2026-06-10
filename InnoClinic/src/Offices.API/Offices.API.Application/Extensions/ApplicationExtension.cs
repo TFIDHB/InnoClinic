@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Extensions
@@ -10,6 +12,8 @@ namespace Application.Extensions
         {
             services.AddScoped<IOfficesService, OfficesService>();
             services.AddAutoMapper(AssemblyReference.Assembly);
+            services.AddFluentValidationAutoValidation();
+            services.AddValidatorsFromAssembly(AssemblyReference.Assembly);
             return services;
         }
     }

@@ -6,19 +6,9 @@ using Offices.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
-
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
-builder.Services.AddPresentation();
+builder.Services.AddPresentation(builder.Configuration);
 
 var app = builder.Build();
 
