@@ -1,10 +1,13 @@
 ﻿using Domain.Entities;
-using InnoClinic.Shared.Interfaces;
 
 namespace Application.Interfaces
 {
-    public interface IOfficesRepository : IRepository<Office, Guid>
+    public interface IOfficesRepository
     {
-        //future functionality according to US
+        Task<Office?> GetByIdAsync(Guid id, CancellationToken ct = default);
+        Task<IEnumerable<Office>> GetAllAsync(CancellationToken ct = default);
+        Task CreateAsync(Office office, CancellationToken ct = default);
+        Task UpdateAsync(Office office, CancellationToken ct = default);
+        Task DeleteAsync(Guid id, CancellationToken ct = default);
     }
 }

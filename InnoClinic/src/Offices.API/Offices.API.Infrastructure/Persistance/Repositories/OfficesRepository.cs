@@ -24,10 +24,5 @@ namespace Infrastructure.Persistance.Repositories
 
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
             => await _collection.DeleteOneAsync(x => x.Id == id, ct);
-
-        public Task<bool> AnyAsync(Expression<Func<Office, bool>> predicate, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

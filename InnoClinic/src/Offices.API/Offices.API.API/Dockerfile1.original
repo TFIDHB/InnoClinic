@@ -14,7 +14,6 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Offices.API/Offices.API.API/Offices.API.csproj", "src/Offices.API/Offices.API.API/"]
 COPY ["src/Shared/InnoClinic.Shared.csproj", "src/Shared/"]
-COPY ["src/Offices.API/Offices.API.Infrastructure/Infrastructure.csproj", "src/Offices.API/Offices.API.Infrastructure/"]
 COPY ["src/Offices.API/Offices.API.Application/Application.csproj", "src/Offices.API/Offices.API.Application/"]
 COPY ["src/Offices.API/Offices.API.Domain/Domain.csproj", "src/Offices.API/Offices.API.Domain/"]
 RUN dotnet restore "./src/Offices.API/Offices.API.API/Offices.API.csproj"

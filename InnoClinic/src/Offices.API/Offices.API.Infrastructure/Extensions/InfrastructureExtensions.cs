@@ -11,7 +11,6 @@ namespace Infrastructure.Extensions
         {
             services.AddSingleton<OfficesDbContext>();
             services.AddScoped<IOfficesRepository, OfficesRepository>();
-            services.AddScoped<IOfficesUnitOfWork, OfficesUnitOfWork>();
             return services;
         }
     }

@@ -1,0 +1,24 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: offices_mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  offices.api:
+    image: ${DOCKER_REGISTRY-}officesapi
+    build:
+      context: .
+      dockerfile: src/Offices.API/Offices.API.API/Dockerfile
+    ports:
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__OfficesConnection=mongodb://mongodb:27017
+    depends_on:
+     - mongodb
+
+volumes:
+  mongo_data:
