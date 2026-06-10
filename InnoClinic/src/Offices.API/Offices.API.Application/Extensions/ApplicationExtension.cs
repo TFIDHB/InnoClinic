@@ -6,8 +6,8 @@ namespace Application.Extensions
 {
     public static class ApplicationExtension
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services) {
-
+        public static IServiceCollection AddApplication(this IServiceCollection services) 
+        {
             services.AddScoped<IOfficesService, OfficesService>();
             services.AddAutoMapper(AssemblyReference.Assembly);
             return services;

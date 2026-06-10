@@ -14,7 +14,6 @@ namespace Application.Services
         public async Task<OfficeDto> CreateAsync(CreateOfficeRequestDto dto, CancellationToken ct = default)
         {
             var office = _mapper.Map<Office>(dto);
-            office.Id = Guid.NewGuid();
 
             await _officesRepository.CreateAsync(office, ct);
             return _mapper.Map<OfficeDto>(office);

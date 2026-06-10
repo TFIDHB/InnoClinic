@@ -6,7 +6,7 @@ namespace Application.AutoMapper
 {
     public class OfficesMapper : Profile
     {
-        public OfficesMapper() 
+        public OfficesMapper()
         {
             CreateMap<CreateOfficeRequestDto, Office>()
                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom(_ => true));
