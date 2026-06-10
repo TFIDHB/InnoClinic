@@ -10,9 +10,8 @@ using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Testcontainers.MsSql;
 
-namespace Auth.API.Tests.Integration_Tests
+namespace Auth.API.Tests.Integration
 {
     public class ServiceAssemblyResult
     {
@@ -20,39 +19,16 @@ namespace Auth.API.Tests.Integration_Tests
         public AuthService AuthService { get; set; }
     }
 
+    [Collection("SqlCollection")]
     public class AuthServiceIntegrationTests : IAsyncLifetime
     {
-        private readonly MsSqlContainer _sqlContainer;
-        private DbContextOptions<AuthDbContext> _contextOptions;
-        private AuthDbContext _dbContext;
-        private AuthService _authService;
-        private IMapper _mapper;
-        private TokenService _tokenService;
+        private readonly SqlContainerFixture _fixture;
+        private readonly IMapper _mapper;
+        private readonly TokenService _tokenService;
 
-        public AuthServiceIntegrationTests()
+        public AuthServiceIntegrationTests(SqlContainerFixture fixture)
         {
-            _sqlContainer = new MsSqlBuilder()
-                .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-                .Build();
-        }
-
-        public async Task InitializeAsync()
-        {
-            await _sqlContainer.StartAsync();
-
-            _contextOptions = new DbContextOptionsBuilder<AuthDbContext>()
-                .UseSqlServer(_sqlContainer.GetConnectionString())
-                .Options;
-
-            _dbContext = new AuthDbContext(_contextOptions);
-            await _dbContext.Database.MigrateAsync();
-
-            var userRepository = new UserRepository(_dbContext);
-
-            var services = new ServiceCollection();
-            services.AddScoped<IUserRepository>(_ => userRepository);
-            var serviceProvider = services.BuildServiceProvider();
-            var unitOfWork = new AuthUnitOfWork(_dbContext, serviceProvider);
+            _fixture = fixture;
 
             _mapper = new MapperConfiguration(cfg => cfg.AddProfile<UserMapper>()).CreateMapper();
 
@@ -64,13 +40,11 @@ namespace Auth.API.Tests.Integration_Tests
                 ExpirationMinutes = 5
             });
             _tokenService = new TokenService(jwtSettings);
-
-            _authService = new AuthService(unitOfWork, _mapper, _tokenService);
         }
 
         private ServiceAssemblyResult CreateServiceContext()
         {
-            var dbContext = new AuthDbContext(_contextOptions);
+            var dbContext = new AuthDbContext(_fixture.ContextOptions);
             var userRepository = new UserRepository(dbContext);
 
             var services = new ServiceCollection();
@@ -87,23 +61,17 @@ namespace Auth.API.Tests.Integration_Tests
             };
         }
 
-        public async Task DisposeAsync()
-        {
-            await _dbContext.DisposeAsync();
-            await _sqlContainer.DisposeAsync();
-        }
-
         [Fact]
         public async Task RegisterAsync_WhenEmailIsNew_AddUserToDatabase()
         {
+            var assembly = CreateServiceContext();
             var email = "test@test.com";
-            var password = "123456";
-            var dto = new RegisterRequestDto { Email = email, Password = password };
+            var dto = new RegisterRequestDto { Email = email, Password = "123456" };
 
-            await _authService.RegisterAsync(dto);
+            await assembly.AuthService.RegisterAsync(dto);
 
-            _dbContext.ChangeTracker.Clear();
-            var user = await _dbContext.Users.FirstOrDefaultAsync(e => e.Email == email);
+            assembly.DbContext.ChangeTracker.Clear();
+            var user = await assembly.DbContext.Users.FirstOrDefaultAsync(e => e.Email == email);
             Assert.NotNull(user);
         }
 
@@ -112,8 +80,7 @@ namespace Auth.API.Tests.Integration_Tests
         {
             var assembly = CreateServiceContext();
             var email = "duplicate@test.com";
-            var password = "123456";
-            var dto = new RegisterRequestDto { Email = email, Password = password };
+            var dto = new RegisterRequestDto { Email = email, Password = "123456" };
 
             await assembly.AuthService.RegisterAsync(dto);
 
@@ -145,9 +112,7 @@ namespace Auth.API.Tests.Integration_Tests
         public async Task LoginAsync_WhenUserDoesNotExist_ThrowsUserNotFoundException()
         {
             var assembly = CreateServiceContext();
-            var email = "doesnotexist@test.com";
-            var password = "123456";
-            var loginDto = new LoginRequestDto { Email = email, Password = password };
+            var loginDto = new LoginRequestDto { Email = "doesnotexist@test.com", Password = "123456" };
 
             await Assert.ThrowsAsync<UserNotFoundException>(async () =>
             {
@@ -160,12 +125,10 @@ namespace Auth.API.Tests.Integration_Tests
         {
             var assembly = CreateServiceContext();
             var email = "wrongpassword@test.com";
-            var correctPassword = "123456";
-            var wrongPassword = "wrongPassword";
 
-            var registerDto = new RegisterRequestDto { Email = email, Password = correctPassword };
+            var registerDto = new RegisterRequestDto { Email = email, Password = "123456" };
             await assembly.AuthService.RegisterAsync(registerDto);
-            var loginDto = new LoginRequestDto { Email = email, Password = wrongPassword };
+            var loginDto = new LoginRequestDto { Email = email, Password = "wrongPassword" };
 
             await Assert.ThrowsAsync<InvalidPasswordException>(async () =>
             {
@@ -184,16 +147,14 @@ namespace Auth.API.Tests.Integration_Tests
             await assembly.AuthService.RegisterAsync(registerDto);
             var loginDto = new LoginRequestDto { Email = email, Password = password };
             var tokens = await assembly.AuthService.LoginAsync(loginDto);
-            int userId;
             assembly.DbContext.ChangeTracker.Clear();
             var user = await assembly.DbContext.Users.FirstAsync(u => u.Email == email);
-            userId = user.Id;
             var logoutDto = new LogOutRequestDto { RefreshToken = tokens.RefreshToken };
 
-            await assembly.AuthService.LogoutAsync(logoutDto, userId);
+            await assembly.AuthService.LogoutAsync(logoutDto, user.Id);
 
             assembly.DbContext.ChangeTracker.Clear();
-            var userAfterLogout = await assembly.DbContext.Users.FirstAsync(u => u.Id == userId);
+            var userAfterLogout = await assembly.DbContext.Users.FirstAsync(u => u.Id == user.Id);
             Assert.Null(userAfterLogout.RefreshToken);
             Assert.Null(userAfterLogout.RefreshTokenExpiry);
         }
@@ -202,8 +163,7 @@ namespace Auth.API.Tests.Integration_Tests
         public async Task LogoutAsync_WhenUserDoesNotExist_ThrowsUserNotFoundException()
         {
             var assembly = CreateServiceContext();
-            var fakeToken = "some-token";
-            var logoutDto = new LogOutRequestDto { RefreshToken = fakeToken };
+            var logoutDto = new LogOutRequestDto { RefreshToken = "some-token" };
 
             await Assert.ThrowsAsync<UserNotFoundException>(async () =>
             {
@@ -217,22 +177,27 @@ namespace Auth.API.Tests.Integration_Tests
             var assembly = CreateServiceContext();
             var email = "invalidtoken@test.com";
             var password = "123456";
-            var invalidToken = "wrong-token";
 
             var registerDto = new RegisterRequestDto { Email = email, Password = password };
             await assembly.AuthService.RegisterAsync(registerDto);
             var loginDto = new LoginRequestDto { Email = email, Password = password };
             await assembly.AuthService.LoginAsync(loginDto);
-            int userId;
+
             assembly.DbContext.ChangeTracker.Clear();
             var user = await assembly.DbContext.Users.FirstAsync(u => u.Email == email);
-            userId = user.Id;
-            var logoutDto = new LogOutRequestDto { RefreshToken = invalidToken };
+            var logoutDto = new LogOutRequestDto { RefreshToken = "wrong-token" };
 
             await Assert.ThrowsAsync<InvalidTokenException>(async () =>
             {
-                await assembly.AuthService.LogoutAsync(logoutDto, userId);
+                await assembly.AuthService.LogoutAsync(logoutDto, user.Id);
             });
         }
+        public async Task InitializeAsync()
+        {
+            using var context = new AuthDbContext(_fixture.ContextOptions);
+            context.Users.RemoveRange(context.Users);
+            await context.SaveChangesAsync();
+        }
+        public Task DisposeAsync() => Task.CompletedTask;
     }
 }

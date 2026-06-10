@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Security.Claims;
 
-namespace Auth.API.Tests.Unit_Tests
+namespace Auth.API.Tests.Unit
 {
     public class AuthControllerTests
     {

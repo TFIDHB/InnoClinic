@@ -1,41 +1,23 @@
 ﻿using DAL;
 using DAL.Entities;
 using DAL.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Testcontainers.MsSql;
 
-namespace Auth.API.Tests.Integration_Tests
+namespace Auth.API.Tests.Integration
 {
+    [Collection("SqlCollection")]
     public class UserRepositoryIntegrationTests : IAsyncLifetime
     {
-        private readonly MsSqlContainer _sqlContainer;
-        private DbContextOptions<AuthDbContext> _contextOptions;
-        public UserRepositoryIntegrationTests()
+        private readonly SqlContainerFixture _fixture;
+
+        public UserRepositoryIntegrationTests(SqlContainerFixture fixture)
         {
-            _sqlContainer = new MsSqlBuilder()
-                .WithImage("mcr.microsoft.com/mssql/server:2022-latest")
-                .Build();
-        }
-        public async Task DisposeAsync()
-        {
-            await _sqlContainer.DisposeAsync();
+            _fixture = fixture;
         }
 
-        public async Task InitializeAsync()
-        {
-            await _sqlContainer.StartAsync();
-
-            _contextOptions = new DbContextOptionsBuilder<AuthDbContext>()
-                .UseSqlServer(_sqlContainer.GetConnectionString())
-                .Options;
-
-            using var context = new AuthDbContext(_contextOptions);
-            await context.Database.MigrateAsync();
-        }
-        private AuthDbContext CreateContext() => new(_contextOptions);
+        private AuthDbContext CreateContext() => new(_fixture.ContextOptions);
 
         [Fact]
-        public async Task ExistsByEmailAsync_WhenEmailExists_ReturnsTrue() 
+        public async Task ExistsByEmailAsync_WhenEmailExists_ReturnsTrue()
         {
             var email = "exists@test.com";
             using (var context = CreateContext())
@@ -47,15 +29,13 @@ namespace Auth.API.Tests.Integration_Tests
             using (var context = CreateContext())
             {
                 var repository = new UserRepository(context);
-
                 var result = await repository.ExistsByEmailAsync(email);
-
                 Assert.True(result);
             }
         }
 
         [Fact]
-        public async Task ExistsByEmailAsync_WhenEmailDoesNotExist_ReturnsFalse() 
+        public async Task ExistsByEmailAsync_WhenEmailDoesNotExist_ReturnsFalse()
         {
             using var context = CreateContext();
             var repository = new UserRepository(context);
@@ -66,8 +46,8 @@ namespace Auth.API.Tests.Integration_Tests
         }
 
         [Fact]
-        public async Task GetByEmailAsync_WhenEmailExists_ReturnsUser() 
-        { 
+        public async Task GetByEmailAsync_WhenEmailExists_ReturnsUser()
+        {
             var email = "getbyemail@test.com";
             var expectedUser = new User { Email = email, PasswordHash = "passwordHash" };
             using (var context = CreateContext())
@@ -79,9 +59,7 @@ namespace Auth.API.Tests.Integration_Tests
             using (var context = CreateContext())
             {
                 var repository = new UserRepository(context);
-
                 var actualUser = await repository.GetByEmailAsync(email);
-
                 Assert.NotNull(actualUser);
                 Assert.Equal(expectedUser.Email, actualUser.Email);
                 Assert.Equal(expectedUser.PasswordHash, actualUser.PasswordHash);
@@ -89,7 +67,7 @@ namespace Auth.API.Tests.Integration_Tests
         }
 
         [Fact]
-        public async Task GetByEmailAsync_WhenEmailDoesNotExist_ReturnsNull() 
+        public async Task GetByEmailAsync_WhenEmailDoesNotExist_ReturnsNull()
         {
             using var context = CreateContext();
             var repository = new UserRepository(context);
@@ -100,11 +78,10 @@ namespace Auth.API.Tests.Integration_Tests
         }
 
         [Fact]
-        public async Task GetByRefreshTokenAsync_WhenTokenExists_ReturnsUser() 
+        public async Task GetByRefreshTokenAsync_WhenTokenExists_ReturnsUser()
         {
             var refreshToken = "valid-refresh-token";
             var expectedUser = new User { Email = "owner@test.com", PasswordHash = "passwordHash", RefreshToken = refreshToken };
-
             using (var context = CreateContext())
             {
                 await context.Users.AddAsync(expectedUser);
@@ -114,9 +91,7 @@ namespace Auth.API.Tests.Integration_Tests
             using (var context = CreateContext())
             {
                 var repository = new UserRepository(context);
-
                 var actualUser = await repository.GetByRefreshTokenAsync(refreshToken);
-
                 Assert.NotNull(actualUser);
                 Assert.Equal(expectedUser.Email, actualUser.Email);
                 Assert.Equal(refreshToken, actualUser.RefreshToken);
@@ -124,7 +99,7 @@ namespace Auth.API.Tests.Integration_Tests
         }
 
         [Fact]
-        public async Task GetByRefreshTokenAsync_WhenTokenDoesNotExist_ReturnsNull() 
+        public async Task GetByRefreshTokenAsync_WhenTokenDoesNotExist_ReturnsNull()
         {
             using var context = CreateContext();
             var repository = new UserRepository(context);
@@ -133,5 +108,12 @@ namespace Auth.API.Tests.Integration_Tests
 
             Assert.Null(result);
         }
+        public async Task InitializeAsync()
+        {
+            using var context = new AuthDbContext(_fixture.ContextOptions);
+            context.Users.RemoveRange(context.Users);
+            await context.SaveChangesAsync();
+        }
+        public Task DisposeAsync() => Task.CompletedTask;
     }
 }

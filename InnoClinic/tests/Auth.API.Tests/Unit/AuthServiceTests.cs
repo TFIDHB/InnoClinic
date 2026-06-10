@@ -7,7 +7,7 @@ using DAL.Entities;
 using DAL.Interfaces;
 using Moq;
 
-namespace Auth.API.Tests.Unit_Tests
+namespace Auth.API.Tests.Unit
 {
     public class AuthServiceTests
     {
