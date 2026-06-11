@@ -10,6 +10,7 @@ namespace Services.API.Controllers
     public class ServicesController(IServicesService servicesService) : ControllerBase
     {
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ServiceDto>> GetService(Guid id, CancellationToken ct = default)
@@ -19,6 +20,7 @@ namespace Services.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IEnumerable<ServiceDto>>> GetAllServices(CancellationToken ct = default) 
         {
@@ -27,6 +29,7 @@ namespace Services.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<ServiceDto>> CreateService([FromBody] CreateServiceRequestDto dto, CancellationToken ct = default)
@@ -36,6 +39,7 @@ namespace Services.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -46,13 +50,14 @@ namespace Services.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ServiceDto>> DeleteService(Guid id, CancellationToken ct = default)
+        public async Task<ActionResult> DeleteService(Guid id, CancellationToken ct = default)
         {
             await servicesService.DeleteAsync(id, ct);
-            return Ok();
+            return NoContent();
         }
     }
 }

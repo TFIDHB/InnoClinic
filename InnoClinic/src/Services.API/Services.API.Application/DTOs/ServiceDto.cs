@@ -1,7 +1,4 @@
-﻿using Domain.Entities;
-using Domain.Enums;
-
-namespace Application.DTOs
+﻿namespace Application.DTOs
 {
     public class ServiceDto
     {
@@ -9,6 +6,6 @@ namespace Application.DTOs
         public string Name { get; set; }
         public double Price { get; set; }
         public Guid ServiceCategoryId { get; set; }
-        public ServiceStatus Status { get; set; }
+        public bool IsActive { get; set; }
     }
 }

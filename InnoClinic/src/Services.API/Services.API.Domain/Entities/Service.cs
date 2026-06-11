@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class Service
     {
@@ -9,6 +7,8 @@ namespace Domain.Entities
         public double Price { get; set; }
         public Guid ServiceCategoryId { get; set; }
         public ServiceCategory ServiceCategory { get; set; }
-        public ServiceStatus Status { get; set; }
+        public Guid SpecializationId { get; set; }
+        public Specialization Specialization { get; set; }
+        public bool IsActive { get; set; }
     }
 }
