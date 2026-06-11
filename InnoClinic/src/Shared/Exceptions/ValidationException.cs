@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace InnoClinic.Shared.Exceptions
+﻿namespace InnoClinic.Shared.Exceptions
 {
     public class ValidationException : BadRequestException
     {

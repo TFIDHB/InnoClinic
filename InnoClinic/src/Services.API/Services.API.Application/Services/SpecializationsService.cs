@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
@@ -13,6 +14,19 @@ namespace Application.Services
             var specialization = mapper.Map<Specialization>(dto);
 
             var services = await unitOfWork.ServicesRepository.GetByIdsAsync(dto.ServiceIds, ct);
+
+            if (services.Count() != dto.ServiceIds.Count())
+            {
+                var missingIds = dto.ServiceIds.Where(id => !services.Any(e => e.Id == id));
+                throw new ServicesNotFoundException(string.Join(", ", missingIds));
+            }
+
+            var inactiveService = services.FirstOrDefault(e => !e.IsActive);
+            if (inactiveService != null) 
+            {
+                throw new InactiveServiceLinkException(inactiveService.Id);
+            }
+
             specialization.Services = services.ToList();
 
             await unitOfWork.SpecializationsRepository.CreateAsync(specialization, ct);
@@ -31,7 +45,7 @@ namespace Application.Services
 
         public async Task<IEnumerable<SpecializationDto>> GetAllAsync(CancellationToken ct = default)
         {
-            var specializations = await unitOfWork.SpecializationsRepository.GetAllAsync(ct);
+            var specializations = await unitOfWork.SpecializationsRepository.GetAllWithServicesAsync(ct);
             return mapper.Map<IEnumerable<SpecializationDto>>(specializations);
         }
 
@@ -49,22 +63,48 @@ namespace Application.Services
 
             mapper.Map(dto, specialization);
 
-            var services = await unitOfWork.ServicesRepository.GetByIdsAsync(dto.ServiceIds, ct);
+            var services = (await unitOfWork.ServicesRepository.GetByIdsAsync(dto.ServiceIds, ct));
+
+            if (services.Count() != dto.ServiceIds.Count())
+            {
+                var missingIds = dto.ServiceIds.Where(id => !services.Any(e => e.Id == id));
+                throw new ServicesNotFoundException(string.Join(", ", missingIds));
+            }
+
             specialization.Services = services.ToList();
+
+            if (specialization.IsActive == false)
+            {
+                foreach (var service in specialization.Services)
+                {
+                    service.IsActive = false;
+                }
+            }
 
             await unitOfWork.SpecializationsRepository.UpdateAsync(specialization, ct);
             await unitOfWork.SaveChangesAsync(ct);
+
             return mapper.Map<SpecializationDto>(specialization);
         }
 
         public async Task<SpecializationDto> UpdateStatusAsync(Guid id, UpdateSpecializationStatusRequestDto dto, CancellationToken ct = default)
         {
-            var specialization = await unitOfWork.SpecializationsRepository.GetByIdAsync(id, ct)
+            var specialization = await unitOfWork.SpecializationsRepository.GetByIdWithServicesAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Specialization));
 
             mapper.Map(dto, specialization);
+
+            if (specialization.IsActive == false)
+            {
+                foreach (var service in specialization.Services)
+                {
+                    service.IsActive = false;
+                }
+            }
+
             await unitOfWork.SpecializationsRepository.UpdateAsync(specialization, ct);
             await unitOfWork.SaveChangesAsync(ct);
+
             return mapper.Map<SpecializationDto>(specialization);
         }
     }

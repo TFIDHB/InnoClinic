@@ -7,6 +7,7 @@
 
         /// <example>a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1</example>
         public Guid ServiceCategoryId { get; set; }
+        public Guid SpecializationId { get; set; }
         public bool IsActive { get; set; }
     }
 }
