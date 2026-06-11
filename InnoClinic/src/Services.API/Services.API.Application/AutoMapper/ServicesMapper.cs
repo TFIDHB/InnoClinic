@@ -12,6 +12,7 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => true));
 
             CreateMap<UpdateServiceRequestDto, Service>();
+            CreateMap<UpdateServiceStatusRequestDto, Service>();
             CreateMap<Service, ServiceDto>();
 
             CreateMap<CreateSpecializationRequestDto, Specialization>()

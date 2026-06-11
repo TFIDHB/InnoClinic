@@ -58,6 +58,18 @@ namespace Application.Services
             return mapper.Map<ServiceDto>(service);
         }
 
+        public async Task<ServiceDto> UpdateStatusAsync(Guid id, UpdateServiceStatusRequestDto dto, CancellationToken ct = default)
+        {
+            var service = await unitOfWork.ServicesRepository.GetByIdAsync(id, ct)
+                ?? throw new NotFoundException(nameof(Service));
+
+            mapper.Map(dto, service);
+            await unitOfWork.ServicesRepository.UpdateAsync(service, ct);
+            await unitOfWork.SaveChangesAsync(ct);
+
+            return mapper.Map<ServiceDto>(service);
+        }
+
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
         {
             var service = await unitOfWork.ServicesRepository.GetByIdAsync(id, ct)

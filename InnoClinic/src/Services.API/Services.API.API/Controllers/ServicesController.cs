@@ -49,6 +49,17 @@ namespace Services.API.Controllers
             return Ok(result);
         }
 
+        [HttpPatch("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ServiceDto>> UpdateServiceStatus(Guid id, [FromBody] UpdateServiceStatusRequestDto dto, CancellationToken ct = default)
+        {
+            var result = await servicesService.UpdateStatusAsync(id, dto, ct);
+            return Ok(result);
+        }
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
