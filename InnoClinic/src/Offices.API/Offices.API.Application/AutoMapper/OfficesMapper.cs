@@ -12,6 +12,7 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom(_ => true));
 
             CreateMap<UpdateOfficeRequestDto, Office>();
+            CreateMap<UpdateOfficeStatusRequestDto, Office>();
             CreateMap<Office, OfficeDto>();
         }
     }
