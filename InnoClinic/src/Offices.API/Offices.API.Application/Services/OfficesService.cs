@@ -43,6 +43,16 @@ namespace Application.Services
             return _mapper.Map<OfficeDto>(office);
         }
 
+        public async Task<OfficeDto> UpdateStatusAsync(Guid id, UpdateOfficeStatusRequestDto dto, CancellationToken ct = default)
+        {
+            var office = await _officesRepository.GetByIdAsync(id, ct)
+                ?? throw new NotFoundException(nameof(Office));
+
+            _mapper.Map(dto, office);
+            await _officesRepository.UpdateAsync(office, ct);
+            return _mapper.Map<OfficeDto>(office);
+        }
+
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
         {
             var office = await _officesRepository.GetByIdAsync(id, ct)
