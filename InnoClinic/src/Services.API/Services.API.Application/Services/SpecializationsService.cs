@@ -12,7 +12,6 @@ namespace Application.Services
         public async Task<SpecializationDto> CreateAsync(CreateSpecializationRequestDto dto, CancellationToken ct = default)
         {
             var specialization = mapper.Map<Specialization>(dto);
-
             var services = await unitOfWork.ServicesRepository.GetByIdsAsync(dto.ServiceIds, ct);
 
             if (services.Count() != dto.ServiceIds.Count())
@@ -62,7 +61,6 @@ namespace Application.Services
                 ?? throw new NotFoundException(nameof(Specialization));
 
             mapper.Map(dto, specialization);
-
             var services = (await unitOfWork.ServicesRepository.GetByIdsAsync(dto.ServiceIds, ct));
 
             if (services.Count() != dto.ServiceIds.Count())
