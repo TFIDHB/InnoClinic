@@ -12,7 +12,7 @@ namespace Application.Validators
 
             RuleFor(x => x.ServiceIds)
                 .NotNull()
-                .Must(ids => ids != null && ids.Any()).WithMessage("Table of services must contain minimum 1 row.");
+                .Must(ids => ids != null && ids.Any()).WithMessage(ServiceMessages.MinimumOneRowMessage);
 
             RuleForEach(x => x.ServiceIds)
                 .NotEmpty();

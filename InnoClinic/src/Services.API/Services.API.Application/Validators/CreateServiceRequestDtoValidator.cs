@@ -11,7 +11,7 @@ namespace Application.Validators
                 .NotEmpty();
 
             RuleFor(x => x.Price)
-                .GreaterThan(0).WithMessage("Price must be greater than 0.");
+                .GreaterThan(0).WithMessage(ServiceMessages.InvalidPriceMessage);
 
             RuleFor(x => x.ServiceCategoryId)
                 .NotEmpty();

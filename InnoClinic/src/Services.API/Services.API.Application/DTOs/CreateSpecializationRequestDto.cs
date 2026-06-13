@@ -3,7 +3,6 @@
     public class CreateSpecializationRequestDto
     {
         public string Name { get; set; }
-        public bool IsActive { get; set; }
-        public IEnumerable<Guid> ServiceIds { get; set; }
+        public IReadOnlyList<Guid> ServiceIds { get; set; }
     }
 }

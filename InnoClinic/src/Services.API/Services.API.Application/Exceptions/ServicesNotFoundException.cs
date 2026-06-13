@@ -4,6 +4,6 @@ namespace Application.Exceptions
 {
     public class ServicesNotFoundException : NotFoundException
     {
-        public ServicesNotFoundException(string missingIds) : base($"Services with IDs ({missingIds})") { }
+        public ServicesNotFoundException(string missingIds) : base(string.Format(ServiceMessages.ServicesNotFoundMessage, missingIds)) { }
     }
 }

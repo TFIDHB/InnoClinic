@@ -5,6 +5,6 @@ namespace Application.Exceptions
 {
     public class InactiveServiceLinkException : BadRequestException
     {
-        public InactiveServiceLinkException(Guid serviceId) : base($"Cannot link inactive service with ID {serviceId}.") { }
+        public InactiveServiceLinkException(Guid serviceId) : base(string.Format(ServiceMessages.InactiveServiceMessage, serviceId)) { }
     }
 }
