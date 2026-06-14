@@ -15,9 +15,6 @@ namespace Application.Validators
 
             RuleFor(x => x.ServiceCategoryId)
                 .NotEmpty();
-
-            RuleFor(x => x.SpecializationId)
-                .NotEmpty();
         }
     }
 }

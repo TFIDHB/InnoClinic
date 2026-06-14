@@ -10,8 +10,12 @@ namespace Application.Services
     {
         public async Task<ServiceDto> CreateAsync(CreateServiceRequestDto dto, CancellationToken ct = default)
         {
-            var specialization = await unitOfWork.SpecializationsRepository.GetByIdAsync(dto.SpecializationId, ct)
-                ?? throw new NotFoundException(nameof(Specialization));
+            if (dto.SpecializationId.HasValue) 
+            {
+                var specialization = await unitOfWork.SpecializationsRepository.GetByIdAsync(dto.SpecializationId.Value, ct)
+                    ?? throw new NotFoundException(nameof(Specialization));
+            }
+
             var categoryExists = await unitOfWork.ServicesRepository.CategoryExistsAsync(dto.ServiceCategoryId, ct);
             if (!categoryExists)
             {
@@ -43,8 +47,13 @@ namespace Application.Services
         {
             var service = await unitOfWork.ServicesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Service));
-            var specialization = await unitOfWork.SpecializationsRepository.GetByIdAsync(dto.SpecializationId, ct)
-                ?? throw new NotFoundException(nameof(Specialization));
+
+            if (dto.SpecializationId.HasValue) 
+            {
+                var specialization = await unitOfWork.SpecializationsRepository.GetByIdAsync(dto.SpecializationId.Value, ct)
+                    ?? throw new NotFoundException(nameof(Specialization));
+            }
+
             var categoryExists = await unitOfWork.ServicesRepository.CategoryExistsAsync(dto.ServiceCategoryId, ct);
             if (!categoryExists)
             {
