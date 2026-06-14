@@ -9,17 +9,22 @@ namespace Infrastructure.Extensions
 {
     public static class InfrastructureExtension
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection service, IConfiguration configuration)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            service.AddDbContext<ServicesDbContext>(options =>
+            services.AddDbContext<ServicesDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("ServicesConnection"));
             });
 
-            service.AddScoped<IServicesUnitOfWork, ServicesUnitOfWork>();
-            service.AddScoped<IServicesRepository, ServicesRepository>();
-            service.AddScoped<ISpecializationsRepository, SpecializationsRepository>();
-            return service;
+            services.AddHttpClient<IAppointmentsClient, AppointmentsClient>(client =>
+            {
+                client.BaseAddress = new Uri(configuration["AppointmentsApi:BaseUrl"]!);
+            });
+
+            services.AddScoped<IServicesUnitOfWork, ServicesUnitOfWork>();
+            services.AddScoped<IServicesRepository, ServicesRepository>();
+            services.AddScoped<ISpecializationsRepository, SpecializationsRepository>();
+            return services;
         }
     }
 }

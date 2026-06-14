@@ -13,11 +13,5 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(a => a.Date == date && (doctorId == null || a.DoctorId == doctorId))
                 .ToListAsync(ct);
         }
-        public async Task<IEnumerable<Appointment>> GetByDateRangeAndDoctorAsync(DateOnly from, DateOnly to, Guid? doctorId, CancellationToken ct = default)
-        {
-            return await context.Appointments
-                .Where(a => a.Date >= from && a.Date <= to && (doctorId == null || a.DoctorId == doctorId))
-                .ToListAsync(ct);
-        }
     }
 }

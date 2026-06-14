@@ -15,8 +15,5 @@ namespace Application.DTOs
 
         /// <example>14:30</example>
         public TimeOnly Time { get; set; }
-
-        /// <example>1</example>
-        public ServiceType ServiceType { get; set; }
     }
 }
