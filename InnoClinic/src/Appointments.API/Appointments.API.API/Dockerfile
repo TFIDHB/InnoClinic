@@ -1,30 +1,27 @@
-# See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
 
-
-# This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["InnoClinic.Appointments/InnoClinic.Appointments.csproj", "InnoClinic.Appointments/"]
-RUN dotnet restore "./InnoClinic.Appointments/InnoClinic.Appointments.csproj"
+COPY ["src/Appointments.API/Appointments.API.API/InnoClinic.Appointments.API.csproj", "src/Appointments.API/Appointments.API.API/"]
+COPY ["src/Appointments.API/Appointments.API.Application/Application.csproj", "src/Appointments.API/Appointments.API.Application/"]
+COPY ["src/Appointments.API/Appointments.API.Domain/Domain.csproj", "src/Appointments.API/Appointments.API.Domain/"]
+COPY ["src/Appointments.API/Appointments.API.Infrastructure/Infrastructure.csproj", "src/Appointments.API/Appointments.API.Infrastructure/"]
+COPY ["src/Shared/InnoClinic.Shared.csproj", "src/Shared/"]
+RUN dotnet restore "./src/Appointments.API/Appointments.API.API/InnoClinic.Appointments.API.csproj"
 COPY . .
-WORKDIR "/src/InnoClinic.Appointments"
-RUN dotnet build "./InnoClinic.Appointments.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/src/Appointments.API/Appointments.API.API"
+RUN dotnet build "./InnoClinic.Appointments.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./InnoClinic.Appointments.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./InnoClinic.Appointments.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "InnoClinic.Appointments.dll"]
+ENTRYPOINT ["dotnet", "InnoClinic.Appointments.API.dll"]

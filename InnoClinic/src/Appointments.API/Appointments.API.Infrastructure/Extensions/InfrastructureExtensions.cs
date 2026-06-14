@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Configurations;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,7 @@ namespace Infrastructure.Extensions
 
             services.AddScoped<IAppointmentUnitOfWork, AppointmentUnitOfWork>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddHostedService<DatabaseMigrator>();
             return services;
         }
     }
