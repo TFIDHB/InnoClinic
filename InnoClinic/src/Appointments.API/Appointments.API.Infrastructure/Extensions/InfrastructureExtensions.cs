@@ -16,6 +16,11 @@ namespace Infrastructure.Extensions
                 options.UseNpgsql(configuration.GetConnectionString("AppointmentsConnection"));
             });
 
+            services.AddHttpClient<IServicesClient, ServicesClient>(client =>
+            {
+                client.BaseAddress = new Uri(configuration["ServicesApi:BaseUrl"]!);
+            });
+
             services.AddScoped<IAppointmentUnitOfWork, AppointmentUnitOfWork>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             return services;

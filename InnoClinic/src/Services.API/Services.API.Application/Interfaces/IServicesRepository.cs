@@ -7,5 +7,6 @@ namespace Application.Interfaces
     {
         Task<IEnumerable<Service>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default);
         Task<bool> CategoryExistsAsync(Guid categoryId, CancellationToken ct = default);
+        Task<int> GetTimeSlotSizeAsync(Guid serviceId, CancellationToken ct = default);
     }
 }

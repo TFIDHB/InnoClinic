@@ -18,6 +18,5 @@ namespace Application.DTOs
         public DateOnly Date { get; set; }
         public TimeOnly Time { get; set; }
         public AppointmentStatus Status { get; set; }
-        public ServiceType ServiceType { get; set; }
     }
 }

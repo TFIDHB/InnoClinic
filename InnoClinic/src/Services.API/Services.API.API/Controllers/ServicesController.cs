@@ -70,5 +70,14 @@ namespace Services.API.Controllers
             await servicesService.DeleteAsync(id, ct);
             return NoContent();
         }
+
+        [HttpGet("{id}/time-slot-size")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<int>> GetTimeSlotSize(Guid id, CancellationToken ct = default)
+        {
+            var result = await servicesService.GetTimeSlotSizeAsync(id, ct);
+            return Ok(result);
+        }
     }
 }
