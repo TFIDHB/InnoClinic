@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.DTOs
+﻿namespace Application.DTOs
 {
     public class UpdateServiceRequestDto
     {
@@ -9,6 +7,6 @@ namespace Application.DTOs
 
         /// <example>a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1</example>
         public Guid ServiceCategoryId { get; set; }
-        public ServiceStatus Status { get; set; }
+        public Guid SpecializationId { get; set; }
     }
 }

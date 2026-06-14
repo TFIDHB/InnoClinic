@@ -8,6 +8,7 @@ namespace Application.Interfaces
         Task<ServiceDto> GetByIdAsync(Guid id, CancellationToken ct = default);
         Task<IEnumerable<ServiceDto>> GetAllAsync(CancellationToken ct = default);
         Task<ServiceDto> UpdateAsync(Guid id, UpdateServiceRequestDto dto, CancellationToken ct = default);
+        Task<ServiceDto> UpdateStatusAsync(Guid id, UpdateServiceStatusRequestDto dto, CancellationToken ct = default);
         Task DeleteAsync(Guid id, CancellationToken ct = default);
     }
 }

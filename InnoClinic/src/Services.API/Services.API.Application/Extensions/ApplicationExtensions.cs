@@ -1,5 +1,7 @@
 ﻿using Application.Interfaces;
 using Application.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Extensions
@@ -9,7 +11,10 @@ namespace Application.Extensions
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<IServicesService, ServicesService>();
+            services.AddScoped<ISpecializationsService, SpecializationsService>();
             services.AddAutoMapper(AssemblyReference.Assembly);
+            services.AddFluentValidationAutoValidation();
+            services.AddValidatorsFromAssembly(AssemblyReference.Assembly);
             return services;
         }
     }

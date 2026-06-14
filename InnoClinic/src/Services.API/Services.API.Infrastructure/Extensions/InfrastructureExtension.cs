@@ -18,6 +18,7 @@ namespace Infrastructure.Extensions
 
             service.AddScoped<IServicesUnitOfWork, ServicesUnitOfWork>();
             service.AddScoped<IServicesRepository, ServicesRepository>();
+            service.AddScoped<ISpecializationsRepository, SpecializationsRepository>();
             return service;
         }
     }

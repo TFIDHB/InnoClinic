@@ -17,7 +17,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(e => e.ServiceCategoryId).IsRequired();
             builder.HasOne(e => e.ServiceCategory).WithMany().HasForeignKey(e => e.ServiceCategoryId);
 
-            builder.Property(e => e.Status).IsRequired().HasConversion<string>();
+            builder.Property(e => e.IsActive).IsRequired();
         }
     }
 }

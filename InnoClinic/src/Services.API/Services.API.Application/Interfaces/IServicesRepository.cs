@@ -5,6 +5,7 @@ namespace Application.Interfaces
 {
     public interface IServicesRepository : IRepository<Service, Guid>
     {
-        //future functionality according to US
+        Task<IEnumerable<Service>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default);
+        Task<bool> CategoryExistsAsync(Guid categoryId, CancellationToken ct = default);
     }
 }
