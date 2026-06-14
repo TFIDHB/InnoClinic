@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Persistence;
+using Infrastructure.Persistence.Configurations;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +25,7 @@ namespace Infrastructure.Extensions
             services.AddScoped<IServicesUnitOfWork, ServicesUnitOfWork>();
             services.AddScoped<IServicesRepository, ServicesRepository>();
             services.AddScoped<ISpecializationsRepository, SpecializationsRepository>();
+            services.AddHostedService<DatabaseMigrator>();
             return services;
         }
     }

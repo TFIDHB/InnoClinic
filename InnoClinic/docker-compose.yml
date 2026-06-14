@@ -51,6 +51,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__ServicesConnection=${SERVICES_CONNECTION}
       - AppointmentsApi__BaseUrl=http://innoclinic.appointments.api:8080
+    labels:
+      com.microsoft.visualstudio.containers.tools.customuiclasses: "Blazor"
     depends_on:
       - sqlserver
 
@@ -65,6 +67,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__AppointmentsConnection=${APPOINTMENTS_CONNECTION}
       - ServicesApi__BaseUrl=http://innoclinic.services.api:8080
+    labels:
+      com.microsoft.visualstudio.containers.tools.customuiclasses: "Blazor"
     depends_on:
       - postgres
 
