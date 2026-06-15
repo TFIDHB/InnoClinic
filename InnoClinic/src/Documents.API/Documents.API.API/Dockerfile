@@ -8,9 +8,9 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["src/Documents.API/Documents.API.API/InnoClinic.Documents.API.csproj", "src/Documents.API/Documents.API.API/"]
-COPY ["src/Documents.API/Documents.API.Application/Application.csproj", "src/Documents.API/Documents.API.Application/"]
-COPY ["src/Documents.API/Documents.API.Domain/Domain.csproj", "src/Documents.API/Documents.API.Domain/"]
-COPY ["src/Documents.API/Documents.API.Infrastructure/Infrastructure.csproj", "src/Documents.API/Documents.API.Infrastructure/"]
+COPY ["src/Documents.API/Documents.API.Application/Documents.API.Application.csproj", "src/Documents.API/Documents.API.Application/"]
+COPY ["src/Documents.API/Documents.API.Domain/Documents.API.Domain.csproj", "src/Documents.API/Documents.API.Domain/"]
+COPY ["src/Documents.API/Documents.API.Infrastructure/Documents.API.Infrastructure.csproj", "src/Documents.API/Documents.API.Infrastructure/"]
 COPY ["src/Shared/InnoClinic.Shared.csproj", "src/Shared/"]
 RUN dotnet restore "./src/Documents.API/Documents.API.API/InnoClinic.Documents.API.csproj"
 COPY . .

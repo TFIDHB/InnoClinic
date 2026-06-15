@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\InnoClinic.Shared.csproj" />
-    <ProjectReference Include="..\Documents.API.Infrastructure\Infrastructure.csproj" />
+    <ProjectReference Include="..\Documents.API.Infrastructure\Documents.API.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
