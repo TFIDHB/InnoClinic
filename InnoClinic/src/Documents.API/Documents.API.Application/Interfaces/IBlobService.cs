@@ -4,7 +4,8 @@ namespace Application.Interfaces
 {
     public interface IBlobService
     {
-        Task<string> UploadAsync(IFormFile file, string containerName, CancellationToken ct = default);
-        Task DeleteAsync(string fileUrl, string containerName, CancellationToken ct = default);
+        Task<string> UploadDocumentAsync(IFormFile file, CancellationToken ct = default);
+        Task<string> UploadPhotoAsync(IFormFile file, CancellationToken ct = default);
+        Task DeleteAsync(string fileUrl, CancellationToken ct = default);
     }
 }

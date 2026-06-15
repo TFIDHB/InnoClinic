@@ -8,14 +8,12 @@ namespace Application.Services
 {
     public class DocumentsService(IDocumentsUnitOfWork unitOfWork, IBlobService blobService, IMapper mapper) : IDocumentsService
     {
-        private const string _containerName = "documents";
-
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
         {
             var document = await unitOfWork.DocumentsRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Document));
 
-            await blobService.DeleteAsync(document.Url, _containerName, ct);
+            await blobService.DeleteAsync(document.Url, ct);
             await unitOfWork.DocumentsRepository.DeleteAsync(id, ct);
             await unitOfWork.SaveChangesAsync(ct);
         }
@@ -38,8 +36,8 @@ namespace Application.Services
             var document = await unitOfWork.DocumentsRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Document));
 
-            await blobService.DeleteAsync(document.Url, _containerName, ct);
-            var newUrl = await blobService.UploadAsync(dto.File, _containerName, ct);
+            await blobService.DeleteAsync(document.Url, ct);
+            var newUrl = await blobService.UploadDocumentAsync(dto.File, ct);
 
             document.Url = newUrl;
             document.ResultId = dto.ResultId;
@@ -51,7 +49,7 @@ namespace Application.Services
 
         public async Task<DocumentDto> UploadAsync(UploadDocumentRequestDto dto, CancellationToken ct = default)
         {
-            var url = await blobService.UploadAsync(dto.File, _containerName, ct);
+            var url = await blobService.UploadDocumentAsync(dto.File, ct);
             var document = new Document { Url = url, ResultId = dto.ResultId };
             await unitOfWork.DocumentsRepository.CreateAsync(document, ct);
             await unitOfWork.SaveChangesAsync(ct);

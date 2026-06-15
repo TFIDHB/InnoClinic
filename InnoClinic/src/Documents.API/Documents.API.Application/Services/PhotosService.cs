@@ -8,13 +8,11 @@ namespace Application.Services
 {
     public class PhotosService(IDocumentsUnitOfWork unitOfWork, IBlobService blobService, IMapper mapper) : IPhotosService
     {
-        private const string _containerName = "photos";
-
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
         {
             var photo = await unitOfWork.PhotosRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Photo));
-            await blobService.DeleteAsync(photo.Url, _containerName, ct);
+            await blobService.DeleteAsync(photo.Url, ct);
             await unitOfWork.PhotosRepository.DeleteAsync(id, ct);
             await unitOfWork.SaveChangesAsync(ct);
         }
@@ -37,8 +35,8 @@ namespace Application.Services
             var photo = await unitOfWork.PhotosRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Photo));
 
-            await blobService.DeleteAsync(photo.Url, _containerName, ct);
-            var newUrl = await blobService.UploadAsync(dto.File, _containerName, ct);
+            await blobService.DeleteAsync(photo.Url, ct);
+            var newUrl = await blobService.UploadPhotoAsync(dto.File, ct);
 
             photo.Url = newUrl;
             photo.Type = dto.Type;
@@ -50,7 +48,7 @@ namespace Application.Services
 
         public async Task<PhotoDto> UploadAsync(UploadPhotoRequestDto dto, CancellationToken ct = default)
         {
-            var url = await blobService.UploadAsync(dto.File, _containerName, ct);
+            var url = await blobService.UploadPhotoAsync(dto.File, ct);
             var photo = new Photo { Url = url, Type = dto.Type };
             await unitOfWork.PhotosRepository.CreateAsync(photo, ct);
             await unitOfWork.SaveChangesAsync(ct);
