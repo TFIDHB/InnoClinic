@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Documents.API.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("api/v1/documents")]
     public class DocumentsController(IDocumentsService documentsService) : ControllerBase
     {
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<DocumentDto>> GetDocument(Guid id, CancellationToken ct = default)
@@ -18,6 +20,7 @@ namespace Documents.API.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IEnumerable<DocumentDto>>> GetAllDocuments(CancellationToken ct = default)
         {
@@ -26,6 +29,7 @@ namespace Documents.API.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<DocumentDto>> UploadDocument([FromForm] UploadDocumentRequestDto dto, CancellationToken ct = default)
@@ -35,6 +39,7 @@ namespace Documents.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -45,13 +50,14 @@ namespace Documents.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteDocument(Guid id, CancellationToken ct = default)
         {
             await documentsService.DeleteAsync(id, ct);
-            return Ok();
+            return NoContent();
         }
     }
 }

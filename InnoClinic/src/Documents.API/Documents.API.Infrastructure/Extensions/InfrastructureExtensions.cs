@@ -2,6 +2,7 @@
 using Azure.Storage.Blobs;
 using Infrastructure.Blob;
 using Infrastructure.Persistance;
+using Infrastructure.Persistance.Configurations;
 using Infrastructure.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +25,7 @@ namespace Infrastructure.Extensions
             services.AddScoped<IPhotosRepository, PhotosRepository>();
             services.AddScoped<IDocumentsRepository, DocumentsRepository>();
             services.AddScoped<IDocumentsUnitOfWork, DocumentsUnitOfWork>();
-
+            services.AddHostedService<DatabaseMigrator>();
             return services;
         }
     }

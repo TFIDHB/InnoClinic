@@ -13,6 +13,7 @@ services:
       - "10000:10000"
     volumes:
       - azurite_data:/data
+    command: azurite-blob --blobHost 0.0.0.0 --blobPort 10000 --skipApiVersionCheck
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -56,8 +57,8 @@ services:
       - "5004:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DocumentsConnection=${DOCUMENTS_CONNECTION};
-      - AzureBlobStorage__ConnectionString=${DOCUMENTS_BLOB_CONNECTION};
+      - ConnectionStrings__DocumentsConnection=${DOCUMENTS_CONNECTION}
+      - ConnectionStrings__BlobStorage=${DOCUMENTS_BLOB_CONNECTION}
     depends_on:
       - azurite
       - sqlserver
