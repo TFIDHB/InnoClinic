@@ -18,4 +18,9 @@
     <Folder Include="Extensions\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\InnoClinic.Shared.csproj" />
+    <ProjectReference Include="..\Documents.API.Infrastructure\Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
