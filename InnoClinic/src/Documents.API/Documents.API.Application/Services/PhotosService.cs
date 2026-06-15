@@ -31,7 +31,7 @@ namespace Application.Services
             return mapper.Map<PhotoDto>(photo);
         }
 
-        public async Task<PhotoDto> UpdateAsync(Guid id, UploadPhotoRequestDto dto, CancellationToken ct = default)
+        public async Task<PhotoDto> UpdateAsync(Guid id, UpdatePhotoRequestDto dto, CancellationToken ct = default)
         {
             var photo = await unitOfWork.PhotosRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Photo));

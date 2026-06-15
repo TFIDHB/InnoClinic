@@ -33,7 +33,7 @@ namespace Application.Services
             return mapper.Map<DocumentDto>(document);
         }
 
-        public async Task<DocumentDto> UpdateAsync(Guid id, UploadDocumentRequestDto dto, CancellationToken ct = default)
+        public async Task<DocumentDto> UpdateAsync(Guid id, UpdateDocumentRequestDto dto, CancellationToken ct = default)
         {
             var document = await unitOfWork.DocumentsRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Document));
