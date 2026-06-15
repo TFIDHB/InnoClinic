@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Documents.API.Controllers
 {
     //[Authorize]
-    [Route("api/v1/photos")]
     [ApiController]
+    [Route("api/v1/photos")]
     public class PhotosController(IPhotosService photosService) : ControllerBase
     {
         [HttpGet("{id}")]
