@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Infrastructure.Persistance.Configurations
+namespace Infrastructure.Persistance.Migrators
 {
     public class DatabaseMigrator(IServiceProvider serviceProvider) : IHostedService
     {

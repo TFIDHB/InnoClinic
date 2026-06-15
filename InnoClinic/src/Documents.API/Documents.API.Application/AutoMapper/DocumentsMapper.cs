@@ -6,7 +6,7 @@ namespace Application.AutoMapper
 {
     public class DocumentsMapper : Profile
     {
-        public DocumentsMapper() 
+        public DocumentsMapper()
         {
             CreateMap<Photo, PhotoDto>();
             CreateMap<Document, DocumentDto>();

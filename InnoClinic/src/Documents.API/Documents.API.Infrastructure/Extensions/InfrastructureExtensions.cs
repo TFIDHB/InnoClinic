@@ -2,7 +2,7 @@
 using Azure.Storage.Blobs;
 using Infrastructure.Blob;
 using Infrastructure.Persistance;
-using Infrastructure.Persistance.Configurations;
+using Infrastructure.Persistance.Migrators;
 using Infrastructure.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
