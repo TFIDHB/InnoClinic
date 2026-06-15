@@ -63,9 +63,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.API.Tests", "tests\Aut
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{81DDED9D-158B-E303-5F62-77A2896D2A5A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents.API", "Documents.API", "{EDCD0DDE-2474-4C17-B6D5-9AA919CA1230}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{EDCD0DDE-2474-4C17-B6D5-9AA919CA1230}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.API", "src\Documents.API\Documents.API.API\Documents.API.csproj", "{1C63178F-7ED5-9C99-7E3C-F77F3A3EB9E6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InnoClinic.Documents.API", "src\Documents.API\Documents.API.API\InnoClinic.Documents.API.csproj", "{1C63178F-7ED5-9C99-7E3C-F77F3A3EB9E6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "src\Documents.API\Documents.API.Domain\Domain.csproj", "{E8FCA739-3F32-2EB8-8C0A-7984B740ADF6}"
 EndProject

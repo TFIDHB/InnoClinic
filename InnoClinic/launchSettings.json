@@ -4,7 +4,8 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "offices.api": "StartDebugging"
+        "offices.api": "StartDebugging",
+        "innoclinic.documents.api": "StartDebugging"
       }
     }
   }
