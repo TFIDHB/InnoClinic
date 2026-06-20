@@ -87,6 +87,7 @@ namespace Application.Services
             await unitOfWork.ServicesRepository.DeleteAsync(id, ct);
             await unitOfWork.SaveChangesAsync(ct);
         }
+
         public async Task<IEnumerable<TimeOnly>> GetAvailableSlotsAsync(GetAvailableSlotsRequestDto dto, CancellationToken ct = default)
         {
             var timeSlotSize = await unitOfWork.ServicesRepository.GetTimeSlotSizeAsync(dto.ServiceId, ct);
@@ -98,6 +99,7 @@ namespace Application.Services
                     .Select(i => slot.AddMinutes(i * 10))
                     .All(s => !busySlots.Contains(s)));
         }
+
         public async Task<IEnumerable<DateOnly>> GetAvailableDatesAsync(GetAvailableDatesRequestDto dto, CancellationToken ct = default)
         {
             var timeSlotSize = await unitOfWork.ServicesRepository.GetTimeSlotSizeAsync(dto.ServiceId, ct);
@@ -116,6 +118,7 @@ namespace Application.Services
 
             return result;
         }
+
         public async Task<int> GetTimeSlotSizeAsync(Guid serviceId, CancellationToken ct = default)
         {
             var timeSlotSize = await unitOfWork.ServicesRepository.GetTimeSlotSizeAsync(serviceId, ct);
@@ -123,6 +126,7 @@ namespace Application.Services
                 throw new NotFoundException(nameof(Service));
             return timeSlotSize;
         }
+
         private bool HasFreeSlot(IEnumerable<TimeOnly> allSlots, HashSet<TimeOnly> busySlots, int requiredSlots)
             => allSlots.Any(slot => Enumerable
                 .Range(0, requiredSlots)

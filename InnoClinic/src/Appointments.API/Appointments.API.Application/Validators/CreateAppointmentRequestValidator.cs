@@ -19,11 +19,11 @@ namespace Application.Validators
             RuleFor(x => x.Date)
                 .NotEmpty()
                 .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
-                .WithMessage("Appointment date cannot be in the past");
+                .WithMessage(Messages.AppointmentInPastMessage);
             RuleFor(x => x.Time)
                 .NotEmpty()
                 .Must(time => time.Hour is >= 8 and <= 19)
-                .WithMessage("Appointment time must be between 08:00 and 20:00");
+                .WithMessage(Messages.AppointmentBetweenMessage);
         }
     }
 }

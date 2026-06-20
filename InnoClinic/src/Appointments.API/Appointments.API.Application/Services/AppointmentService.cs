@@ -16,6 +16,7 @@ namespace Application.Services
 
             return mapper.Map<AppointmentResponseDto>(appointment);
         }
+
         public async Task<AppointmentResponseDto> CreateAsync(CreateAppointmentRequestDto dto, CancellationToken ct = default)
         {
             var timeSlotSize = await servicesClient.GetTimeSlotSizeAsync(dto.ServiceId, ct);
@@ -40,6 +41,7 @@ namespace Application.Services
 
             return mapper.Map<AppointmentResponseDto>(appointment);
         }
+
         public async Task<IEnumerable<AppointmentSlotDto>> GetSlotsByDateAndDoctorAsync(DateOnly date, Guid? doctorId, CancellationToken ct = default)
         {
             var appointments = await unitOfWork.AppointmentRepository.GetByDateAndDoctorAsync(date, doctorId, ct);
