@@ -6,8 +6,14 @@ using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
 {
-    public class ServicesService(IServicesUnitOfWork unitOfWork, IMapper mapper, IAppointmentsClient appointmentsClient) : IServicesService
+    public class ServicesService(
+        IServicesUnitOfWork unitOfWork,
+        IMapper mapper,
+        IAppointmentsClient appointmentsClient) : IServicesService
     {
+        private const int SlotGranularityMinutes = 10;
+        private const int StartTime = 8;
+        private const int EndTime = 20;
         public async Task<ServiceDto> CreateAsync(CreateServiceRequestDto dto, CancellationToken ct = default)
         {
             if (dto.SpecializationId.HasValue)
@@ -133,23 +139,23 @@ namespace Application.Services
         private bool HasFreeSlot(IEnumerable<TimeOnly> allSlots, HashSet<TimeOnly> busySlots, int requiredSlots)
             => allSlots.Any(slot => Enumerable
                 .Range(0, requiredSlots)
-                .All(j => !busySlots.Contains(slot.AddMinutes(j * 10))));
+                .All(j => !busySlots.Contains(slot.AddMinutes(j * SlotGranularityMinutes))));
 
         private static HashSet<TimeOnly> GetBusySlots(IEnumerable<AppointmentSlotDto> appointments)
             => appointments
                 .SelectMany(a => Enumerable
-                    .Range(0, (int)a.Duration.TotalMinutes / 10)
-                    .Select(i => a.Time.AddMinutes(i * 10)))
+                    .Range(0, (int)a.Duration.TotalMinutes / SlotGranularityMinutes)
+                    .Select(i => a.Time.AddMinutes(i * SlotGranularityMinutes)))
                 .ToHashSet();
 
         private static IEnumerable<TimeOnly> GenerateAllSlots(int requiredSlots)
         {
-            var slot = new TimeOnly(8, 0);
-            var end = new TimeOnly(20, 0).AddMinutes(-(requiredSlots - 1) * 10);
+            var slot = new TimeOnly(StartTime, 0);
+            var end = new TimeOnly(EndTime, 0).AddMinutes(-(requiredSlots - 1) * SlotGranularityMinutes);
             while (slot < end)
             {
                 yield return slot;
-                slot = slot.AddMinutes(10);
+                slot = slot.AddMinutes(SlotGranularityMinutes);
             }
         }
     }

@@ -7,7 +7,10 @@ using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
 {
-    public class AppointmentService(IAppointmentUnitOfWork unitOfWork, IMapper mapper, IServicesClient servicesClient) : IAppointmentService
+    public class AppointmentService(
+        IAppointmentUnitOfWork unitOfWork,
+        IMapper mapper,
+        IServicesClient servicesClient) : IAppointmentService
     {
         public async Task<AppointmentResponseDto> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
