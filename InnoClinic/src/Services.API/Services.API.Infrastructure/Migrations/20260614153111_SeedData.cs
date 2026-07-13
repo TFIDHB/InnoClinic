@@ -19,6 +19,10 @@ namespace Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            var scriptPath = Path.Combine(AppContext.BaseDirectory, "Scripts", "ServiceCategorySeedData_Down.sql");
+            var sql = File.ReadAllText(scriptPath);
+
+            migrationBuilder.Sql(sql);
         }
     }
 }

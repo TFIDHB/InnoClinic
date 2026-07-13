@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
+﻿using Documents.API.Domain.Entities;
 using InnoClinic.Shared.Interfaces;
 
-namespace Application.Interfaces
+namespace Documents.API.Application.Interfaces
 {
     public interface IPhotosRepository : IRepository<Photo, Guid>
     {

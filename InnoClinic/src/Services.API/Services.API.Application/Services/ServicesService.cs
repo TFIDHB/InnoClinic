@@ -104,13 +104,16 @@ namespace Application.Services
         {
             var timeSlotSize = await unitOfWork.ServicesRepository.GetTimeSlotSizeAsync(dto.ServiceId, ct);
             var today = DateOnly.FromDateTime(DateTime.Today);
+            var startDate = today;
+            var endDate = today.AddDays(29);
             var result = new List<DateOnly>();
             var allSlots = GenerateAllSlots(timeSlotSize).ToList();
+            var allAppointments = await appointmentsClient.GetAppointmentsRangeAsync(startDate, endDate, dto.DoctorId, ct);
 
             for (int i = 0; i < 30; i++)
             {
                 var date = today.AddDays(i);
-                var appointments = await appointmentsClient.GetAppointmentsAsync(date, dto.DoctorId, ct);
+                var appointments = allAppointments.Where(e => e.Date == date);
                 var busySlots = GetBusySlots(appointments);
                 if (HasFreeSlot(allSlots, busySlots, timeSlotSize))
                     result.Add(date);

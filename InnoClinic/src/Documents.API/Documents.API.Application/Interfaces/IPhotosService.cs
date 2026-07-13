@@ -1,6 +1,6 @@
-﻿using Application.DTOs;
+﻿using Documents.API.Application.DTOs;
 
-namespace Application.Interfaces
+namespace Documents.API.Application.Interfaces
 {
     public interface IPhotosService
     {

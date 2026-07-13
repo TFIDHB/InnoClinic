@@ -1,6 +1,6 @@
-﻿using Domain.Enums;
+﻿using Documents.API.Domain.Enums;
 
-namespace Domain.Entities
+namespace Documents.API.Domain.Entities
 {
     public class Photo
     {

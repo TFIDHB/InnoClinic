@@ -42,9 +42,22 @@ namespace Application.Services
             return mapper.Map<AppointmentResponseDto>(appointment);
         }
 
-        public async Task<IEnumerable<AppointmentSlotDto>> GetSlotsByDateAndDoctorAsync(DateOnly date, Guid? doctorId, CancellationToken ct = default)
+        public async Task<IEnumerable<AppointmentSlotDto>> GetSlotsByDateAndDoctorAsync(
+            DateOnly date,
+            Guid? doctorId,
+            CancellationToken ct = default)
         {
             var appointments = await unitOfWork.AppointmentRepository.GetByDateAndDoctorAsync(date, doctorId, ct);
+            return mapper.Map<IEnumerable<AppointmentSlotDto>>(appointments);
+        }
+
+        public async Task<IEnumerable<AppointmentSlotDto>> GetSlotsByDateRangeAndDoctorAsync(
+            DateOnly startDate,
+            DateOnly endDate,
+            Guid? doctorId,
+            CancellationToken ct = default)
+        {
+            var appointments = await unitOfWork.AppointmentRepository.GetByDateRangeAndDoctorAsync(startDate, endDate, doctorId, ct);
             return mapper.Map<IEnumerable<AppointmentSlotDto>>(appointments);
         }
     }

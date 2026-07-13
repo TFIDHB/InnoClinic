@@ -1,10 +1,12 @@
 ﻿using Application.Interfaces;
+using Infrastructure.Options;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Configurations;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Extensions
 {
@@ -17,9 +19,12 @@ namespace Infrastructure.Extensions
                 options.UseSqlServer(configuration.GetConnectionString("ServicesConnection"));
             });
 
-            services.AddHttpClient<IAppointmentsClient, AppointmentsClient>(client =>
+            services.Configure<AppointmentsApiOptions>(configuration.GetSection("AppointmentsApi"));
+
+            services.AddHttpClient<IAppointmentsClient, AppointmentsClient>((sp, client) =>
             {
-                client.BaseAddress = new Uri(configuration["AppointmentsApi:BaseUrl"]!);
+                var options = sp.GetRequiredService<IOptions<AppointmentsApiOptions>>().Value;
+                client.BaseAddress = new Uri(options.BaseUrl);
             });
 
             services.AddScoped<IServicesUnitOfWork, ServicesUnitOfWork>();

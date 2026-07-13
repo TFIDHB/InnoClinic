@@ -1,4 +1,4 @@
-﻿namespace Domain.Entities
+﻿namespace Documents.API.Domain.Entities
 {
     public class Document
     {

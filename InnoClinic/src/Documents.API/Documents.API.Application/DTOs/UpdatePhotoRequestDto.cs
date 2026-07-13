@@ -1,7 +1,7 @@
-﻿using Domain.Enums;
+﻿using Documents.API.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
-namespace Application.DTOs
+namespace Documents.API.Application.DTOs
 {
     public class UpdatePhotoRequestDto
     {

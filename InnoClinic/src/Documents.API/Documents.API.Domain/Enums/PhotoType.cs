@@ -1,4 +1,4 @@
-﻿namespace Domain.Enums
+﻿namespace Documents.API.Domain.Enums
 {
     public enum PhotoType
     {

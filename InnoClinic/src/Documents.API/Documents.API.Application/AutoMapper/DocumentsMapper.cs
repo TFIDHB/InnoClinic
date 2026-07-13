@@ -1,8 +1,8 @@
-﻿using Application.DTOs;
-using AutoMapper;
-using Domain.Entities;
+﻿using AutoMapper;
+using Documents.API.Application.DTOs;
+using Documents.API.Domain.Entities;
 
-namespace Application.AutoMapper
+namespace Documents.API.Application.AutoMapper
 {
     public class DocumentsMapper : Profile
     {

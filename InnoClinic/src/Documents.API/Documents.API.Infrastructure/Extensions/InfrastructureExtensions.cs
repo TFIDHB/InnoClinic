@@ -1,14 +1,14 @@
-﻿using Application.Interfaces;
-using Azure.Storage.Blobs;
-using Infrastructure.Blob;
-using Infrastructure.Persistance;
-using Infrastructure.Persistance.Migrators;
-using Infrastructure.Persistance.Repositories;
+﻿using Azure.Storage.Blobs;
+using Documents.API.Application.Interfaces;
+using Documents.API.Infrastructure.Blob;
+using Documents.API.Infrastructure.Persistance;
+using Documents.API.Infrastructure.Persistance.Migrators;
+using Documents.API.Infrastructure.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Extensions
+namespace Documents.API.Infrastructure.Extensions
 {
     public static class InfrastructureExtensions
     {

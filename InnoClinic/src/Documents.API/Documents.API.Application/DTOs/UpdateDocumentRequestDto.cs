@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Application.DTOs
+namespace Documents.API.Application.DTOs
 {
     public class UpdateDocumentRequestDto
     {

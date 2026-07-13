@@ -1,7 +1,8 @@
-﻿using Application.Interfaces;
+﻿using Documents.API.Application.Interfaces;
+using Documents.API.Infrastructure.Persistance;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Persistance.Repositories
+namespace Documents.API.Infrastructure.Persistance.Repositories
 {
     public class DocumentsUnitOfWork(DocumentsDbContext context, IServiceProvider provider) : IDocumentsUnitOfWork, IDisposable
     {

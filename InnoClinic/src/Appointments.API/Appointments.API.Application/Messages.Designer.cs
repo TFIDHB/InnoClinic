@@ -61,7 +61,7 @@ namespace Application {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Appointment time must be between 08:00 and 20:00.
+        ///   Looks up a localized string similar to Appointment time must be between {0} and {1}.
         /// </summary>
         public static string AppointmentBetweenMessage {
             get {

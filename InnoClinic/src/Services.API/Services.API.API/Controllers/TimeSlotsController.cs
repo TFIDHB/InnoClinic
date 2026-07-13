@@ -11,7 +11,11 @@ namespace InnoClinic.Services.API.Controllers
         [HttpGet("slots")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<TimeOnly>>> GetAvailableSlots([FromQuery] GetAvailableSlotsRequestDto dto, CancellationToken ct = default)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<TimeOnly>>> GetAvailableSlots(
+            [FromQuery] GetAvailableSlotsRequestDto dto,
+            CancellationToken ct = default)
         {
             var result = await servicesService.GetAvailableSlotsAsync(dto, ct);
             return Ok(result);
@@ -20,7 +24,11 @@ namespace InnoClinic.Services.API.Controllers
         [HttpGet("dates")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<DateOnly>>> GetAvailableDates([FromQuery] GetAvailableDatesRequestDto dto, CancellationToken ct = default)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<DateOnly>>> GetAvailableDates(
+            [FromQuery] GetAvailableDatesRequestDto dto,
+            CancellationToken ct = default)
         {
             var result = await servicesService.GetAvailableDatesAsync(dto, ct);
             return Ok(result);

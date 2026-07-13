@@ -1,6 +1,6 @@
-﻿using Domain.Enums;
+﻿using Documents.API.Domain.Enums;
 
-namespace Application.DTOs
+namespace Documents.API.Application.DTOs
 {
     public class PhotoDto
     {

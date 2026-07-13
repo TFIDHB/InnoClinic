@@ -1,8 +1,8 @@
-﻿using Domain.Entities;
+﻿using Documents.API.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistance.Configurations
+namespace Documents.API.Infrastructure.Persistance.Configurations
 {
     public class PhotoConfiguration : IEntityTypeConfiguration<Photo>
     {

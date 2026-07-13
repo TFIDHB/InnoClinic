@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Documents.API.Infrastructure.Persistance;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Infrastructure.Persistance.Migrators
+namespace Documents.API.Infrastructure.Persistance.Migrators
 {
     public class DatabaseMigrator(IServiceProvider serviceProvider) : IHostedService
     {

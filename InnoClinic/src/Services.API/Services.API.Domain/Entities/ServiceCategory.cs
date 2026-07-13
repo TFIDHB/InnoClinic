@@ -2,8 +2,8 @@
 {
     public class ServiceCategory
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public int TimeSlotSize { get; set; }
+        public required Guid Id { get; set; }
+        public required string Name { get; set; }
+        public required int TimeSlotSize { get; set; }
     }
 }

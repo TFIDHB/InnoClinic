@@ -1,8 +1,9 @@
-﻿using Application.Interfaces;
-using Application.Services;
+﻿using Documents.API.Application;
+using Documents.API.Application.Interfaces;
+using Documents.API.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Application.Extensions
+namespace Documents.API.Application.Extensions
 {
     public static class ApplicationExtensions
     {

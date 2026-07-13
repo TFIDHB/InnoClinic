@@ -1,6 +1,6 @@
 ﻿using InnoClinic.Shared.Extensions;
 
-namespace Documents.API.Extensions
+namespace InnoClinic.Documents.API.Extensions
 {
     public static class PresentationExtensions
     {
