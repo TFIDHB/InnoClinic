@@ -35,7 +35,7 @@ namespace InnoClinic.Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<SpecializationDto>> CreateSpecialization(
-            [FromBody] CreateSpecializationRequestDto dto, 
+            [FromBody] CreateSpecializationRequestDto dto,
             CancellationToken ct = default)
         {
             var result = await specializationsService.CreateAsync(dto, ct);

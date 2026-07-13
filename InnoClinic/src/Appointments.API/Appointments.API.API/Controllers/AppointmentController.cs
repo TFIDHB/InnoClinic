@@ -25,7 +25,7 @@ namespace InnoClinic.Appointments.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<AppointmentResponseDto>> CreateAppointment(
-            [FromBody] CreateAppointmentRequestDto dto, 
+            [FromBody] CreateAppointmentRequestDto dto,
             CancellationToken ct = default)
         {
             var result = await appointmentService.CreateAsync(dto, ct);
@@ -37,8 +37,8 @@ namespace InnoClinic.Appointments.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<AppointmentSlotDto>>> GetAppointmentSlots(
-            [FromQuery] DateOnly date, 
-            [FromQuery] Guid? doctorId, 
+            [FromQuery] DateOnly date,
+            [FromQuery] Guid? doctorId,
             CancellationToken ct = default)
         {
             var result = await appointmentService.GetSlotsByDateAndDoctorAsync(date, doctorId, ct);
@@ -50,9 +50,9 @@ namespace InnoClinic.Appointments.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> GetAppointmentsByRange(
-            [FromQuery] DateOnly startDate, 
-            [FromQuery] DateOnly endDate, 
-            [FromQuery] Guid? doctorId, 
+            [FromQuery] DateOnly startDate,
+            [FromQuery] DateOnly endDate,
+            [FromQuery] Guid? doctorId,
             CancellationToken ct = default)
         {
             var result = await appointmentService.GetSlotsByDateRangeAndDoctorAsync(startDate, endDate, doctorId, ct);

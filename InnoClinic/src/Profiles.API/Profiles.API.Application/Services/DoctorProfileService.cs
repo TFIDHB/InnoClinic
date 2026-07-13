@@ -3,7 +3,6 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using InnoClinic.Shared.Exceptions;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.Services
 {
@@ -22,7 +21,7 @@ namespace Application.Services
         {
             var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(DoctorProfile));
-            
+
             await unitOfWork.DoctorProfilesRepository.DeleteAsync(id, ct);
             await unitOfWork.SaveChangesAsync(ct);
         }

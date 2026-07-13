@@ -53,7 +53,7 @@ namespace Auth.API.Tests.Unit
         }
 
         [Fact]
-        public async Task LoginAsync_WhenUserNotFound_ThrowsUserNotFoundException() 
+        public async Task LoginAsync_WhenUserNotFound_ThrowsUserNotFoundException()
         {
             var dto = new LoginRequestDto { Email = "test@test.com", Password = "123456" };
             _unitOfWorkMock
@@ -65,10 +65,11 @@ namespace Auth.API.Tests.Unit
         }
 
         [Fact]
-        public async Task LoginAsync_WhenPasswordIsIncorrect_ThrowsInvalidPasswordException() 
+        public async Task LoginAsync_WhenPasswordIsIncorrect_ThrowsInvalidPasswordException()
         {
             var dto = new LoginRequestDto { Email = "test@test.com", Password = "123456" };
-            var user = new User {
+            var user = new User
+            {
                 Email = dto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("incorrect-password")
             };
@@ -76,12 +77,12 @@ namespace Auth.API.Tests.Unit
                 .Setup(e => e.UserRepository.GetByEmailAsync(dto.Email, default))
                 .ReturnsAsync(user);
 
-            await Assert.ThrowsAsync <InvalidPasswordException> (
+            await Assert.ThrowsAsync<InvalidPasswordException>(
                 async () => await _authService.LoginAsync(dto));
         }
 
         [Fact]
-        public async Task LoginAsync_WhenCredentialsAreValid_ReturnsAuthTokenDto() 
+        public async Task LoginAsync_WhenCredentialsAreValid_ReturnsAuthTokenDto()
         {
             var dto = new LoginRequestDto { Email = "test@test.com", Password = "123456" };
             var user = new User
@@ -107,7 +108,7 @@ namespace Auth.API.Tests.Unit
         }
 
         [Fact]
-        public async Task LogoutAsync_WhenUserNotFound_ThrowsUserNotFoundException() 
+        public async Task LogoutAsync_WhenUserNotFound_ThrowsUserNotFoundException()
         {
             var dto = new LogOutRequestDto { RefreshToken = "some-token" };
             var userId = 1;
@@ -120,7 +121,7 @@ namespace Auth.API.Tests.Unit
         }
 
         [Fact]
-        public async Task LogoutAsync_WhenTokenIsInvalid_ThrowsTokenIsInvalidException() 
+        public async Task LogoutAsync_WhenTokenIsInvalid_ThrowsTokenIsInvalidException()
         {
             var dto = new LogOutRequestDto { RefreshToken = "wrong-token" };
             var userId = 1;
@@ -133,7 +134,7 @@ namespace Auth.API.Tests.Unit
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
                 .ReturnsAsync(user);
 
-            await Assert.ThrowsAsync <InvalidTokenException> (
+            await Assert.ThrowsAsync<InvalidTokenException>(
                 async () => await _authService.LogoutAsync(dto, userId));
         }
 
@@ -157,7 +158,7 @@ namespace Auth.API.Tests.Unit
         }
 
         [Fact]
-        public async Task LogoutAsync_WhenTokenIsValid_ClearsRefreshToken() 
+        public async Task LogoutAsync_WhenTokenIsValid_ClearsRefreshToken()
         {
             var dto = new LogOutRequestDto { RefreshToken = "correct-token" };
             var userId = 1;

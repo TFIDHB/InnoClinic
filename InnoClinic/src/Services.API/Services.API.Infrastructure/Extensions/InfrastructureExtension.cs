@@ -1,8 +1,8 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Options;
 using Infrastructure.Persistence;
-using Infrastructure.Persistence.Configurations;
 using Infrastructure.Persistence.Repositories;
+using InnoClinic.Shared.Migrators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +30,7 @@ namespace Infrastructure.Extensions
             services.AddScoped<IServicesUnitOfWork, ServicesUnitOfWork>();
             services.AddScoped<IServicesRepository, ServicesRepository>();
             services.AddScoped<ISpecializationsRepository, SpecializationsRepository>();
-            services.AddHostedService<DatabaseMigrator>();
+            services.AddHostedService<DatabaseMigrator<ServicesDbContext>>();
             return services;
         }
     }

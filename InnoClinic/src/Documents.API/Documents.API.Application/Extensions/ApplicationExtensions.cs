@@ -1,5 +1,4 @@
-﻿using Documents.API.Application;
-using Documents.API.Application.Interfaces;
+﻿using Documents.API.Application.Interfaces;
 using Documents.API.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 

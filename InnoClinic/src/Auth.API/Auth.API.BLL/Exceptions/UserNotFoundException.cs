@@ -1,5 +1,4 @@
 ﻿using InnoClinic.Shared.Exceptions;
-using System.Net;
 
 namespace BLL.Exceptions
 {

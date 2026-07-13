@@ -1,7 +1,7 @@
 ﻿using BLL.Settings;
-using InnoClinic.Shared.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using InnoClinic.Shared.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;

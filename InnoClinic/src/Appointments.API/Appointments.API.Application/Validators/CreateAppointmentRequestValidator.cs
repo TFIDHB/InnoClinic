@@ -7,7 +7,7 @@ namespace Application.Validators
 {
     public class CreateAppointmentRequestValidator : AbstractValidator<CreateAppointmentRequestDto>
     {
-        public CreateAppointmentRequestValidator(IOptions<WorkingHoursOptions> workingHoursOpt) 
+        public CreateAppointmentRequestValidator(IOptions<WorkingHoursOptions> workingHoursOpt)
         {
             var workingHours = workingHoursOpt.Value;
 

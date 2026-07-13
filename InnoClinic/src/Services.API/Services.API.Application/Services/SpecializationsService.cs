@@ -21,7 +21,7 @@ namespace Application.Services
             }
 
             var inactiveService = services.FirstOrDefault(e => !e.IsActive);
-            if (inactiveService != null) 
+            if (inactiveService != null)
             {
                 throw new InactiveServiceLinkException(inactiveService.Id);
             }
