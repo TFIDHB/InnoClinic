@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Domain.Entities;
 using InnoClinic.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 
