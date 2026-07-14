@@ -36,11 +36,12 @@ namespace InnoClinic.Auth.API.Controllers
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null) {
+            if (userId == null)
+            {
                 return Unauthorized();
             }
 
-            await _authService.LogoutAsync(dto, int.Parse(userId)); 
+            await _authService.LogoutAsync(dto, int.Parse(userId));
             return Ok();
         }
     }

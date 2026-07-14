@@ -67,11 +67,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents.API", "Documents.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InnoClinic.Documents.API", "src\Documents.API\Documents.API.API\InnoClinic.Documents.API.csproj", "{1C63178F-7ED5-9C99-7E3C-F77F3A3EB9E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.API.Domain", "src\Documents.API\Documents.API.Domain\Documents.API.Domain.csproj", "{E8FCA739-3F32-2EB8-8C0A-7984B740ADF6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InnoClinic.Documents.API.Domain", "src\Documents.API\Documents.API.Domain\InnoClinic.Documents.API.Domain.csproj", "{E8FCA739-3F32-2EB8-8C0A-7984B740ADF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.API.Infrastructure", "src\Documents.API\Documents.API.Infrastructure\Documents.API.Infrastructure.csproj", "{C1097987-DBE9-90CA-6B40-B4199CA8B8E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InnoClinic.Documents.API.Infrastructure", "src\Documents.API\Documents.API.Infrastructure\InnoClinic.Documents.API.Infrastructure.csproj", "{C1097987-DBE9-90CA-6B40-B4199CA8B8E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documents.API.Application", "src\Documents.API\Documents.API.Application\Documents.API.Application.csproj", "{D03BEAD7-7570-759D-9B54-377814A3CEB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InnoClinic.Documents.API.Application", "src\Documents.API\Documents.API.Application\InnoClinic.Documents.API.Application.csproj", "{D03BEAD7-7570-759D-9B54-377814A3CEB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

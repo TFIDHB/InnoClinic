@@ -1,8 +1,8 @@
-﻿using Application.DTOs;
-using Application.Interfaces;
+﻿using InnoClinic.Documents.API.Application.DTOs;
+using InnoClinic.Documents.API.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Documents.API.Controllers
+namespace InnoClinic.Documents.API.Controllers
 {
     //[Authorize]
     [ApiController]

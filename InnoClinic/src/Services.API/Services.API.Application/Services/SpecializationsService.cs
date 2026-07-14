@@ -7,7 +7,9 @@ using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
 {
-    public class SpecializationsService(IServicesUnitOfWork unitOfWork, IMapper mapper) : ISpecializationsService
+    public class SpecializationsService(
+        IServicesUnitOfWork unitOfWork,
+        IMapper mapper) : ISpecializationsService
     {
         public async Task<SpecializationDto> CreateAsync(CreateSpecializationRequestDto dto, CancellationToken ct = default)
         {
@@ -21,7 +23,7 @@ namespace Application.Services
             }
 
             var inactiveService = services.FirstOrDefault(e => !e.IsActive);
-            if (inactiveService != null) 
+            if (inactiveService != null)
             {
                 throw new InactiveServiceLinkException(inactiveService.Id);
             }

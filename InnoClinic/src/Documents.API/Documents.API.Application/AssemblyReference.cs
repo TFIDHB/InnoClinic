@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace Application
+namespace InnoClinic.Documents.API.Application
 {
     public static class AssemblyReference
     {

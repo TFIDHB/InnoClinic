@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppointmentBetweenMessage" xml:space="preserve">
+    <value>Appointment time must be between {0} and {1}</value>
+  </data>
+  <data name="AppointmentInPastMessage" xml:space="preserve">
+    <value>Appointment date cannot be in the past</value>
+  </data>
   <data name="InactiveEntityMessage" xml:space="preserve">
     <value>{0} is not active or not available.</value>
   </data>

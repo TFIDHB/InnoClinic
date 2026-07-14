@@ -1,11 +1,16 @@
 ﻿using Application.DTOs;
+using Application.Options;
 using FluentValidation;
+using Microsoft.Extensions.Options;
 
 namespace Application.Validators
 {
     public class CreateAppointmentRequestValidator : AbstractValidator<CreateAppointmentRequestDto>
     {
-        public CreateAppointmentRequestValidator() {
+        public CreateAppointmentRequestValidator(IOptions<WorkingHoursOptions> workingHoursOpt)
+        {
+            var workingHours = workingHoursOpt.Value;
+
             RuleFor(x => x.PatientId)
                 .NotEmpty();
             RuleFor(x => x.SpecializationId)
@@ -19,11 +24,11 @@ namespace Application.Validators
             RuleFor(x => x.Date)
                 .NotEmpty()
                 .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
-                .WithMessage("Appointment date cannot be in the past");
+                .WithMessage(Messages.AppointmentInPastMessage);
             RuleFor(x => x.Time)
                 .NotEmpty()
-                .Must(time => time.Hour is >= 8 and <= 19)
-                .WithMessage("Appointment time must be between 08:00 and 20:00");
+                .Must(time => time >= workingHours.Start && time < workingHours.End)
+                .WithMessage(string.Format(Messages.AppointmentBetweenMessage, workingHours.Start, workingHours.End));
         }
     }
 }

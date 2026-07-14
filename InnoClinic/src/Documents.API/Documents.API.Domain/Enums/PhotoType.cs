@@ -1,4 +1,4 @@
-﻿namespace Domain.Enums
+﻿namespace InnoClinic.Documents.API.Domain.Enums
 {
     public enum PhotoType
     {

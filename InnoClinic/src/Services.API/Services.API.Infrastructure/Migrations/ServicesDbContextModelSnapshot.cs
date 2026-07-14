@@ -42,7 +42,7 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ServiceCategoryId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("SpecializationId")
+                    b.Property<Guid?>("SpecializationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
@@ -64,26 +64,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("TimeSlotSize")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("ServiceCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"),
-                            Name = "Analyses"
-                        },
-                        new
-                        {
-                            Id = new Guid("a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2"),
-                            Name = "Consultation"
-                        },
-                        new
-                        {
-                            Id = new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3"),
-                            Name = "Diagnostics"
-                        });
                 });
 
             modelBuilder.Entity("Domain.Entities.Specialization", b =>
@@ -115,9 +101,7 @@ namespace Infrastructure.Migrations
 
                     b.HasOne("Domain.Entities.Specialization", "Specialization")
                         .WithMany("Services")
-                        .HasForeignKey("SpecializationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SpecializationId");
 
                     b.Navigation("ServiceCategory");
 

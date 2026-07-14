@@ -61,6 +61,24 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Appointment time must be between {0} and {1}.
+        /// </summary>
+        public static string AppointmentBetweenMessage {
+            get {
+                return ResourceManager.GetString("AppointmentBetweenMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Appointment date cannot be in the past.
+        /// </summary>
+        public static string AppointmentInPastMessage {
+            get {
+                return ResourceManager.GetString("AppointmentInPastMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is not active or not available..
         /// </summary>
         public static string InactiveEntityMessage {

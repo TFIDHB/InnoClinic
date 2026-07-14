@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Application.Interfaces
+namespace InnoClinic.Documents.API.Application.Interfaces
 {
     public interface IBlobService
     {

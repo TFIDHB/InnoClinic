@@ -1,7 +1,7 @@
-﻿using Domain.Entities;
+﻿using InnoClinic.Documents.API.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Persistance
+namespace InnoClinic.Documents.API.Infrastructure.Persistance
 {
     public class DocumentsDbContext : DbContext
     {

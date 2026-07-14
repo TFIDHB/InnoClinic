@@ -1,6 +1,6 @@
-﻿using Application.DTOs;
+﻿using InnoClinic.Documents.API.Application.DTOs;
 
-namespace Application.Interfaces
+namespace InnoClinic.Documents.API.Application.Interfaces
 {
     public interface IDocumentsService
     {

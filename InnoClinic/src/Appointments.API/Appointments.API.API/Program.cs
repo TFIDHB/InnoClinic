@@ -1,16 +1,18 @@
 using Application.Extensions;
 using Infrastructure.Extensions;
-using InnoClinic.Appointments.Extensions;
-using InnoClinic.Shared.Middleware;
+using InnoClinic.Appointments.API.Extensions;
 using InnoClinic.Shared.Extensions;
+using InnoClinic.Shared.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddPresentation();
+builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddApplication();
+builder.Services.AddPresentation(builder.Configuration);
 
 var app = builder.Build();
+
+app.UseCors();
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,8 +1,8 @@
-﻿using Application.Interfaces;
-using Azure.Storage.Blobs;
+﻿using Azure.Storage.Blobs;
+using InnoClinic.Documents.API.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace Infrastructure.Blob
+namespace InnoClinic.Documents.API.Infrastructure.Blob
 {
     public class BlobService(BlobServiceClient blobServiceClient) : IBlobService
     {

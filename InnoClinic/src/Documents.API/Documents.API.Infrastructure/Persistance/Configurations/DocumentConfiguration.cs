@@ -1,8 +1,8 @@
-﻿using Domain.Entities;
+﻿using InnoClinic.Documents.API.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistance.Configurations
+namespace InnoClinic.Documents.API.Infrastructure.Persistance.Configurations
 {
     public class DocumentConfiguration : IEntityTypeConfiguration<Document>
     {

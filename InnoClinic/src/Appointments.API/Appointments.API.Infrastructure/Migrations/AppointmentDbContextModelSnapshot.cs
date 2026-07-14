@@ -52,9 +52,6 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("ServiceId")
                         .HasColumnType("uuid");
 
-                    b.Property<int>("ServiceType")
-                        .HasColumnType("integer");
-
                     b.Property<Guid>("SpecializationId")
                         .HasColumnType("uuid");
 

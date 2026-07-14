@@ -1,14 +1,14 @@
-﻿using Application.Interfaces;
-using Azure.Storage.Blobs;
-using Infrastructure.Blob;
-using Infrastructure.Persistance;
-using Infrastructure.Persistance.Migrators;
-using Infrastructure.Persistance.Repositories;
+﻿using Azure.Storage.Blobs;
+using InnoClinic.Documents.API.Application.Interfaces;
+using InnoClinic.Documents.API.Infrastructure.Blob;
+using InnoClinic.Documents.API.Infrastructure.Persistance;
+using InnoClinic.Documents.API.Infrastructure.Persistance.Migrators;
+using InnoClinic.Documents.API.Infrastructure.Persistance.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Extensions
+namespace InnoClinic.Documents.API.Infrastructure.Extensions
 {
     public static class InfrastructureExtensions
     {

@@ -13,15 +13,15 @@ namespace Auth.API.Tests.Unit
         private readonly Mock<IAuthService> _authService;
         private readonly AuthController _authController;
 
-        public AuthControllerTests() 
+        public AuthControllerTests()
         {
             _authService = new Mock<IAuthService>();
             _authController = new AuthController(_authService.Object);
         }
 
-        public void SetUserClaims(int? userId) 
-        { 
-            var claims = userId.HasValue ? new[] {new Claim(ClaimTypes.NameIdentifier, userId.ToString())} : null;
+        public void SetUserClaims(int? userId)
+        {
+            var claims = userId.HasValue ? new[] { new Claim(ClaimTypes.NameIdentifier, userId.ToString()) } : null;
 
             var identity = new ClaimsIdentity(claims);
             var principal = new ClaimsPrincipal(identity);
@@ -33,7 +33,7 @@ namespace Auth.API.Tests.Unit
         }
 
         [Fact]
-        public async Task Logout_WhenUserIsAuthorized_ReturnsOk() 
+        public async Task Logout_WhenUserIsAuthorized_ReturnsOk()
         {
             SetUserClaims(1);
             var dto = new LogOutRequestDto { RefreshToken = "some-token" };
@@ -45,7 +45,7 @@ namespace Auth.API.Tests.Unit
         }
 
         [Fact]
-        public async Task Logout_WhenUserIsUnauthorized_ReturnsUnauthorized() 
+        public async Task Logout_WhenUserIsUnauthorized_ReturnsUnauthorized()
         {
             SetUserClaims(null);
             var dto = new LogOutRequestDto { RefreshToken = "some-token" };

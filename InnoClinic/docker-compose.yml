@@ -7,14 +7,6 @@ services:
     volumes:
       - mongo_data:/data/db
 
-  azurite:
-    image: mcr.microsoft.com/azure-storage/azurite:3.33.0
-    ports:
-      - "10000:10000"
-    volumes:
-      - azurite_data:/data
-    command: azurite-blob --blobHost 0.0.0.0 --blobPort 10000 --skipApiVersionCheck
-
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
@@ -35,6 +27,14 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:3.33.0
+    ports:
+      - "10000:10000"
+    volumes:
+      - azurite_data:/data
+    command: azurite-blob --blobHost 0.0.0.0 --blobPort 10000 --skipApiVersionCheck
+
   offices.api:
     image: ${DOCKER_REGISTRY-}officesapi
     build:
@@ -47,21 +47,6 @@ services:
       - ConnectionStrings__OfficesConnection=mongodb://mongodb:27017
     depends_on:
       - mongodb
-
-  innoclinic.documents.api:
-    image: ${DOCKER_REGISTRY-}innoclinicdocumentsapi
-    build:
-      context: .
-      dockerfile: src/Documents.API/Documents.API.API/Dockerfile
-    ports:
-      - "5004:8080"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DocumentsConnection=${DOCUMENTS_CONNECTION}
-      - ConnectionStrings__BlobStorage=${DOCUMENTS_BLOB_CONNECTION}
-    depends_on:
-      - azurite
-      - sqlserver
 
   innoclinic.services.api:
     image: ${DOCKER_REGISTRY-}innoclinicservicesapi
@@ -91,9 +76,24 @@ services:
     depends_on:
       - postgres
 
+  innoclinic.documents.api:
+    image: ${DOCKER_REGISTRY-}innoclinicdocumentsapi
+    build:
+      context: .
+      dockerfile: src/Documents.API/Documents.API.API/Dockerfile
+    ports:
+      - "5004:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DocumentsConnection=${DOCUMENTS_CONNECTION}
+      - ConnectionStrings__BlobStorage=${DOCUMENTS_BLOB_CONNECTION}
+    depends_on:
+      - azurite
+      - sqlserver
+
 volumes:
   mongo_data:
-  azurite_data:
-  postgres_data:
   sqlserver_data:
+  postgres_data:
+  azurite_data:
 

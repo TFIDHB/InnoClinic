@@ -2,7 +2,7 @@
 using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Services.API.Controllers
+namespace InnoClinic.Services.API.Controllers
 {
     //[Authorize]
     [ApiController]
@@ -13,6 +13,7 @@ namespace Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ServiceDto>> GetService(Guid id, CancellationToken ct = default)
         {
             var result = await servicesService.GetByIdAsync(id, ct);
@@ -22,7 +23,8 @@ namespace Services.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<IEnumerable<ServiceDto>>> GetAllServices(CancellationToken ct = default) 
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<ServiceDto>>> GetAllServices(CancellationToken ct = default)
         {
             var result = await servicesService.GetAllAsync(ct);
             return Ok(result);
@@ -32,10 +34,13 @@ namespace Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<ServiceDto>> CreateService([FromBody] CreateServiceRequestDto dto, CancellationToken ct = default)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ServiceDto>> CreateService(
+            [FromBody] CreateServiceRequestDto dto,
+            CancellationToken ct = default)
         {
             var result = await servicesService.CreateAsync(dto, ct);
-            return CreatedAtAction(nameof(GetService), new {id = result.Id}, result);
+            return CreatedAtAction(nameof(GetService), new { id = result.Id }, result);
         }
 
         [HttpPut("{id}")]
@@ -43,7 +48,11 @@ namespace Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ServiceDto>> UpdateService(Guid id, [FromBody] UpdateServiceRequestDto dto, CancellationToken ct = default)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ServiceDto>> UpdateService(
+            Guid id,
+            [FromBody] UpdateServiceRequestDto dto,
+            CancellationToken ct = default)
         {
             var result = await servicesService.UpdateAsync(id, dto, ct);
             return Ok(result);
@@ -54,7 +63,11 @@ namespace Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ServiceDto>> UpdateServiceStatus(Guid id, [FromBody] UpdateServiceStatusRequestDto dto, CancellationToken ct = default)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ServiceDto>> UpdateServiceStatus(
+            Guid id,
+            [FromBody] UpdateServiceStatusRequestDto dto,
+            CancellationToken ct = default)
         {
             var result = await servicesService.UpdateStatusAsync(id, dto, ct);
             return Ok(result);
@@ -65,10 +78,22 @@ namespace Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> DeleteService(Guid id, CancellationToken ct = default)
         {
             await servicesService.DeleteAsync(id, ct);
             return NoContent();
+        }
+
+        [HttpGet("{id}/time-slot-size")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<int>> GetTimeSlotSize(Guid id, CancellationToken ct = default)
+        {
+            var result = await servicesService.GetTimeSlotSizeAsync(id, ct);
+            return Ok(result);
         }
     }
 }

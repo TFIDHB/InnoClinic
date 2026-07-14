@@ -1,7 +1,6 @@
 ﻿using BLL.AutoMapper;
 using BLL.Interfaces;
 using BLL.Services;
-using BLL.Settings;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

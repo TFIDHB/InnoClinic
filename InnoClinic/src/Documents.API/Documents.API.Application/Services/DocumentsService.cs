@@ -1,10 +1,10 @@
-﻿using Application.DTOs;
-using Application.Interfaces;
-using AutoMapper;
-using Domain.Entities;
+﻿using AutoMapper;
+using InnoClinic.Documents.API.Application.DTOs;
+using InnoClinic.Documents.API.Application.Interfaces;
+using InnoClinic.Documents.API.Domain.Entities;
 using InnoClinic.Shared.Exceptions;
 
-namespace Application.Services
+namespace InnoClinic.Documents.API.Application.Services
 {
     public class DocumentsService(IDocumentsUnitOfWork unitOfWork, IBlobService blobService, IMapper mapper) : IDocumentsService
     {

@@ -12,6 +12,7 @@ namespace InnoClinic.Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<SpecializationDto>> GetSpecialization(Guid id, CancellationToken ct = default)
         {
             var result = await specializationsService.GetByIdAsync(id, ct);
@@ -21,6 +22,7 @@ namespace InnoClinic.Services.API.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<SpecializationDto>>> GetAllSpecializations(CancellationToken ct = default)
         {
             var result = await specializationsService.GetAllAsync(ct);
@@ -31,7 +33,10 @@ namespace InnoClinic.Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<SpecializationDto>> CreateSpecialization([FromBody] CreateSpecializationRequestDto dto, CancellationToken ct = default)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<SpecializationDto>> CreateSpecialization(
+            [FromBody] CreateSpecializationRequestDto dto,
+            CancellationToken ct = default)
         {
             var result = await specializationsService.CreateAsync(dto, ct);
             return CreatedAtAction(nameof(GetSpecialization), new { id = result.Id }, result);
@@ -42,7 +47,11 @@ namespace InnoClinic.Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<SpecializationDto>> UpdateSpecialization(Guid id, [FromBody] UpdateSpecializationRequestDto dto, CancellationToken ct = default)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<SpecializationDto>> UpdateSpecialization(
+            Guid id,
+            [FromBody] UpdateSpecializationRequestDto dto,
+            CancellationToken ct = default)
         {
             var result = await specializationsService.UpdateAsync(id, dto, ct);
             return Ok(result);
@@ -52,7 +61,11 @@ namespace InnoClinic.Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<SpecializationDto>> UpdateSpecializationStatus(Guid id, [FromBody] UpdateSpecializationStatusRequestDto dto, CancellationToken ct = default)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<SpecializationDto>> UpdateSpecializationStatus(
+            Guid id,
+            [FromBody] UpdateSpecializationStatusRequestDto dto,
+            CancellationToken ct = default)
         {
             var result = await specializationsService.UpdateStatusAsync(id, dto, ct);
             return Ok(result);
@@ -62,6 +75,7 @@ namespace InnoClinic.Services.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> DeleteSpecialization(Guid id, CancellationToken ct = default)
         {
             await specializationsService.DeleteAsync(id, ct);

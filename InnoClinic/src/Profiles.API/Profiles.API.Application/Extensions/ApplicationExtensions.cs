@@ -1,5 +1,4 @@
-﻿using Application.AutoMapper;
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Interfaces;
 using Application.Services;
 using Microsoft.Extensions.DependencyInjection;

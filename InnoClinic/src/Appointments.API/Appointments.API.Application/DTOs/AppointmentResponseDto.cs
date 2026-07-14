@@ -1,9 +1,4 @@
 ﻿using Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.DTOs
 {
@@ -18,6 +13,5 @@ namespace Application.DTOs
         public DateOnly Date { get; set; }
         public TimeOnly Time { get; set; }
         public AppointmentStatus Status { get; set; }
-        public ServiceType ServiceType { get; set; }
     }
 }

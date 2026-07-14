@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using InnoClinic.Shared.Exceptions;
+﻿using InnoClinic.Shared.Exceptions;
 
 namespace Application.Exceptions
 {
