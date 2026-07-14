@@ -7,7 +7,9 @@ namespace InnoClinic.Profiles.API.Controllers
     //[Authorize]
     [ApiController]
     [Route("api/v1/receptionists")]
-    public class ReceptionistProfilesController(IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto> receptionistProfilesService) : ControllerBase
+    public class ReceptionistProfilesController(
+        IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto> receptionistProfilesService
+        ) : ControllerBase
     {
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
