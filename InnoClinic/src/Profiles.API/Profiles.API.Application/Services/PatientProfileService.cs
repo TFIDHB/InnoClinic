@@ -41,7 +41,20 @@ namespace Application.Services
             return mapper.Map<PatientProfileDto>(patientProfile);
         }
 
-        public async Task<PatientProfileDto> UpdateAsync(Guid id, UpdatePatientProfileRequestDto dto, CancellationToken ct = default)
+        public async Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
+        {
+            var patienProfile = await unitOfWork.PatientProfilesRepository.GetByAccountIdAsync(id, ct);
+
+            if (patienProfile == null)
+                return null;
+
+            return new AccountProfileInfoDto { Role = "Patient" };
+        }
+
+        public async Task<PatientProfileDto> UpdateAsync(
+            Guid id,
+            UpdatePatientProfileRequestDto dto,
+            CancellationToken ct = default)
         {
             var patientProfile = await unitOfWork.PatientProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(PatientProfile));

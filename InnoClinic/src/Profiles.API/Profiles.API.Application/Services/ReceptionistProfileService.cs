@@ -40,7 +40,20 @@ namespace Application.Services
             return mapper.Map<ReceptionistProfileDto>(receptionistProfile);
         }
 
-        public async Task<ReceptionistProfileDto> UpdateAsync(Guid id, UpdateReceptionistProfileRequestDto dto, CancellationToken ct = default)
+        public async Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
+        {
+            var receptionistProfile = await unitOfWork.ReceptionistProfilesRepository.GetByAccountIdAsync(id, ct);
+
+            if (receptionistProfile == null)
+                return null;
+
+            return new AccountProfileInfoDto { Role = "Receptionist" };
+        }
+
+        public async Task<ReceptionistProfileDto> UpdateAsync(
+            Guid id,
+            UpdateReceptionistProfileRequestDto dto,
+            CancellationToken ct = default)
         {
             var receptionistProfile = await unitOfWork.ReceptionistProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(ReceptionistProfile));
