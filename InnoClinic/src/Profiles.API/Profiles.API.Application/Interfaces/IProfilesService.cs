@@ -1,4 +1,6 @@
-﻿namespace Application.Interfaces
+﻿using Application.DTOs;
+
+namespace Application.Interfaces
 {
     public interface IProfilesService<TDto, TCreateDto, TUpdateDto>
     {
@@ -7,5 +9,6 @@
         Task<IEnumerable<TDto>> GetAllAsync(CancellationToken ct = default);
         Task<TDto> UpdateAsync(Guid id, TUpdateDto dto, CancellationToken ct = default);
         Task DeleteAsync(Guid id, CancellationToken ct = default);
+        Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default);
     }
 }

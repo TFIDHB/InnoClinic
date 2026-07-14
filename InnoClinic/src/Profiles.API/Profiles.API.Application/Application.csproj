@@ -9,8 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Exceptions\" />
-    <Folder Include="Validators\" />
+    <Compile Remove="Exceptions\**" />
+    <Compile Remove="Validators\**" />
+    <EmbeddedResource Remove="Exceptions\**" />
+    <EmbeddedResource Remove="Validators\**" />
+    <None Remove="Exceptions\**" />
+    <None Remove="Validators\**" />
   </ItemGroup>
 
   <ItemGroup>
