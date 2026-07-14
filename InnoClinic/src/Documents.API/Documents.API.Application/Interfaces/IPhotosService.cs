@@ -1,6 +1,6 @@
-﻿using Documents.API.Application.DTOs;
+﻿using InnoClinic.Documents.API.Application.DTOs;
 
-namespace Documents.API.Application.Interfaces
+namespace InnoClinic.Documents.API.Application.Interfaces
 {
     public interface IPhotosService
     {

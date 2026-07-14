@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Documents.API.Application.DTOs;
-using Documents.API.Domain.Entities;
+using InnoClinic.Documents.API.Domain.Entities;
+using InnoClinic.Documents.API.Application.DTOs;
 
-namespace Documents.API.Application.AutoMapper
+namespace InnoClinic.Documents.API.Application.AutoMapper
 {
     public class DocumentsMapper : Profile
     {

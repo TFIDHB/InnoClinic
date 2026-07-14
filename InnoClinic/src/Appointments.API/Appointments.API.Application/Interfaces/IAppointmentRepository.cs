@@ -9,6 +9,7 @@ namespace Application.Interfaces
             DateOnly date,
             Guid? doctorId,
             CancellationToken ct = default);
+
         Task<IEnumerable<Appointment>> GetByDateRangeAndDoctorAsync(
             DateOnly startDate,
             DateOnly endDate,

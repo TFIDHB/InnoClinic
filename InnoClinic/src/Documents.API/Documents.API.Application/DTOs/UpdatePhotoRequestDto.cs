@@ -1,7 +1,7 @@
-﻿using Documents.API.Domain.Enums;
+﻿using InnoClinic.Documents.API.Domain.Enums;
 using Microsoft.AspNetCore.Http;
 
-namespace Documents.API.Application.DTOs
+namespace InnoClinic.Documents.API.Application.DTOs
 {
     public class UpdatePhotoRequestDto
     {

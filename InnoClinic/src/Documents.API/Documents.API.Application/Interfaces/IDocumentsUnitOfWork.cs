@@ -1,6 +1,6 @@
 ﻿using InnoClinic.Shared.Interfaces;
 
-namespace Documents.API.Application.Interfaces
+namespace InnoClinic.Documents.API.Application.Interfaces
 {
     public interface IDocumentsUnitOfWork : IBasicUnitOfWork
     {

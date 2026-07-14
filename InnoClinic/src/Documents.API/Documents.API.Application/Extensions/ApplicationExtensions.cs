@@ -1,8 +1,9 @@
-﻿using Documents.API.Application.Interfaces;
-using Documents.API.Application.Services;
+﻿using InnoClinic.Documents.API.Application;
+using InnoClinic.Documents.API.Application.Interfaces;
+using InnoClinic.Documents.API.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Documents.API.Application.Extensions
+namespace InnoClinic.Documents.API.Application.Extensions
 {
     public static class ApplicationExtensions
     {

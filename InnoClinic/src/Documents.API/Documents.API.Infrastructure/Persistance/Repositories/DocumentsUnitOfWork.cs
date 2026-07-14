@@ -1,7 +1,7 @@
-﻿using Documents.API.Application.Interfaces;
+﻿using InnoClinic.Documents.API.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Documents.API.Infrastructure.Persistance.Repositories
+namespace InnoClinic.Documents.API.Infrastructure.Persistance.Repositories
 {
     public class DocumentsUnitOfWork(DocumentsDbContext context, IServiceProvider provider) : IDocumentsUnitOfWork, IDisposable
     {

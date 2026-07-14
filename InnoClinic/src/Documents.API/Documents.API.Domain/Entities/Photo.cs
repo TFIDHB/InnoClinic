@@ -1,6 +1,6 @@
-﻿using Documents.API.Domain.Enums;
+﻿using InnoClinic.Documents.API.Domain.Enums;
 
-namespace Documents.API.Domain.Entities
+namespace InnoClinic.Documents.API.Domain.Entities
 {
     public class Photo
     {

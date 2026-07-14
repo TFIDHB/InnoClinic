@@ -1,5 +1,5 @@
-﻿using Documents.API.Application.DTOs;
-using Documents.API.Application.Interfaces;
+﻿using InnoClinic.Documents.API.Application.DTOs;
+using InnoClinic.Documents.API.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Documents.API.Controllers

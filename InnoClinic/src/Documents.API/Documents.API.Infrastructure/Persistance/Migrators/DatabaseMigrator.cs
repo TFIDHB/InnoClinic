@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InnoClinic.Documents.API.Infrastructure.Persistance;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Documents.API.Infrastructure.Persistance.Migrators
+namespace InnoClinic.Documents.API.Infrastructure.Persistance.Migrators
 {
     public class DatabaseMigrator(IServiceProvider serviceProvider) : IHostedService
     {
