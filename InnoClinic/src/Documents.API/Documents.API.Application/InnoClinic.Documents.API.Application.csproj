@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\InnoClinic.Shared.csproj" />
-    <ProjectReference Include="..\Documents.API.Domain\Documents.API.Domain.csproj" />
     <ProjectReference Include="..\Documents.API.Domain\InnoClinic.Documents.API.Domain.csproj" />
   </ItemGroup>
 
