@@ -1,6 +1,7 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
+using InnoClinic.Shared.Migrators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ namespace Infrastructure.Extensions
             services.AddScoped<IDoctorProfilesRepository, DoctorProfilesRepository>();
             services.AddScoped<IPatientProfilesRepository, PatientProfilesRepository>();
             services.AddScoped<IReceptionistProfilesRepository, ReceptionistProfilesRepository>();
+            services.AddHostedService<DatabaseMigrator<ProfilesDbContext>>();
             return services;
         }
     }
