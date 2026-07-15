@@ -91,9 +91,38 @@ services:
       - azurite
       - sqlserver
 
+  innoclinic.auth.api:
+    image: ${DOCKER_REGISTRY-}innoclinicauthapi
+    build:
+      context: .
+      dockerfile: src/Auth.API/Auth.API.API/Dockerfile
+    ports:
+      - "5005:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__AuthConnection=${AUTH_CONNECTION}
+      - ProfilesApi__BaseUrl=http://innoclinic.profiles.api:8080
+    depends_on:
+      - sqlserver
+
+  innoclinic.profiles.api:
+    image: ${DOCKER_REGISTRY-}innoclinicprofilesapi
+    build:
+      context: .
+      dockerfile: src/Profiles.API/InnoClinic.Profiles.API/Dockerfile
+    ports:
+      - "5006:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ProfilesConnection=${PROFILES_CONNECTION}
+    depends_on:
+      - sqlserver
+
 volumes:
   mongo_data:
   sqlserver_data:
   postgres_data:
   azurite_data:
+
+
 

@@ -7,38 +7,30 @@ using DAL.Interfaces;
 
 namespace BLL.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService(
+        ITokenService tokenService,
+        IAuthUnitOfWork unitOfWork,
+        IMapper mapper,
+        IProfilesClient profilesClient) : IAuthService
     {
-        private readonly ITokenService _tokenService;
-        private readonly IAuthUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        public AuthService(
-            IAuthUnitOfWork unitOfWork,
-            IMapper mapper,
-            ITokenService tokenService)
-        {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _tokenService = tokenService;
-        }
         public async Task RegisterAsync(RegisterRequestDto dto, CancellationToken ct = default)
         {
-            if (await _unitOfWork.UserRepository.ExistsByEmailAsync(dto.Email, ct))
+            if (await unitOfWork.UserRepository.ExistsByEmailAsync(dto.Email, ct))
             {
                 throw new EmailAlreadyExistsException();
             }
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            var user = _mapper.Map<User>(dto);
+            var user = mapper.Map<User>(dto);
             user.PasswordHash = passwordHash;
 
-            await _unitOfWork.UserRepository.CreateAsync(user, ct);
-            await _unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.UserRepository.CreateAsync(user, ct);
+            await unitOfWork.SaveChangesAsync(ct);
         }
         public async Task<AuthTokenDto> LoginAsync(LoginRequestDto dto, CancellationToken ct = default)
         {
-            var user = await _unitOfWork.UserRepository.GetByEmailAsync(dto.Email, ct);
+            var user = await unitOfWork.UserRepository.GetByEmailAsync(dto.Email, ct);
             if (user == null)
             {
                 throw new UserNotFoundException();
@@ -49,16 +41,27 @@ namespace BLL.Services
                 throw new InvalidPasswordException();
             }
 
-            var accessToken = _tokenService.GenerateAccessToken(user);
-            var refreshToken = _tokenService.GenerateRefreshToken();
+            var profileInfo = await profilesClient.GetProfileInfoByAccountIdAsync(user.Id, ct);
+            if (profileInfo == null)
+            {
+                throw new UserNotFoundException();
+            }
+
+            if (profileInfo.Role == "Doctor" && profileInfo.Status == "Inactive")
+            {
+                throw new UserNotFoundException();
+            }
+
+            var accessToken = tokenService.GenerateAccessToken(user, profileInfo.Role);
+            var refreshToken = tokenService.GenerateRefreshToken();
 
             var refreshTokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken);
 
             user.RefreshToken = refreshTokenHash;
             user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
 
-            await _unitOfWork.UserRepository.UpdateAsync(user, ct);
-            await _unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.UserRepository.UpdateAsync(user, ct);
+            await unitOfWork.SaveChangesAsync(ct);
 
             return new AuthTokenDto
             {
@@ -68,7 +71,7 @@ namespace BLL.Services
         }
         public async Task LogoutAsync(LogOutRequestDto dto, Guid userId, CancellationToken ct = default)
         {
-            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, ct);
+            var user = await unitOfWork.UserRepository.GetByIdAsync(userId, ct);
 
             if (user == null)
             {
@@ -84,7 +87,7 @@ namespace BLL.Services
             user.RefreshToken = null;
             user.RefreshTokenExpiry = null;
 
-            await _unitOfWork.SaveChangesAsync(ct);
+            await unitOfWork.SaveChangesAsync(ct);
         }
     }
 }

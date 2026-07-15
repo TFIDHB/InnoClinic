@@ -7,7 +7,9 @@
         "offices.api": "StartDebugging",
         "innoclinic.services.api": "StartDebugging",
         "innoclinic.appointments.api": "StartDebugging",
-        "innoclinic.documents.api": "StartDebugging"
+        "innoclinic.documents.api": "StartDebugging",
+        "innoclinic.auth.api": "StartDebugging",
+        "innoclinic.profiles.api": "StartDebugging"
       }
     }
   }
