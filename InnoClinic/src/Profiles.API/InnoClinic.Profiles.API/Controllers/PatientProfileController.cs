@@ -30,7 +30,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Receptionist")]
+        [Authorize(Roles = "Receptionist,Patient")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<PatientProfileDto>> CreatePatient([FromBody] CreatePatientProfileRequestDto dto, CancellationToken ct = default)
