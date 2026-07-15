@@ -44,7 +44,7 @@ namespace Auth.API.Tests.Unit
                 .ReturnsAsync(false);
             _mapperMock
                 .Setup(e => e.Map<User>(dto))
-                .Returns(new User { Email = dto.Email });
+                .Returns(new User { Id = Guid.NewGuid(), Email = dto.Email, PasswordHash = "placeholder"});
 
             await _authService.RegisterAsync(dto);
 
@@ -70,8 +70,9 @@ namespace Auth.API.Tests.Unit
             var dto = new LoginRequestDto { Email = "test@test.com", Password = "123456" };
             var user = new User
             {
+                Id = Guid.NewGuid(),
                 Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("incorrect-password")
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("incorrect-password"),
             };
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByEmailAsync(dto.Email, default))
@@ -87,6 +88,7 @@ namespace Auth.API.Tests.Unit
             var dto = new LoginRequestDto { Email = "test@test.com", Password = "123456" };
             var user = new User
             {
+                Id = Guid.NewGuid(),
                 Email = dto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456")
             };
@@ -111,7 +113,7 @@ namespace Auth.API.Tests.Unit
         public async Task LogoutAsync_WhenUserNotFound_ThrowsUserNotFoundException()
         {
             var dto = new LogOutRequestDto { RefreshToken = "some-token" };
-            var userId = 1;
+            var userId = Guid.NewGuid();
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
                 .ReturnsAsync((User?)null);
@@ -124,9 +126,12 @@ namespace Auth.API.Tests.Unit
         public async Task LogoutAsync_WhenTokenIsInvalid_ThrowsTokenIsInvalidException()
         {
             var dto = new LogOutRequestDto { RefreshToken = "wrong-token" };
-            var userId = 1;
+            var userId = Guid.NewGuid();
             var user = new User
             {
+                Id = Guid.NewGuid(),
+                Email = "test@test",
+                PasswordHash = "placeholder",
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
                 RefreshTokenExpiry = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(10)
             };
@@ -143,9 +148,12 @@ namespace Auth.API.Tests.Unit
         public async Task LogoutAsync_WhenTokenIsExpired_ThrowsTokenIsInvalidException()
         {
             var dto = new LogOutRequestDto { RefreshToken = "correct-token" };
-            var userId = 1;
+            var userId = Guid.NewGuid();
             var user = new User
             {
+                Id = Guid.NewGuid(),
+                Email = "test@test",
+                PasswordHash = "placeholder",
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
                 RefreshTokenExpiry = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)
             };
@@ -161,9 +169,12 @@ namespace Auth.API.Tests.Unit
         public async Task LogoutAsync_WhenTokenIsValid_ClearsRefreshToken()
         {
             var dto = new LogOutRequestDto { RefreshToken = "correct-token" };
-            var userId = 1;
+            var userId = Guid.NewGuid();
             var user = new User
             {
+                Id = Guid.NewGuid(),
+                Email = "test@test",
+                PasswordHash = "placeholder",
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
                 RefreshTokenExpiry = new DateTime(2027, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(10)
             };

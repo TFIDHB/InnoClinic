@@ -41,7 +41,7 @@ namespace InnoClinic.Auth.API.Controllers
                 return Unauthorized();
             }
 
-            await _authService.LogoutAsync(dto, int.Parse(userId));
+            await _authService.LogoutAsync(dto, Guid.Parse(userId));
             return Ok();
         }
     }

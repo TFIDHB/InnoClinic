@@ -66,7 +66,7 @@ namespace BLL.Services
                 RefreshToken = refreshToken,
             };
         }
-        public async Task LogoutAsync(LogOutRequestDto dto, int userId, CancellationToken ct = default)
+        public async Task LogoutAsync(LogOutRequestDto dto, Guid userId, CancellationToken ct = default)
         {
             var user = await _unitOfWork.UserRepository.GetByIdAsync(userId, ct);
 

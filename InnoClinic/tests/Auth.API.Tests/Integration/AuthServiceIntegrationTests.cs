@@ -167,7 +167,7 @@ namespace Auth.API.Tests.Integration
 
             await Assert.ThrowsAsync<UserNotFoundException>(async () =>
             {
-                await assembly.AuthService.LogoutAsync(logoutDto, userId: 9999);
+                await assembly.AuthService.LogoutAsync(logoutDto, userId: Guid.NewGuid());
             });
         }
 
