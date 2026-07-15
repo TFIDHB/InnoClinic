@@ -1,10 +1,11 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Profiles.API.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = "Patient,Doctor,Receptionist")]
     [ApiController]
     [Route("api/v1/patients")]
     public class PatientProfileController(
@@ -29,6 +30,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<PatientProfileDto>> CreatePatient([FromBody] CreatePatientProfileRequestDto dto, CancellationToken ct = default)
@@ -38,6 +40,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Receptionist,Patient")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -48,6 +51,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
