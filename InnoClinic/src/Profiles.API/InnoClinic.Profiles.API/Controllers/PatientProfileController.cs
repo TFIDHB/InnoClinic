@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using InnoClinic.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,7 @@ namespace InnoClinic.Profiles.API.Controllers
     [ApiController]
     [Route("api/v1/patients")]
     public class PatientProfileController(
-        IProfilesService<PatientProfileDto, CreatePatientProfileRequestDto, UpdatePatientProfileRequestDto> patientProfilesService
+        IPatientProfileService patientProfilesService
         ) : ControllerBase
     {
         [HttpGet("{id}")]
@@ -59,6 +60,24 @@ namespace InnoClinic.Profiles.API.Controllers
         {
             await patientProfilesService.DeleteAsync(id, ct);
             return Ok();
+        }
+
+        [HttpPost("create-my-profile")]
+        [Authorize(Roles = "Patient")]
+        public async Task<ActionResult<PatientProfileDto>> CreateMyProfile([FromBody] CreatePatientProfileRequestDto dto, CancellationToken ct = default)
+        {
+            var accountId = User.GetUserId();
+            var result = await patientProfilesService.CreateOrMatchProfileAsync(accountId, dto, ct);
+            return Ok(result);
+        }
+
+        [HttpPost("{id}/link-to-account")]
+        [Authorize(Roles = "Patient")]
+        public async Task<ActionResult<PatientProfileDto>> LinkProfileToAccount(Guid id, CancellationToken ct = default)
+        {
+            var accountId = User.GetUserId();
+            var result = await patientProfilesService.LinkProfileToAccountAsync(id, accountId, ct);
+            return Ok(result);
         }
     }
 }

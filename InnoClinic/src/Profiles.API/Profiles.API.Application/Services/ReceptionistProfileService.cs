@@ -6,11 +6,19 @@ using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
 {
-    public class ReceptionistProfileService(IProfilesUnitOfWork unitOfWork, IMapper mapper) : IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto>
+    public class ReceptionistProfileService(
+        IProfilesUnitOfWork unitOfWork,
+        IMapper mapper,
+        IAuthClient authClient
+        ) : IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto>
     {
         public async Task<ReceptionistProfileDto> CreateAsync(CreateReceptionistProfileRequestDto dto, CancellationToken ct = default)
         {
+            var accountResult = await authClient.CreateStaffAccountAsync(dto.Email, ct);
+
             var receptionistProfile = mapper.Map<ReceptionistProfile>(dto);
+            receptionistProfile.AccountId = accountResult.AccountId;
+
             await unitOfWork.ReceptionistProfilesRepository.CreateAsync(receptionistProfile, ct);
             await unitOfWork.SaveChangesAsync(ct);
 

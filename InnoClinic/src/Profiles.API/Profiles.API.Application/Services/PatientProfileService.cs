@@ -6,7 +6,7 @@ using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
 {
-    public class PatientProfileService(IProfilesUnitOfWork unitOfWork, IMapper mapper) : IProfilesService<PatientProfileDto, CreatePatientProfileRequestDto, UpdatePatientProfileRequestDto>
+    public class PatientProfileService(IProfilesUnitOfWork unitOfWork, IMapper mapper) : IPatientProfileService
     {
         public async Task<PatientProfileDto> CreateAsync(CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
@@ -16,6 +16,44 @@ namespace Application.Services
             await unitOfWork.SaveChangesAsync(ct);
 
             return mapper.Map<PatientProfileDto>(patientProfile);
+        }
+
+        public async Task<PatientProfileDto> CreateOrMatchProfileAsync(
+            Guid accountId,
+            CreatePatientProfileRequestDto dto,
+            CancellationToken ct = default)
+        {
+            var candidates = await unitOfWork.PatientProfilesRepository.GetUnlinkedProfilesAsync(ct);
+
+            var bestMatch = candidates
+                .Select(p => new { Profile = p, Score = CalculateMatchScore(p, dto) })
+                .Where(x => x.Score >= 13)
+                .OrderByDescending(x => x.Score)
+                .FirstOrDefault();
+
+            if (bestMatch != null)
+            {
+                return mapper.Map<PatientProfileDto>(bestMatch.Profile);
+            }
+
+            var newProfile = mapper.Map<PatientProfile>(dto);
+            newProfile.AccountId = accountId;
+            newProfile.IsLinkedToAccount = true;
+
+            await unitOfWork.PatientProfilesRepository.CreateAsync(newProfile, ct);
+            await unitOfWork.SaveChangesAsync(ct);
+
+            return mapper.Map<PatientProfileDto>(newProfile);
+        }
+
+        private static int CalculateMatchScore(PatientProfile profile, CreatePatientProfileRequestDto dto)
+        {
+            var score = 0;
+            if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (profile.DateOfBirth == dto.DateOfBirth) score += 3;
+            return score;
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
@@ -64,6 +102,23 @@ namespace Application.Services
             await unitOfWork.SaveChangesAsync(ct);
 
             return mapper.Map<PatientProfileDto>(patientProfile);
+        }
+
+        public async Task<PatientProfileDto> LinkProfileToAccountAsync(
+            Guid profileId,
+            Guid accountId,
+            CancellationToken ct = default)
+        {
+            var profile = await unitOfWork.PatientProfilesRepository.GetByIdAsync(profileId, ct)
+                ?? throw new NotFoundException(nameof(PatientProfile));
+
+            profile.AccountId = accountId;
+            profile.IsLinkedToAccount = true;
+
+            await unitOfWork.PatientProfilesRepository.UpdateAsync(profile, ct);
+            await unitOfWork.SaveChangesAsync(ct);
+
+            return mapper.Map<PatientProfileDto>(profile);
         }
     }
 }

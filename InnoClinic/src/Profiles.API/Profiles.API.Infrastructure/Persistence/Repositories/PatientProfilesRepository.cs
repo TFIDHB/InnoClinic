@@ -12,5 +12,12 @@ namespace Infrastructure.Persistence.Repositories
             return await context.Set<PatientProfile>()
                 .FirstOrDefaultAsync(profile => profile.AccountId == id, ct);
         }
+
+        public async Task<IEnumerable<PatientProfile>> GetUnlinkedProfilesAsync(CancellationToken ct = default)
+        {
+            return await context.PatientProfiles
+                .Where(p => !p.IsLinkedToAccount)
+                .ToListAsync(ct);
+        }
     }
 }
