@@ -7,5 +7,6 @@ namespace Application.Interfaces
     public interface IDoctorProfilesRepository : IRepository<DoctorProfile, Guid>
     {
         Task<DoctorProfile?> GetByAccountIdAsync(Guid id, CancellationToken ct = default);
+        Task<IEnumerable<DoctorProfile>> GetFilteredAsync(Guid? specializationId, Guid? officeId, CancellationToken ct = default);
     }
 }

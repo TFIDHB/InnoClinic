@@ -120,5 +120,13 @@ namespace Application.Services
 
             return mapper.Map<PatientProfileDto>(profile);
         }
+
+        public async Task<PatientProfileDto> GetByAccountIdAsync(Guid accountId, CancellationToken ct = default)
+        {
+            var patientProfile = await unitOfWork.PatientProfilesRepository.GetByAccountIdAsync(accountId, ct)
+                    ?? throw new NotFoundException(nameof(PatientProfile));
+
+            return mapper.Map<PatientProfileDto>(patientProfile);
+        }
     }
 }

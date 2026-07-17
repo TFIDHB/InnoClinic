@@ -11,8 +11,12 @@ namespace Application.Extensions
         {
             services.AddScoped<PatientProfileService>();
             services.AddScoped<IPatientProfileService>(sp => sp.GetRequiredService<PatientProfileService>());
+
+            services.AddScoped<DoctorProfileService>();
+            services.AddScoped<IDoctorProfileService>(sp => sp.GetRequiredService<DoctorProfileService>());
+
             services.AddScoped<IProfilesService<PatientProfileDto, CreatePatientProfileRequestDto, UpdatePatientProfileRequestDto>>(sp => sp.GetRequiredService<PatientProfileService>());
-            services.AddScoped<IProfilesService<PatientProfileDto, CreatePatientProfileRequestDto, UpdatePatientProfileRequestDto>, PatientProfileService>();
+            services.AddScoped<IProfilesService<DoctorProfileDto, CreateDoctorProfileRequestDto, UpdateDoctorProfileRequestDto>>(sp => sp.GetRequiredService<DoctorProfileService>());
             services.AddScoped<IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto>, ReceptionistProfileService>();
             services.AddAutoMapper(AssemblyReference.Assembly);
             return services;

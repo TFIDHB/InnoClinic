@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using InnoClinic.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +10,21 @@ namespace InnoClinic.Profiles.API.Controllers
     [ApiController]
     [Route("api/v1/doctors")]
     public class DoctorProfileController(
-        IProfilesService<DoctorProfileDto, CreateDoctorProfileRequestDto, UpdateDoctorProfileRequestDto> doctorProfilesService
+        IDoctorProfileService doctorProfilesService
         ) : ControllerBase
     {
+        [HttpGet("me")]
+        [Authorize(Roles = "Doctor")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<DoctorProfileDto>> GetMyProfile(CancellationToken ct = default)
+        {
+            var accountId = User.GetUserId();
+            var result = await doctorProfilesService.GetByAccountIdAsync(accountId, ct);
+            return Ok(result);
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -23,9 +36,12 @@ namespace InnoClinic.Profiles.API.Controllers
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<IEnumerable<DoctorProfileDto>>> GetAllDoctors(CancellationToken ct = default)
+        public async Task<ActionResult<IEnumerable<DoctorProfileDto>>> GetAllDoctors(
+            [FromQuery] Guid? specializationId,
+            [FromQuery] Guid? officeId,
+            CancellationToken ct = default)
         {
-            var result = await doctorProfilesService.GetAllAsync(ct);
+            var result = await doctorProfilesService.GetFilteredDoctorsAsync(specializationId, officeId, ct);
             return Ok(result);
         }
 
@@ -46,6 +62,13 @@ namespace InnoClinic.Profiles.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<DoctorProfileDto>> UpdateDoctor(Guid id, [FromBody] UpdateDoctorProfileRequestDto dto, CancellationToken ct = default)
         {
+            if (User.IsInRole("Doctor"))
+            {
+                var profile = await doctorProfilesService.GetByIdAsync(id, ct);
+                if (profile.AccountId != User.GetUserId())
+                    return Forbid();
+            }
+
             var result = await doctorProfilesService.UpdateAsync(id, dto, ct);
             return Ok(result);
         }

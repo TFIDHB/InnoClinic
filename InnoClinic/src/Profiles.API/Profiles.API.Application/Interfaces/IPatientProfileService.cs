@@ -11,5 +11,6 @@ namespace Application.Interfaces
     {
         Task<PatientProfileDto> CreateOrMatchProfileAsync(Guid accountId, CreatePatientProfileRequestDto dto, CancellationToken ct = default);
         Task<PatientProfileDto> LinkProfileToAccountAsync(Guid profileId, Guid accountId, CancellationToken ct = default);
+        Task<PatientProfileDto> GetByAccountIdAsync(Guid accountId, CancellationToken ct = default);
     }
 }

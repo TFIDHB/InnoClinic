@@ -10,7 +10,7 @@ namespace Application.Services
         IProfilesUnitOfWork unitOfWork,
         IMapper mapper,
         IAuthClient authClient
-        ) : IProfilesService<DoctorProfileDto, CreateDoctorProfileRequestDto, UpdateDoctorProfileRequestDto>
+        ) : IDoctorProfileService
     {
         public async Task<DoctorProfileDto> CreateAsync(CreateDoctorProfileRequestDto dto, CancellationToken ct = default)
         {
@@ -40,12 +40,26 @@ namespace Application.Services
             return mapper.Map<IEnumerable<DoctorProfileDto>>(doctorProfiles);
         }
 
+        public async Task<DoctorProfileDto> GetByAccountIdAsync(Guid accountId, CancellationToken ct = default)
+        {
+            var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByAccountIdAsync(accountId, ct)
+                    ?? throw new NotFoundException(nameof(DoctorProfile));
+
+            return mapper.Map<DoctorProfileDto>(doctorProfile);
+        }
+
         public async Task<DoctorProfileDto> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(DoctorProfile));
 
             return mapper.Map<DoctorProfileDto>(doctorProfile);
+        }
+
+        public async Task<IEnumerable<DoctorProfileDto>> GetFilteredDoctorsAsync(Guid? specializationId, Guid? officeId, CancellationToken ct = default)
+        {
+            var doctors = await unitOfWork.DoctorProfilesRepository.GetFilteredAsync(specializationId, officeId, ct);
+            return mapper.Map<IEnumerable<DoctorProfileDto>>(doctors);
         }
 
         public async Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
