@@ -7,5 +7,6 @@ namespace BLL.Interfaces
         Task RegisterAsync(RegisterRequestDto dto, CancellationToken ct = default);
         Task<AuthTokenDto> LoginAsync(LoginRequestDto dto, CancellationToken ct = default);
         Task LogoutAsync(LogOutRequestDto dto, Guid userId, CancellationToken ct = default);
+        Task<CreateStaffAccountResponseDto> CreateStaffAccountAsync(CreateStaffAccountRequestDto dto, CancellationToken ct = default);
     }
 }

@@ -16,6 +16,7 @@ namespace BLL.Extensions
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddAutoMapper(typeof(UserMapper));
+            services.AddScoped<IPasswordGenerator, PasswordGenerator>();
 
             services.Configure<ProfilesApiOptions>(configuration.GetSection("ProfilesApi"));
             services.AddHttpClient<IProfilesClient, ProfilesClient>((sp, client) =>

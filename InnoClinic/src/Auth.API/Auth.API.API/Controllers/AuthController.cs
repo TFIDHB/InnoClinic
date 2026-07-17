@@ -44,5 +44,12 @@ namespace InnoClinic.Auth.API.Controllers
             await _authService.LogoutAsync(dto, Guid.Parse(userId));
             return Ok();
         }
+
+        [HttpPost("create-staff-account")]
+        public async Task<IActionResult> CreateStaffAccount([FromBody] CreateStaffAccountRequestDto dto, CancellationToken ct = default)
+        {
+            var result = await _authService.CreateStaffAccountAsync(dto, ct);
+            return Ok(result);
+        }
     }
 }

@@ -11,7 +11,8 @@ namespace BLL.Services
         ITokenService tokenService,
         IAuthUnitOfWork unitOfWork,
         IMapper mapper,
-        IProfilesClient profilesClient) : IAuthService
+        IProfilesClient profilesClient,
+        IPasswordGenerator passwordGenerator) : IAuthService
     {
         public async Task RegisterAsync(RegisterRequestDto dto, CancellationToken ct = default)
         {
@@ -88,6 +89,35 @@ namespace BLL.Services
             user.RefreshTokenExpiry = null;
 
             await unitOfWork.SaveChangesAsync(ct);
+        }
+
+        public async Task<CreateStaffAccountResponseDto> CreateStaffAccountAsync(CreateStaffAccountRequestDto dto, CancellationToken ct = default)
+        {
+            if (await unitOfWork.UserRepository.ExistsByEmailAsync(dto.Email, ct))
+            {
+                throw new EmailAlreadyExistsException();
+            }
+
+            var temporaryFakePassword = passwordGenerator.Generate();
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(temporaryFakePassword);
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                Email = dto.Email,
+                PasswordHash = passwordHash
+            };
+
+            await unitOfWork.UserRepository.CreateAsync(user, ct);
+            await unitOfWork.SaveChangesAsync(ct);
+
+            //Temporary decision for now. Password should be sent on email
+
+            return new CreateStaffAccountResponseDto
+            {
+                AccountId = user.Id,
+                TemporaryFakePassword = temporaryFakePassword
+            };
         }
     }
 }

@@ -119,6 +119,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__ProfilesConnection=${PROFILES_CONNECTION}
+      - AuthApi__BaseUrl=http://innoclinic.auth.api:8080
       - JwtSettings__Secret=123456789012345678901234567890123
       - JwtSettings__Issuer=InnoClinic.Auth.API
       - JwtSettings__Audience=InnoClinic.Clients
