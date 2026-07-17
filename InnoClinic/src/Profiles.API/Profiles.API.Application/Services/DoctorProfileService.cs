@@ -22,7 +22,11 @@ namespace Application.Services
             await unitOfWork.DoctorProfilesRepository.CreateAsync(doctorProfile, ct);
             await unitOfWork.SaveChangesAsync(ct);
 
-            return mapper.Map<DoctorProfileDto>(doctorProfile);
+            var responseDto = mapper.Map<DoctorProfileDto>(doctorProfile);
+
+            responseDto.TemporaryFakePassword = accountResult.TemporaryFakePassword;
+
+            return responseDto;
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)

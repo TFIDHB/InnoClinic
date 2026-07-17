@@ -43,17 +43,15 @@ namespace BLL.Services
             }
 
             var profileInfo = await profilesClient.GetProfileInfoByAccountIdAsync(user.Id, ct);
-            if (profileInfo == null)
+
+            var role = profileInfo?.Role ?? "Patient";
+
+            if (profileInfo != null && profileInfo.Role == "Doctor" && profileInfo.Status == "Inactive")
             {
                 throw new UserNotFoundException();
             }
 
-            if (profileInfo.Role == "Doctor" && profileInfo.Status == "Inactive")
-            {
-                throw new UserNotFoundException();
-            }
-
-            var accessToken = tokenService.GenerateAccessToken(user, profileInfo.Role);
+            var accessToken = tokenService.GenerateAccessToken(user, role);
             var refreshToken = tokenService.GenerateRefreshToken();
 
             var refreshTokenHash = BCrypt.Net.BCrypt.HashPassword(refreshToken);

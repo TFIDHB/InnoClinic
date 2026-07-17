@@ -26,6 +26,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<DoctorProfileDto>> GetDoctor(Guid id, CancellationToken ct = default)
@@ -35,6 +36,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Doctor, Receptionist")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<IEnumerable<DoctorProfileDto>>> GetAllDoctors(
             [FromQuery] Guid? specializationId,
