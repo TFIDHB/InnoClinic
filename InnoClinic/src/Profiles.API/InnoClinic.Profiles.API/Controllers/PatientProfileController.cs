@@ -18,6 +18,7 @@ namespace InnoClinic.Profiles.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PatientProfileDto>> GetMyProfile(CancellationToken ct = default)
         {
             var accountId = User.GetUserId();
@@ -27,8 +28,11 @@ namespace InnoClinic.Profiles.API.Controllers
 
         [HttpGet("{id}")]
         [Authorize(Roles = "Doctor, Receptionist")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PatientProfileDto>> GetPatient(Guid id, CancellationToken ct = default)
         {
             var result = await patientProfilesService.GetByIdAsync(id, ct);
@@ -39,18 +43,33 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Doctor,Receptionist")]
+        [Authorize(Roles = "Doctor, Receptionist")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<PatientProfileDto>>> GetAllPatients(CancellationToken ct = default)
         {
             var result = await patientProfilesService.GetAllAsync(ct);
             return Ok(result);
         }
 
+        [HttpGet]
+        [Authorize(Roles = "Receptionist")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<PatientProfileDto>>> GetFilteredPatients(string? search, CancellationToken ct = default)
+        {
+            var result = await patientProfilesService.GetFilteredPatientsAsync(search, ct);
+            return Ok(result);
+        }
+
         [HttpPost]
         [Authorize(Roles = "Receptionist")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PatientProfileDto>> CreatePatient([FromBody] CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
             var result = await patientProfilesService.CreateAsync(dto, ct);
@@ -59,9 +78,12 @@ namespace InnoClinic.Profiles.API.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Receptionist,Patient")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PatientProfileDto>> UpdatePatient(Guid id, [FromBody] UpdatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
             if (User.IsInRole("Patient"))
@@ -77,9 +99,11 @@ namespace InnoClinic.Profiles.API.Controllers
 
         [HttpDelete("{id}")]
         [Authorize(Roles = "Receptionist")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> DeletePatient(Guid id, CancellationToken ct = default)
         {
             await patientProfilesService.DeleteAsync(id, ct);
@@ -88,6 +112,8 @@ namespace InnoClinic.Profiles.API.Controllers
 
         [HttpPost("create-my-profile")]
         [Authorize(Roles = "Patient")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PatientProfileDto>> CreateMyProfile([FromBody] CreateMyPatientProfileRequestDto dto, CancellationToken ct = default)
         {
             var accountId = User.GetUserId();
@@ -97,6 +123,8 @@ namespace InnoClinic.Profiles.API.Controllers
 
         [HttpPost("{id}/link-to-account")]
         [Authorize(Roles = "Patient")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PatientProfileDto>> LinkProfileToAccount(Guid id, CancellationToken ct = default)
         {
             var accountId = User.GetUserId();

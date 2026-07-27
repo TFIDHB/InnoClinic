@@ -2,6 +2,7 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
@@ -64,9 +65,10 @@ namespace Application.Services
             Guid? specializationId,
             Guid? officeId,
             string? search,
+            DoctorStatus? status,
             CancellationToken ct = default)
         {
-            var doctors = await unitOfWork.DoctorProfilesRepository.GetFilteredAsync(specializationId, officeId, search, ct);
+            var doctors = await unitOfWork.DoctorProfilesRepository.GetFilteredAsync(specializationId, officeId, search, status, ct);
             return mapper.Map<IEnumerable<DoctorProfileDto>>(doctors);
         }
 

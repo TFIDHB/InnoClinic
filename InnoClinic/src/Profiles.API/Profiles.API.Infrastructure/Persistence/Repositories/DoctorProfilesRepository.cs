@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
+using Domain.Enums;
 using InnoClinic.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,7 @@ namespace Infrastructure.Persistence.Repositories
             Guid? specializationId,
             Guid? officeId,
             string? search,
+            DoctorStatus? status,
             CancellationToken ct = default)
         {
             var query = context.Set<DoctorProfile>().AsQueryable();
@@ -26,6 +28,9 @@ namespace Infrastructure.Persistence.Repositories
 
             if (officeId.HasValue)
                 query = query.Where(d => d.OfficeId == officeId.Value);
+
+            if (status.HasValue)
+                query = query.Where(d => d.Status == status.Value);
 
             if (!string.IsNullOrWhiteSpace(search))
             {

@@ -18,6 +18,7 @@ namespace InnoClinic.Profiles.API.Controllers
         //[Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ReceptionistProfileDto>> GetReceptionist(Guid id, CancellationToken ct = default)
         {
             var result = await receptionistProfilesService.GetByIdAsync(id, ct);
@@ -27,6 +28,7 @@ namespace InnoClinic.Profiles.API.Controllers
         [HttpGet]
         //[Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ReceptionistProfileDto>>> GetAllReceptionists(CancellationToken ct = default)
         {
             var result = await receptionistProfilesService.GetAllAsync(ct);
@@ -37,6 +39,7 @@ namespace InnoClinic.Profiles.API.Controllers
         //[Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ReceptionistProfileDto>> CreateReceptionist([FromBody] CreateReceptionistProfileRequestDto dto, CancellationToken ct = default)
         {
             var result = await receptionistProfilesService.CreateAsync(dto, ct);
@@ -48,6 +51,7 @@ namespace InnoClinic.Profiles.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ReceptionistProfileDto>> UpdateReceptionist(Guid id, [FromBody] UpdateReceptionistProfileRequestDto dto, CancellationToken ct = default)
         {
             var result = await receptionistProfilesService.UpdateAsync(id, dto, ct);
@@ -59,6 +63,7 @@ namespace InnoClinic.Profiles.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> DeleteReceptionist(Guid id, CancellationToken ct = default)
         {
             await receptionistProfilesService.DeleteAsync(id, ct);

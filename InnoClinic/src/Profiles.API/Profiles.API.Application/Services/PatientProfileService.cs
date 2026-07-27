@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Exceptions;
 using Application.Interfaces;
 using AutoMapper;
 using BLL.DTOs;
@@ -27,6 +28,12 @@ namespace Application.Services
             CreateMyPatientProfileRequestDto dto,
             CancellationToken ct = default)
         {
+            var existingProfile = await unitOfWork.PatientProfilesRepository.GetByAccountIdAsync(accountId, ct);
+            if (existingProfile != null)
+            {
+                throw new ProfileAlreadyExistsException();
+            }
+
             var candidates = await unitOfWork.PatientProfilesRepository.GetUnlinkedProfilesAsync(ct);
 
             var bestMatch = candidates
@@ -165,6 +172,13 @@ namespace Application.Services
             }
 
             return dto;
+        }
+
+        public async Task<IEnumerable<PatientProfileDto>> GetFilteredPatientsAsync(string? search, CancellationToken ct = default)
+        {
+            var patients = await unitOfWork.PatientProfilesRepository.GetFilteredAsync(search, ct);
+            return mapper.Map<IEnumerable<PatientProfileDto>>(patients);
+
         }
     }
 }

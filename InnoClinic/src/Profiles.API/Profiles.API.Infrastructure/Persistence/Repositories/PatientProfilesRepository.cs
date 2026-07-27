@@ -13,6 +13,25 @@ namespace Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(profile => profile.AccountId == id, ct);
         }
 
+        public async Task<IEnumerable<PatientProfile>> GetFilteredAsync(string? search, CancellationToken ct = default)
+        {
+            var query = context.Set<PatientProfile>().AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var terms = search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var term in terms)
+                {
+                    query = query.Where(d =>
+                        EF.Functions.Like(d.FirstName, $"%{term}%") ||
+                        EF.Functions.Like(d.LastName, $"%{term}%") ||
+                        (d.MiddleName != null && EF.Functions.Like(d.MiddleName, $"%{term}%")));
+                }
+            }
+
+            return await query.ToListAsync(ct);
+        }
+
         public async Task<IEnumerable<PatientProfile>> GetUnlinkedProfilesAsync(CancellationToken ct = default)
         {
             return await context.PatientProfiles
