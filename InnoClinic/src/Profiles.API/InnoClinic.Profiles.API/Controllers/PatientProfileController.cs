@@ -53,7 +53,7 @@ namespace InnoClinic.Profiles.API.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
+        [HttpGet("search")]
         [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
