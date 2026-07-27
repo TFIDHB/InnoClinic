@@ -2,6 +2,7 @@
 using BLL.AutoMapper;
 using BLL.DTOs;
 using BLL.Exceptions;
+using BLL.Interfaces;
 using BLL.Services;
 using BLL.Settings;
 using DAL;
@@ -13,6 +14,11 @@ using Microsoft.Extensions.Options;
 
 namespace Auth.API.Tests.Integration
 {
+    public class FakeProfilesClient : IProfilesClient
+    {
+        public Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
+            => Task.FromResult<AccountProfileInfoDto?>(null);
+    }
     public class ServiceAssemblyResult
     {
         public AuthDbContext DbContext { get; set; }
@@ -52,7 +58,10 @@ namespace Auth.API.Tests.Integration
             var serviceProvider = services.BuildServiceProvider();
 
             var unitOfWork = new AuthUnitOfWork(dbContext, serviceProvider);
-            var authService = new AuthService(unitOfWork, _mapper, _tokenService);
+            var profilesClient = new FakeProfilesClient();
+            var passwordGenerator = new PasswordGenerator();
+
+            var authService = new AuthService(_tokenService, unitOfWork, _mapper, profilesClient, passwordGenerator);
 
             return new ServiceAssemblyResult
             {

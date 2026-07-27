@@ -88,7 +88,7 @@ namespace InnoClinic.Profiles.API.Controllers
 
         [HttpPost("create-my-profile")]
         [Authorize(Roles = "Patient")]
-        public async Task<ActionResult<PatientProfileDto>> CreateMyProfile([FromBody] CreatePatientProfileRequestDto dto, CancellationToken ct = default)
+        public async Task<ActionResult<PatientProfileDto>> CreateMyProfile([FromBody] CreateMyPatientProfileRequestDto dto, CancellationToken ct = default)
         {
             var accountId = User.GetUserId();
             var result = await patientProfilesService.CreateOrMatchProfileAsync(accountId, dto, ct);

@@ -13,7 +13,11 @@ namespace Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(profile => profile.AccountId == id, ct);
         }
 
-        public async Task<IEnumerable<DoctorProfile>> GetFilteredAsync(Guid? specializationId, Guid? officeId, CancellationToken ct = default)
+        public async Task<IEnumerable<DoctorProfile>> GetFilteredAsync(
+            Guid? specializationId,
+            Guid? officeId,
+            string? search,
+            CancellationToken ct = default)
         {
             var query = context.Set<DoctorProfile>().AsQueryable();
 
@@ -22,6 +26,18 @@ namespace Infrastructure.Persistence.Repositories
 
             if (officeId.HasValue)
                 query = query.Where(d => d.OfficeId == officeId.Value);
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var terms = search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var term in terms)
+                {
+                    query = query.Where(d =>
+                        EF.Functions.Like(d.FirstName, $"%{term}%") ||
+                        EF.Functions.Like(d.LastName, $"%{term}%") ||
+                        (d.MiddleName != null && EF.Functions.Like(d.MiddleName, $"%{term}%")));
+                }
+            }
 
             return await query.ToListAsync(ct);
         }

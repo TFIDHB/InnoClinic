@@ -13,6 +13,8 @@ namespace Auth.API.Tests.Unit
     {
         private readonly Mock<IAuthUnitOfWork> _unitOfWorkMock;
         private readonly Mock<ITokenService> _tokenServiceMock;
+        private readonly Mock<IProfilesClient> _profilesClientMock;
+        private readonly Mock<IPasswordGenerator> _passwordGeneratorMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly AuthService _authService;
         public AuthServiceTests()
@@ -20,7 +22,12 @@ namespace Auth.API.Tests.Unit
             _unitOfWorkMock = new Mock<IAuthUnitOfWork>();
             _tokenServiceMock = new Mock<ITokenService>();
             _mapperMock = new Mock<IMapper>();
-            _authService = new AuthService(_unitOfWorkMock.Object, _mapperMock.Object, _tokenServiceMock.Object);
+            _authService = new AuthService(
+                _tokenServiceMock.Object,
+                _unitOfWorkMock.Object,
+                _mapperMock.Object,
+                _profilesClientMock.Object,
+                _passwordGeneratorMock.Object);
         }
 
         [Fact]
@@ -92,11 +99,13 @@ namespace Auth.API.Tests.Unit
                 Email = dto.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456")
             };
+            var role = "Patient";
+
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByEmailAsync(dto.Email, default))
                 .ReturnsAsync(user);
             _tokenServiceMock
-                .Setup(e => e.GenerateAccessToken(user))
+                .Setup(e => e.GenerateAccessToken(user, role))
                 .Returns("access-token");
             _tokenServiceMock
                 .Setup(e => e.GenerateRefreshToken())

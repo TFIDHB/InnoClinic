@@ -4,6 +4,7 @@ using BLL.Exceptions;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
+using Microsoft.Identity.Client;
 
 namespace BLL.Services
 {
@@ -25,6 +26,7 @@ namespace BLL.Services
 
             var user = mapper.Map<User>(dto);
             user.PasswordHash = passwordHash;
+            user.CreatedAt = DateTime.UtcNow;
 
             await unitOfWork.UserRepository.CreateAsync(user, ct);
             await unitOfWork.SaveChangesAsync(ct);
@@ -116,6 +118,24 @@ namespace BLL.Services
                 AccountId = user.Id,
                 TemporaryFakePassword = temporaryFakePassword
             };
+        }
+
+        public async Task<UserAccountInfoDto> GetUserAccountInfo(Guid userId, CancellationToken ct = default)
+        {
+            var user = await unitOfWork.UserRepository.GetByIdAsync(userId, ct)
+                ?? throw new UserNotFoundException();
+
+            return mapper.Map<UserAccountInfoDto>(user);
+        }
+
+        public async Task UpdateUserAccountInfo(Guid userId, UpdateUserAccountInfoDto dto, CancellationToken ct = default)
+        {
+            var user = await unitOfWork.UserRepository.GetByIdAsync(userId, ct)
+                ?? throw new UserNotFoundException();
+
+            mapper.Map(dto, user);
+            await unitOfWork.UserRepository.UpdateAsync(user, ct);
+            await unitOfWork.SaveChangesAsync(ct);
         }
     }
 }

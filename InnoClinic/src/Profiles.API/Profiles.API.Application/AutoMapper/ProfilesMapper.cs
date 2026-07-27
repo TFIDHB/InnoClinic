@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using AutoMapper;
+using BLL.DTOs;
 using Domain.Entities;
 
 namespace Application.AutoMapper
@@ -15,6 +16,8 @@ namespace Application.AutoMapper
             CreateMap<PatientProfile, PatientProfileDto>();
             CreateMap<CreatePatientProfileRequestDto, PatientProfile>();
             CreateMap<UpdatePatientProfileRequestDto, PatientProfile>();
+            CreateMap<UserAccountInfoDto, PatientProfileDto>();
+            CreateMap<CreateMyPatientProfileRequestDto, PatientProfile>();
 
             CreateMap<ReceptionistProfile, ReceptionistProfileDto>();
             CreateMap<CreateReceptionistProfileRequestDto, ReceptionistProfile>();

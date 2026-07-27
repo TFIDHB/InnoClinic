@@ -41,9 +41,10 @@ namespace InnoClinic.Profiles.API.Controllers
         public async Task<ActionResult<IEnumerable<DoctorProfileDto>>> GetAllDoctors(
             [FromQuery] Guid? specializationId,
             [FromQuery] Guid? officeId,
+            [FromQuery] string? search,
             CancellationToken ct = default)
         {
-            var result = await doctorProfilesService.GetFilteredDoctorsAsync(specializationId, officeId, ct);
+            var result = await doctorProfilesService.GetFilteredDoctorsAsync(specializationId, officeId, search, ct);
             return Ok(result);
         }
 

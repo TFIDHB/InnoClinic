@@ -1,12 +1,16 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using AutoMapper;
+using BLL.DTOs;
 using Domain.Entities;
 using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
 {
-    public class PatientProfileService(IProfilesUnitOfWork unitOfWork, IMapper mapper) : IPatientProfileService
+    public class PatientProfileService(
+        IProfilesUnitOfWork unitOfWork,
+        IMapper mapper,
+        IAuthClient authClient) : IPatientProfileService
     {
         public async Task<PatientProfileDto> CreateAsync(CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
@@ -20,7 +24,7 @@ namespace Application.Services
 
         public async Task<PatientProfileDto> CreateOrMatchProfileAsync(
             Guid accountId,
-            CreatePatientProfileRequestDto dto,
+            CreateMyPatientProfileRequestDto dto,
             CancellationToken ct = default)
         {
             var candidates = await unitOfWork.PatientProfilesRepository.GetUnlinkedProfilesAsync(ct);
@@ -33,7 +37,11 @@ namespace Application.Services
 
             if (bestMatch != null)
             {
-                return mapper.Map<PatientProfileDto>(bestMatch.Profile);
+                await authClient.UpdateUserAccountInfoDtoAsync(accountId, new UpdateUserAccountInfoDto { PhoneNumber = dto.PhoneNumber }, ct);
+
+                var matchDto = mapper.Map<PatientProfileDto>(bestMatch.Profile);
+                matchDto.PhoneNumber = dto.PhoneNumber;
+                return matchDto;
             }
 
             var newProfile = mapper.Map<PatientProfile>(dto);
@@ -43,10 +51,14 @@ namespace Application.Services
             await unitOfWork.PatientProfilesRepository.CreateAsync(newProfile, ct);
             await unitOfWork.SaveChangesAsync(ct);
 
-            return mapper.Map<PatientProfileDto>(newProfile);
+            await authClient.UpdateUserAccountInfoDtoAsync(accountId, new UpdateUserAccountInfoDto { PhoneNumber = dto.PhoneNumber }, ct);
+
+            var result = mapper.Map<PatientProfileDto>(newProfile);
+            result.PhoneNumber = dto.PhoneNumber;
+            return result;
         }
 
-        private static int CalculateMatchScore(PatientProfile profile, CreatePatientProfileRequestDto dto)
+        private static int CalculateMatchScore(PatientProfile profile, IPatientFields dto)
         {
             var score = 0;
             if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase)) score += 5;
@@ -76,7 +88,17 @@ namespace Application.Services
             var patientProfile = await unitOfWork.PatientProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(PatientProfile));
 
-            return mapper.Map<PatientProfileDto>(patientProfile);
+            var dto =  mapper.Map<PatientProfileDto>(patientProfile);
+
+            var accountInfo = authClient.GetUserAccountInfoDtoAsync(id, ct);
+
+            if (accountInfo != null)
+            { 
+                mapper.Map(accountInfo, dto);
+            }
+
+            return dto;
+
         }
 
         public async Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
@@ -101,7 +123,14 @@ namespace Application.Services
             await unitOfWork.PatientProfilesRepository.UpdateAsync(patientProfile, ct);
             await unitOfWork.SaveChangesAsync(ct);
 
-            return mapper.Map<PatientProfileDto>(patientProfile);
+            if (dto.PhoneNumber != null)
+            {
+                await authClient.UpdateUserAccountInfoDtoAsync(id, new UpdateUserAccountInfoDto { PhoneNumber = dto.PhoneNumber }, ct);
+            }
+
+            var result = mapper.Map<PatientProfileDto>(patientProfile);
+            result.PhoneNumber = dto.PhoneNumber;
+            return result;
         }
 
         public async Task<PatientProfileDto> LinkProfileToAccountAsync(
@@ -126,7 +155,16 @@ namespace Application.Services
             var patientProfile = await unitOfWork.PatientProfilesRepository.GetByAccountIdAsync(accountId, ct)
                     ?? throw new NotFoundException(nameof(PatientProfile));
 
-            return mapper.Map<PatientProfileDto>(patientProfile);
+            var dto = mapper.Map<PatientProfileDto>(patientProfile);
+
+            var accountInfo = await authClient.GetUserAccountInfoDtoAsync(accountId, ct);
+
+            if (accountInfo != null)
+            {
+                mapper.Map(accountInfo, dto);
+            }
+
+            return dto;
         }
     }
 }

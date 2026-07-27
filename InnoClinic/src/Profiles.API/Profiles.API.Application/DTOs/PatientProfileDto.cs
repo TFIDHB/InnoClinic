@@ -9,5 +9,7 @@
         public DateOnly? DateOfBirth { get; set; }
         public Guid? AccountId { get; set; }
         public bool IsLinkedToAccount { get; set; }
+        public string? PhoneNumber { get; set; }
+        public Guid? PhotoId { get; set; }
     }
 }
