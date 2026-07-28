@@ -7,7 +7,7 @@ using System.Security.Claims;
 namespace InnoClinic.Auth.API.Controllers
 {
     [ApiController]
-    [Route("api/auth")]
+    [Route("api/v1/auth")]
     public class AuthController(IAuthService authService) : ControllerBase
     {
 
@@ -26,9 +26,9 @@ namespace InnoClinic.Auth.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto dto, CancellationToken ct = default)
         {
-            var result = await authService.LoginAsync(dto);
+            var result = await authService.LoginAsync(dto, ct);
             return Ok(result);
         }
 
@@ -38,20 +38,19 @@ namespace InnoClinic.Auth.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Logout([FromBody] LogOutRequestDto dto)
+        public async Task<IActionResult> Logout([FromBody] LogOutRequestDto dto, CancellationToken ct = default)
         {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            if (userId == null)
-            {
+            if (!Guid.TryParse(userIdClaim, out var userId))
                 return Unauthorized();
-            }
 
-            await authService.LogoutAsync(dto, Guid.Parse(userId));
+            await authService.LogoutAsync(dto, userId, ct);
             return Ok();
         }
 
         [HttpPost("create-staff-account")]
+        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -59,28 +58,6 @@ namespace InnoClinic.Auth.API.Controllers
         {
             var result = await authService.CreateStaffAccountAsync(dto, ct);
             return Ok(result);
-        }
-
-        [HttpGet("accounts/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAccountInfo(Guid id, CancellationToken ct = default)
-        {
-            var result = await authService.GetUserAccountInfo(id, ct);
-            return Ok(result);
-        }
-
-        [HttpPut("accounts/{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateAccountInfo(Guid id, [FromBody] UpdateUserAccountInfoDto dto, CancellationToken ct = default)
-        {
-            await authService.UpdateUserAccountInfo(id, dto, ct);
-            return Ok();
         }
     }
 }

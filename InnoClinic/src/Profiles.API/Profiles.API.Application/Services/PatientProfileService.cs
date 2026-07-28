@@ -13,6 +13,16 @@ namespace Application.Services
         IMapper mapper,
         IAuthClient authClient) : IPatientProfileService
     {
+        private static int CalculateMatchScore(PatientProfile profile, IPatientFields dto)
+        {
+            var score = 0;
+            if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (profile.DateOfBirth == dto.DateOfBirth) score += 3;
+            return score;
+        }
+
         public async Task<PatientProfileDto> CreateAsync(CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
             var patientProfile = mapper.Map<PatientProfile>(dto);
@@ -44,7 +54,7 @@ namespace Application.Services
 
             if (bestMatch != null)
             {
-                await authClient.UpdateUserAccountInfoDtoAsync(accountId, new UpdateUserAccountInfoDto { PhoneNumber = dto.PhoneNumber }, ct);
+                await authClient.UpdateUserAccountInfoAsync(accountId, new UpdateUserAccountInfoDto { PhoneNumber = dto.PhoneNumber }, ct);
 
                 var matchDto = mapper.Map<PatientProfileDto>(bestMatch.Profile);
                 matchDto.PhoneNumber = dto.PhoneNumber;
@@ -58,21 +68,11 @@ namespace Application.Services
             await unitOfWork.PatientProfilesRepository.CreateAsync(newProfile, ct);
             await unitOfWork.SaveChangesAsync(ct);
 
-            await authClient.UpdateUserAccountInfoDtoAsync(accountId, new UpdateUserAccountInfoDto { PhoneNumber = dto.PhoneNumber }, ct);
+            await authClient.UpdateUserAccountInfoAsync(accountId, new UpdateUserAccountInfoDto { PhoneNumber = dto.PhoneNumber }, ct);
 
             var result = mapper.Map<PatientProfileDto>(newProfile);
             result.PhoneNumber = dto.PhoneNumber;
             return result;
-        }
-
-        private static int CalculateMatchScore(PatientProfile profile, IPatientFields dto)
-        {
-            var score = 0;
-            if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (profile.DateOfBirth == dto.DateOfBirth) score += 3;
-            return score;
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
@@ -97,7 +97,7 @@ namespace Application.Services
 
             var dto =  mapper.Map<PatientProfileDto>(patientProfile);
 
-            var accountInfo = authClient.GetUserAccountInfoDtoAsync(id, ct);
+            var accountInfo = authClient.GetUserAccountInfoAsync(id, ct);
 
             if (accountInfo != null)
             { 
@@ -110,9 +110,9 @@ namespace Application.Services
 
         public async Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
         {
-            var patienProfile = await unitOfWork.PatientProfilesRepository.GetByAccountIdAsync(id, ct);
+            var patientProfile = await unitOfWork.PatientProfilesRepository.GetByAccountIdAsync(id, ct);
 
-            if (patienProfile == null)
+            if (patientProfile == null)
                 return null;
 
             return new AccountProfileInfoDto { Role = "Patient" };
@@ -132,7 +132,7 @@ namespace Application.Services
 
             if (dto.PhoneNumber != null)
             {
-                await authClient.UpdateUserAccountInfoDtoAsync(id, new UpdateUserAccountInfoDto { PhoneNumber = dto.PhoneNumber }, ct);
+                await authClient.UpdateUserAccountInfoAsync(id, new UpdateUserAccountInfoDto { PhoneNumber = dto.PhoneNumber }, ct);
             }
 
             var result = mapper.Map<PatientProfileDto>(patientProfile);
@@ -143,10 +143,17 @@ namespace Application.Services
         public async Task<PatientProfileDto> LinkProfileToAccountAsync(
             Guid profileId,
             Guid accountId,
+            IPatientFields fields,
             CancellationToken ct = default)
         {
             var profile = await unitOfWork.PatientProfilesRepository.GetByIdAsync(profileId, ct)
                 ?? throw new NotFoundException(nameof(PatientProfile));
+
+            if (profile.IsLinkedToAccount)
+                throw new BadRequestException(ProfilesApplicationMessages.ProfileAlreadyLinkedMessage);
+
+            if (CalculateMatchScore(profile, fields) < 13)
+                throw new BadRequestException(ProfilesApplicationMessages.ProfileDoesNotMatchMessage);
 
             profile.AccountId = accountId;
             profile.IsLinkedToAccount = true;
@@ -164,7 +171,7 @@ namespace Application.Services
 
             var dto = mapper.Map<PatientProfileDto>(patientProfile);
 
-            var accountInfo = await authClient.GetUserAccountInfoDtoAsync(accountId, ct);
+            var accountInfo = await authClient.GetUserAccountInfoAsync(accountId, ct);
 
             if (accountInfo != null)
             {

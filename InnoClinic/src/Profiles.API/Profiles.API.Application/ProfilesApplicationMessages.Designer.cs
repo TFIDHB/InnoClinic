@@ -22,14 +22,14 @@ namespace Application {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class ProfilesMessages {
+    public class ProfilesApplicationMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ProfilesMessages() {
+        internal ProfilesApplicationMessages() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Application {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Application.ProfilesMessages", typeof(ProfilesMessages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Application.ProfilesApplicationMessages", typeof(ProfilesApplicationMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -66,6 +66,24 @@ namespace Application {
         public static string ProfileAlreadyExistsMessage {
             get {
                 return ResourceManager.GetString("ProfileAlreadyExistsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This profile is already linked to another account.
+        /// </summary>
+        public static string ProfileAlreadyLinkedMessage {
+            get {
+                return ResourceManager.GetString("ProfileAlreadyLinkedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The entered data doesn&apos;t match this profile.
+        /// </summary>
+        public static string ProfileDoesNotMatchMessage {
+            get {
+                return ResourceManager.GetString("ProfileDoesNotMatchMessage", resourceCulture);
             }
         }
     }

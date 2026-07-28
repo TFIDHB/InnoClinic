@@ -102,7 +102,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__AuthConnection=${AUTH_CONNECTION}
       - ProfilesApi__BaseUrl=http://innoclinic.profiles.api:8080
-      - JwtSettings__Secret=123456789012345678901234567890123
+      - JwtSettings__Secret={JWT_SECRET}
       - JwtSettings__Issuer=InnoClinic.Auth.API
       - JwtSettings__Audience=InnoClinic.Clients
       - JwtSettings__ExpirationMinutes=5
@@ -120,7 +120,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__ProfilesConnection=${PROFILES_CONNECTION}
       - AuthApi__BaseUrl=http://innoclinic.auth.api:8080
-      - JwtSettings__Secret=123456789012345678901234567890123
+      - JwtSettings__Secret={JWT_SECRET}
       - JwtSettings__Issuer=InnoClinic.Auth.API
       - JwtSettings__Audience=InnoClinic.Clients
       - JwtSettings__ExpirationMinutes=5
@@ -132,6 +132,3 @@ volumes:
   sqlserver_data:
   postgres_data:
   azurite_data:
-
-
-

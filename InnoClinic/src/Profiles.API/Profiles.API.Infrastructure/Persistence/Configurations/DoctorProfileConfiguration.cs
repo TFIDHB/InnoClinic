@@ -9,7 +9,9 @@ namespace Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<DoctorProfile> builder)
         {
             builder.HasKey(e => e.Id);
-            builder.Property(e => e.Id).HasDefaultValueSql("newsequentialid()").ValueGeneratedOnAdd();
+            builder.Property(e => e.Id)
+                .HasDefaultValueSql("newsequentialid()")
+                .ValueGeneratedOnAdd();
 
             builder.Property(e => e.FirstName).IsRequired();
             builder.Property(e => e.LastName).IsRequired();
@@ -17,6 +19,7 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(e => e.CareerStartYear).IsRequired();
             builder.Property(e => e.Status).HasConversion<string>();
             builder.Property(e => e.SpecializationId).IsRequired();
+            builder.HasIndex(e => e.AccountId).IsUnique();
         }
     }
 }

@@ -6,9 +6,12 @@ namespace InnoClinic.Shared.Extensions
     {
         public static Guid GetUserId(this ClaimsPrincipal claimsPrincipal) 
         {
-            var value = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new UnauthorizedAccessException();
-            return Guid.Parse(value);
+            var value = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!Guid.TryParse(value, out var userId))
+                throw new UnauthorizedAccessException();
+
+            return userId;
         }
 
         public static string GetUserRole(this ClaimsPrincipal claimsPrincipal)

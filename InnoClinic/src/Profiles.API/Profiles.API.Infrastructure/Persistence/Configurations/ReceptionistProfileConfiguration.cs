@@ -9,11 +9,14 @@ namespace Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<ReceptionistProfile> builder)
         {
             builder.HasKey(e => e.Id);
-            builder.Property(e => e.Id).HasDefaultValueSql("newsequentialid()").ValueGeneratedOnAdd();
+            builder.Property(e => e.Id)
+                .HasDefaultValueSql("newsequentialid()")
+                .ValueGeneratedOnAdd();
 
             builder.Property(e => e.FirstName).IsRequired();
             builder.Property(e => e.LastName).IsRequired();
             builder.Property(e => e.MiddleName);
+            builder.HasIndex(e => e.AccountId).IsUnique();
         }
     }
 }

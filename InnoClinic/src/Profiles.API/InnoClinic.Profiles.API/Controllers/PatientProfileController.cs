@@ -36,9 +36,6 @@ namespace InnoClinic.Profiles.API.Controllers
         public async Task<ActionResult<PatientProfileDto>> GetPatient(Guid id, CancellationToken ct = default)
         {
             var result = await patientProfilesService.GetByIdAsync(id, ct);
-            if (User.IsInRole("Patient") && result.AccountId != User.GetUserId())
-                return Forbid();
-
             return Ok(result);
         }
 
@@ -125,10 +122,10 @@ namespace InnoClinic.Profiles.API.Controllers
         [Authorize(Roles = "Patient")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PatientProfileDto>> LinkProfileToAccount(Guid id, CancellationToken ct = default)
+        public async Task<ActionResult<PatientProfileDto>> LinkProfileToAccount(Guid id, CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
             var accountId = User.GetUserId();
-            var result = await patientProfilesService.LinkProfileToAccountAsync(id, accountId, ct);
+            var result = await patientProfilesService.LinkProfileToAccountAsync(id, accountId, dto, ct);
             return Ok(result);
         }
     }

@@ -9,11 +9,13 @@ namespace Application.Extensions
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<PatientProfileService>();
-            services.AddScoped<IPatientProfileService>(sp => sp.GetRequiredService<PatientProfileService>());
+            services.AddScopedSp<PatientProfileService,
+                IPatientProfileService,
+                IProfilesService<PatientProfileDto, CreatePatientProfileRequestDto, UpdatePatientProfileRequestDto>>();
 
-            services.AddScoped<DoctorProfileService>();
-            services.AddScoped<IDoctorProfileService>(sp => sp.GetRequiredService<DoctorProfileService>());
+            services.AddScopedSp<DoctorProfileService,
+                IDoctorProfileService,
+                IProfilesService<DoctorProfileDto, CreateDoctorProfileRequestDto, UpdateDoctorProfileRequestDto>>();
 
             services.AddScoped<IProfilesService<PatientProfileDto, CreatePatientProfileRequestDto, UpdatePatientProfileRequestDto>>(sp => sp.GetRequiredService<PatientProfileService>());
             services.AddScoped<IProfilesService<DoctorProfileDto, CreateDoctorProfileRequestDto, UpdateDoctorProfileRequestDto>>(sp => sp.GetRequiredService<DoctorProfileService>());

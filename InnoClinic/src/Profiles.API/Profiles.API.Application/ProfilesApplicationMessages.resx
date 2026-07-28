@@ -120,4 +120,10 @@
   <data name="ProfileAlreadyExistsMessage" xml:space="preserve">
     <value>Profile for this account already exists</value>
   </data>
+  <data name="ProfileAlreadyLinkedMessage" xml:space="preserve">
+    <value>This profile is already linked to another account</value>
+  </data>
+  <data name="ProfileDoesNotMatchMessage" xml:space="preserve">
+    <value>The entered data doesn't match this profile</value>
+  </data>
 </root>

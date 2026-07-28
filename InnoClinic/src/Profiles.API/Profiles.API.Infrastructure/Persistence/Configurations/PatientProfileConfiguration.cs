@@ -9,12 +9,17 @@ namespace Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<PatientProfile> builder)
         {
             builder.HasKey(e => e.Id);
-            builder.Property(e => e.Id).HasDefaultValueSql("newsequentialid()").ValueGeneratedOnAdd();
+            builder.Property(e => e.Id)
+                .HasDefaultValueSql("newsequentialid()")
+                .ValueGeneratedOnAdd();
 
             builder.Property(e => e.FirstName).IsRequired();
             builder.Property(e => e.LastName).IsRequired();
             builder.Property(e => e.MiddleName);
             builder.Property(e => e.IsLinkedToAccount).IsRequired();
+            builder.HasIndex(e => e.AccountId)
+                .IsUnique()
+                .HasFilter("[AccountId] IS NOT NULL");
         }
     }
 }

@@ -4,6 +4,6 @@ namespace BLL.Exceptions
 {
     public class UserNotFoundException : BadRequestException
     {
-        public UserNotFoundException() : base(BllMessages.UserNotFound) { }
+        public UserNotFoundException() : base(BllMessages.UserNotFoundMessage) { }
     }
 }

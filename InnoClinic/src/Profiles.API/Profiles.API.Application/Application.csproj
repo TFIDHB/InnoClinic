@@ -9,28 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Validators\**" />
-    <EmbeddedResource Remove="Validators\**" />
-    <None Remove="Validators\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\Shared\InnoClinic.Shared.csproj" />
     <ProjectReference Include="..\Profiles.API.Domain\Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ProfilesMessages.Designer.cs">
+    <Compile Update="ProfilesApplicationMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>ProfilesMessages.resx</DependentUpon>
+      <DependentUpon>ProfilesApplicationMessages.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="ProfilesMessages.resx">
+    <EmbeddedResource Update="ProfilesApplicationMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>ProfilesMessages.Designer.cs</LastGenOutput>
+      <LastGenOutput>ProfilesApplicationMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

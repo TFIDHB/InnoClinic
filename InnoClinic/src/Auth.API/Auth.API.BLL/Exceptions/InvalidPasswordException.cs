@@ -4,6 +4,6 @@ namespace BLL.Exceptions
 {
     public class InvalidPasswordException : BadRequestException
     {
-        public InvalidPasswordException() : base(BllMessages.InvalidPassword) { }
+        public InvalidPasswordException() : base(BllMessages.InvalidPasswordMessage) { }
     }
 }

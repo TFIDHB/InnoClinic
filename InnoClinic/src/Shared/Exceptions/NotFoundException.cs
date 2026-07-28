@@ -2,6 +2,8 @@
 {
     public class NotFoundException : Exception
     {
-        public NotFoundException(string entityName) : base(string.Format(SharedMessages.NotFoundMessage, entityName)) { }
+        public NotFoundException(string entityName) : base(string.Format(SharedMessages.NotFoundMessage, entityName)) 
+        {
+        }
     }
 }

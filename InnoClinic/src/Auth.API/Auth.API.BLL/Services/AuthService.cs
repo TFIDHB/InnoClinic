@@ -4,7 +4,6 @@ using BLL.Exceptions;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
-using Microsoft.Identity.Client;
 
 namespace BLL.Services
 {
@@ -50,7 +49,7 @@ namespace BLL.Services
 
             if (profileInfo != null && profileInfo.Role == "Doctor" && profileInfo.Status == "Inactive")
             {
-                throw new UserNotFoundException();
+                throw new InactiveEntityException();
             }
 
             var accessToken = tokenService.GenerateAccessToken(user, role);
@@ -105,7 +104,8 @@ namespace BLL.Services
             {
                 Id = Guid.NewGuid(),
                 Email = dto.Email,
-                PasswordHash = passwordHash
+                PasswordHash = passwordHash,
+                CreatedAt = DateTime.UtcNow
             };
 
             await unitOfWork.UserRepository.CreateAsync(user, ct);
@@ -116,7 +116,7 @@ namespace BLL.Services
             return new CreateStaffAccountResponseDto
             {
                 AccountId = user.Id,
-                TemporaryFakePassword = temporaryFakePassword
+                TemporaryPassword = temporaryFakePassword
             };
         }
 

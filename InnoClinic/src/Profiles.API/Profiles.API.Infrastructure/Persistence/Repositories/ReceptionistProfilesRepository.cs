@@ -5,12 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class ReceptionistProfilesRepository(ProfilesDbContext context) : BaseRepository<ReceptionistProfile, Guid>(context), IReceptionistProfilesRepository
+    public class ReceptionistProfilesRepository(ProfilesDbContext context) 
+        : BaseRepository<ReceptionistProfile, Guid>(context), IReceptionistProfilesRepository
     {
         public async Task<ReceptionistProfile?> GetByAccountIdAsync(Guid id, CancellationToken ct = default)
         {
-            return await context.Set<ReceptionistProfile>()
-                .FirstOrDefaultAsync(x => x.AccountId == id);
+            return await DbSet.FirstOrDefaultAsync(x => x.AccountId == id, ct);
         }
     }
 }

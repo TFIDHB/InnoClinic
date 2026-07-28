@@ -61,6 +61,15 @@ namespace InnoClinic.Shared {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} returned an empty response..
+        /// </summary>
+        public static string ExternalServiceMessage {
+            get {
+                return ResourceManager.GetString("ExternalServiceMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} doesn&apos;t exist..
         /// </summary>
         public static string NotFoundMessage {

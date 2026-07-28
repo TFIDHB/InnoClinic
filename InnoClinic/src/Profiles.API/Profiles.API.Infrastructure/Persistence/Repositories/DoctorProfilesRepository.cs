@@ -1,17 +1,18 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
 using Domain.Enums;
+using InnoClinic.Shared.Helpers;
 using InnoClinic.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class DoctorProfilesRepository(ProfilesDbContext context) : BaseRepository<DoctorProfile, Guid>(context), IDoctorProfilesRepository
+    public class DoctorProfilesRepository(ProfilesDbContext context) 
+        : BaseRepository<DoctorProfile, Guid>(context), IDoctorProfilesRepository
     {
         public async Task<DoctorProfile?> GetByAccountIdAsync(Guid id, CancellationToken ct = default)
         {
-            return await context.Set<DoctorProfile>()
-                .FirstOrDefaultAsync(profile => profile.AccountId == id, ct);
+            return await DbSet.FirstOrDefaultAsync(profile => profile.AccountId == id, ct);
         }
 
         public async Task<IEnumerable<DoctorProfile>> GetFilteredAsync(
@@ -37,10 +38,11 @@ namespace Infrastructure.Persistence.Repositories
                 var terms = search.Split(' ', StringSplitOptions.RemoveEmptyEntries);
                 foreach (var term in terms)
                 {
+                    var escaped = LikeTermHelper.EscapeLikeTerm(term);
                     query = query.Where(d =>
-                        EF.Functions.Like(d.FirstName, $"%{term}%") ||
-                        EF.Functions.Like(d.LastName, $"%{term}%") ||
-                        (d.MiddleName != null && EF.Functions.Like(d.MiddleName, $"%{term}%")));
+                        EF.Functions.Like(d.FirstName, $"%{escaped}%") ||
+                        EF.Functions.Like(d.LastName, $"%{escaped}%") ||
+                        (d.MiddleName != null && EF.Functions.Like(d.MiddleName, $"%{escaped}%")));
                 }
             }
 
