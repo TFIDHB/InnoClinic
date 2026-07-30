@@ -61,6 +61,15 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You don&apos;t have access to this resource.
+        /// </summary>
+        public static string ForbiddenAccessMessage {
+            get {
+                return ResourceManager.GetString("ForbiddenAccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Profile for this account already exists.
         /// </summary>
         public static string ProfileAlreadyExistsMessage {

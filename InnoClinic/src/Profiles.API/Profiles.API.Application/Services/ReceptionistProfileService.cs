@@ -65,6 +65,7 @@ namespace Application.Services
         public async Task<ReceptionistProfileDto> UpdateAsync(
             Guid id,
             UpdateReceptionistProfileRequestDto dto,
+            Guid? accountOwnerId = null,
             CancellationToken ct = default)
         {
             var receptionistProfile = await unitOfWork.ReceptionistProfilesRepository.GetByIdAsync(id, ct)

@@ -6,5 +6,6 @@ namespace BLL.Interfaces
     {
         string GenerateAccessToken(User user, string role);
         string GenerateRefreshToken();
+        string GenerateInternalServiceToken();
     }
 }

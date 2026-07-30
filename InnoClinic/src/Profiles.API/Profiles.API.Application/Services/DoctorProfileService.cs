@@ -89,10 +89,14 @@ namespace Application.Services
         public async Task<DoctorProfileDto> UpdateAsync(
             Guid id,
             UpdateDoctorProfileRequestDto dto,
+            Guid? accountOwnerId = null,
             CancellationToken ct = default)
         {
             var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(DoctorProfile));
+
+            if (accountOwnerId.HasValue && accountOwnerId.Value != doctorProfile.AccountId)
+                throw new ForbiddenException(ProfilesApplicationMessages.ForbiddenAccessMessage);
 
             mapper.Map(dto, doctorProfile);
             await unitOfWork.DoctorProfilesRepository.UpdateAsync(doctorProfile, ct);

@@ -1,9 +1,12 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using InnoClinic.Shared.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Profiles.API.Controllers
 {
+    [Authorize(Roles = Roles.InternalService)]
     [ApiController]
     [Route("api/v1/accounts")]
     public class AccountSearchController(

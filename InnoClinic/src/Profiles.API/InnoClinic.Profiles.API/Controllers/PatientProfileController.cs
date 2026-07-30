@@ -1,12 +1,13 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using InnoClinic.Shared.Constants;
 using InnoClinic.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Profiles.API.Controllers
 {
-    [Authorize(Roles = "Patient,Doctor,Receptionist")]
+    [Authorize(Roles = Roles.Patient + "," + Roles.Doctor + "," + Roles.Receptionist)]
     [ApiController]
     [Route("api/v1/patients")]
     public class PatientProfileController(
@@ -14,7 +15,7 @@ namespace InnoClinic.Profiles.API.Controllers
         ) : ControllerBase
     {
         [HttpGet("me")]
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = Roles.Patient)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -27,7 +28,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Doctor, Receptionist")]
+        [Authorize(Roles = Roles.Doctor + "," + Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -40,7 +41,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Doctor, Receptionist")]
+        [Authorize(Roles = Roles.Doctor + "," + Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -51,7 +52,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet("search")]
-        [Authorize(Roles = "Receptionist")]
+        [Authorize(Roles = Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -62,7 +63,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Receptionist")]
+        [Authorize(Roles = Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -74,7 +75,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Receptionist,Patient")]
+        [Authorize(Roles = Roles.Patient + "," + Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -83,19 +84,13 @@ namespace InnoClinic.Profiles.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PatientProfileDto>> UpdatePatient(Guid id, [FromBody] UpdatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
-            if (User.IsInRole("Patient"))
-            {
-                var profile = await patientProfilesService.GetByIdAsync(id, ct);
-                if (profile.AccountId != User.GetUserId())
-                    return Forbid();
-            }
-
-            var result = await patientProfilesService.UpdateAsync(id, dto, ct);
+            Guid? accountOwnerId = User.IsInRole(Roles.Patient) ? User.GetUserId() : null;
+            var result = await patientProfilesService.UpdateAsync(id, dto, accountOwnerId, ct);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Receptionist")]
+        [Authorize(Roles = Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -108,7 +103,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPost("create-my-profile")]
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = Roles.Patient)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PatientProfileDto>> CreateMyProfile([FromBody] CreateMyPatientProfileRequestDto dto, CancellationToken ct = default)
@@ -119,7 +114,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPost("{id}/link-to-account")]
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = Roles.Patient)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<PatientProfileDto>> LinkProfileToAccount(Guid id, CreatePatientProfileRequestDto dto, CancellationToken ct = default)

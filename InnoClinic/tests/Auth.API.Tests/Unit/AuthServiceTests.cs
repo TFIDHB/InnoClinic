@@ -22,6 +22,8 @@ namespace Auth.API.Tests.Unit
             _unitOfWorkMock = new Mock<IAuthUnitOfWork>();
             _tokenServiceMock = new Mock<ITokenService>();
             _mapperMock = new Mock<IMapper>();
+            _profilesClientMock = new Mock<IProfilesClient>();
+            _passwordGeneratorMock = new Mock<IPasswordGenerator>();
             _authService = new AuthService(
                 _tokenServiceMock.Object,
                 _unitOfWorkMock.Object,

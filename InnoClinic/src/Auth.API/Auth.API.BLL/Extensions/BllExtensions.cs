@@ -19,11 +19,13 @@ namespace BLL.Extensions
             services.AddSingleton<IPasswordGenerator, PasswordGenerator>();
 
             services.Configure<ProfilesApiOptions>(configuration.GetSection("ProfilesApi"));
+
+            services.AddTransient<InternalServiceTokenClient>();
             services.AddHttpClient<IProfilesClient, ProfilesClient>((sp, client) =>
             {
                 var options = sp.GetRequiredService<IOptions<ProfilesApiOptions>>().Value;
                 client.BaseAddress = new Uri(options.BaseUrl);
-            });
+            }).AddHttpMessageHandler<InternalServiceTokenClient>();
             return services;
         }
     }

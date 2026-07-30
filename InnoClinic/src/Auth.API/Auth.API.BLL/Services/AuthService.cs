@@ -4,6 +4,7 @@ using BLL.Exceptions;
 using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
+using InnoClinic.Shared.Constants;
 
 namespace BLL.Services
 {
@@ -45,9 +46,9 @@ namespace BLL.Services
 
             var profileInfo = await profilesClient.GetProfileInfoByAccountIdAsync(user.Id, ct);
 
-            var role = profileInfo?.Role ?? "Patient";
+            var role = profileInfo?.Role ?? Roles.Patient;
 
-            if (profileInfo != null && profileInfo.Role == "Doctor" && profileInfo.Status == "Inactive")
+            if (profileInfo != null && profileInfo.Role == Roles.Doctor && profileInfo.Status == "Inactive")
             {
                 throw new InactiveEntityException();
             }

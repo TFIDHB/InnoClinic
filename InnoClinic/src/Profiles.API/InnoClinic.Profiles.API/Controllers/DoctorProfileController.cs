@@ -1,13 +1,14 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Enums;
+using InnoClinic.Shared.Constants;
 using InnoClinic.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Profiles.API.Controllers
 {
-    [Authorize(Roles = "Patient, Doctor, Receptionist")]
+    [Authorize(Roles = Roles.Patient + "," + Roles.Doctor + "," + Roles.Receptionist)]
     [ApiController]
     [Route("api/v1/doctors")]
     public class DoctorProfileController(
@@ -15,7 +16,7 @@ namespace InnoClinic.Profiles.API.Controllers
         ) : ControllerBase
     {
         [HttpGet("me")]
-        [Authorize(Roles = "Doctor")]
+        [Authorize(Roles = Roles.Doctor)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -28,7 +29,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = "Receptionist")]
+        [Authorize(Roles = Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -40,7 +41,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Patient, Doctor, Receptionist")]
+        [Authorize(Roles = Roles.Patient + "," + Roles.Doctor + "," + Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -50,13 +51,13 @@ namespace InnoClinic.Profiles.API.Controllers
             [FromQuery] string? search,
             CancellationToken ct = default)
         {
-            DoctorStatus? status = User.IsInRole("Patient") ? DoctorStatus.AtWork : null;
+            DoctorStatus? status = User.IsInRole(Roles.Patient) ? DoctorStatus.AtWork : null;
             var result = await doctorProfilesService.GetFilteredDoctorsAsync(specializationId, officeId, search, status, ct);
             return Ok(result);
         }
 
         [HttpPost]
-        [Authorize(Roles = "Receptionist")]
+        [Authorize(Roles = Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -68,28 +69,25 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Receptionist, Doctor")]
+        [Authorize(Roles = Roles.Receptionist + "," + Roles.Doctor)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<DoctorProfileDto>> UpdateDoctor(Guid id, [FromBody] UpdateDoctorProfileRequestDto dto, CancellationToken ct = default)
+        public async Task<ActionResult<DoctorProfileDto>> UpdateDoctor(
+            Guid id,
+            [FromBody] UpdateDoctorProfileRequestDto dto,
+            CancellationToken ct = default)
         {
-            if (User.IsInRole("Doctor"))
-            {
-                var profile = await doctorProfilesService.GetByIdAsync(id, ct);
-                if (profile.AccountId != User.GetUserId())
-                    return Forbid();
-            }
-
-            var result = await doctorProfilesService.UpdateAsync(id, dto, ct);
+            Guid? accountOwnerId = User.IsInRole(Roles.Doctor) ? User.GetUserId() : null;
+            var result = await doctorProfilesService.UpdateAsync(id, dto, accountOwnerId, ct);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Receptionist")]
+        [Authorize(Roles = Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

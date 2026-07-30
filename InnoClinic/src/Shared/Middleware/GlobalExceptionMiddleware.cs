@@ -36,6 +36,7 @@ namespace InnoClinic.Shared.Middleware
             {
                 BadRequestException => (400, exception.Message),
                 UnauthorizedAccessException => (401, "Unauthorized"),
+                ForbiddenException => (403, exception.Message),
                 NotFoundException => (404, exception.Message),
                 ExternalServiceException => (502, exception.Message),
                 _ => (500, "Internal Server Error")

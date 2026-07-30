@@ -3,6 +3,7 @@ using DAL.Entities;
 using InnoClinic.Shared.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -21,7 +22,7 @@ namespace BLL.Services
         {
             var claims = new[]
             {
-                new Claim (ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, role)
             };
@@ -40,6 +41,28 @@ namespace BLL.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public string GenerateInternalServiceToken()
+        {
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Role, "InternalService")
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
+            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+              issuer: _jwtSettings.Issuer,
+              audience: _jwtSettings.Audience,
+              claims: claims,
+              expires: DateTime.UtcNow.AddMinutes(1),
+              signingCredentials: credentials
+          );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
         public string GenerateRefreshToken()
         {
             var randBytes = RandomNumberGenerator.GetBytes(64);

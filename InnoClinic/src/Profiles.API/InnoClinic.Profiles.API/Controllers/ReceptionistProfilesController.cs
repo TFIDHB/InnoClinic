@@ -1,11 +1,12 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using InnoClinic.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Profiles.API.Controllers
 {
-    [Authorize(Roles = "Patient, Doctor, Receptionist")]
+    [Authorize(Roles = Roles.Receptionist)]
     [ApiController]
     [Route("api/v1/receptionists")]
     public class ReceptionistProfilesController(
@@ -13,7 +14,6 @@ namespace InnoClinic.Profiles.API.Controllers
         ) : ControllerBase
     {
         [HttpGet("{id}")]
-        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -25,7 +25,6 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -36,7 +35,6 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -48,20 +46,22 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ReceptionistProfileDto>> UpdateReceptionist(Guid id, [FromBody] UpdateReceptionistProfileRequestDto dto, CancellationToken ct = default)
+        public async Task<ActionResult<ReceptionistProfileDto>> UpdateReceptionist(
+            Guid id,
+            [FromBody] UpdateReceptionistProfileRequestDto dto,
+            Guid? accountOwnerId = null,
+            CancellationToken ct = default)
         {
-            var result = await receptionistProfilesService.UpdateAsync(id, dto, ct);
+            var result = await receptionistProfilesService.UpdateAsync(id, dto, accountOwnerId, ct);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Receptionist")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
