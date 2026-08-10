@@ -1,10 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace InnoClinic.Shared.Migrators
 {
-    public class DatabaseMigrator<TContext>(IServiceProvider serviceProvider) : IHostedService where TContext : DbContext
+    public class DatabaseMigrator<TContext>(
+        IServiceProvider serviceProvider,
+        ILogger<DatabaseMigrator<TContext>> logger) : IHostedService where TContext : DbContext
     {
         private const int MaxAttempts = 10;
         private static readonly TimeSpan Delay = TimeSpan.FromSeconds(5);
@@ -17,11 +20,21 @@ namespace InnoClinic.Shared.Migrators
             {
                 try
                 {
+                    logger.LogInformation("Applying migrations for {DbContext} (Attempt {Attempt}/{MaxAttempts})...", 
+                        typeof(TContext).Name, attempt, MaxAttempts);
+
                     await context.Database.MigrateAsync(cancellationToken);
+
+                    logger.LogInformation("Database migration succeeded on attempt {Attempt}", attempt);
+
                     return;
                 }
                 catch (Exception ex) when (attempt < MaxAttempts)
                 {
+                    logger.LogWarning(ex,
+                        "Failed to apply migrations for {DbContext} on attempt {Attempt}/{MaxAttempts}. Retrying in {Delay} seconds...",
+                        typeof(TContext).Name, attempt, MaxAttempts, Delay.TotalSeconds);
+
                     await Task.Delay(Delay, cancellationToken);
                 }
             }

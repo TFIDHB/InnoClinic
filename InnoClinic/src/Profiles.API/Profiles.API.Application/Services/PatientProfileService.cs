@@ -18,7 +18,7 @@ namespace Application.Services
             var score = 0;
             if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase)) score += 5;
             if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (profile.MiddleName != null && string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase)) score += 5;
             if (profile.DateOfBirth == dto.DateOfBirth) score += 3;
             return score;
         }
@@ -97,7 +97,7 @@ namespace Application.Services
 
             var dto =  mapper.Map<PatientProfileDto>(patientProfile);
 
-            var accountInfo = authClient.GetUserAccountInfoAsync(id, ct);
+            var accountInfo = await authClient.GetAccountInfoAsStaffAsync(id, ct);
 
             if (accountInfo != null)
             { 

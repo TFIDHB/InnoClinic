@@ -11,7 +11,7 @@ namespace InnoClinic.Auth.API.Controllers
     public class AccountsController(IAuthService authService) : ControllerBase
     {
 
-        [HttpGet("accounts/{id}")]
+        [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -19,11 +19,11 @@ namespace InnoClinic.Auth.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAccountInfo(Guid id, CancellationToken ct = default)
         {
-            var result = await authService.GetUserAccountInfo(id, ct);
+            var result = await authService.GetUserAccountInfo(id, User, ct);
             return Ok(result);
         }
 
-        [HttpPut("accounts/{id}")]
+        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -31,7 +31,7 @@ namespace InnoClinic.Auth.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateAccountInfo(Guid id, [FromBody] UpdateUserAccountInfoDto dto, CancellationToken ct = default)
         {
-            await authService.UpdateUserAccountInfo(id, dto, ct);
+            await authService.UpdateUserAccountInfo(id, dto, User, ct);
             return Ok();
         }
     }

@@ -5,6 +5,9 @@ using BLL.Interfaces;
 using DAL.Entities;
 using DAL.Interfaces;
 using InnoClinic.Shared.Constants;
+using InnoClinic.Shared.Exceptions;
+using InnoClinic.Shared.Extensions;
+using System.Security.Claims;
 
 namespace BLL.Services
 {
@@ -98,8 +101,8 @@ namespace BLL.Services
                 throw new EmailAlreadyExistsException();
             }
 
-            var temporaryFakePassword = passwordGenerator.Generate();
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(temporaryFakePassword);
+            var temporaryPassword = passwordGenerator.Generate();
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(temporaryPassword);
 
             var user = new User
             {
@@ -117,20 +120,36 @@ namespace BLL.Services
             return new CreateStaffAccountResponseDto
             {
                 AccountId = user.Id,
-                TemporaryPassword = temporaryFakePassword
+                TemporaryPassword = temporaryPassword
             };
         }
 
-        public async Task<UserAccountInfoDto> GetUserAccountInfo(Guid userId, CancellationToken ct = default)
+        public async Task<UserAccountInfoDto> GetUserAccountInfo(Guid userId, ClaimsPrincipal currentUser, CancellationToken ct = default)
         {
+            var currentUserId = currentUser.GetUserId();
+            var isInternalService = currentUser.IsInRole(Roles.InternalService);
+
+            if (!isInternalService && currentUserId != userId)
+            {
+                throw new ForbiddenException(BllMessages.ForbiddenAccessMessage);
+            }
+
             var user = await unitOfWork.UserRepository.GetByIdAsync(userId, ct)
                 ?? throw new UserNotFoundException();
 
             return mapper.Map<UserAccountInfoDto>(user);
         }
 
-        public async Task UpdateUserAccountInfo(Guid userId, UpdateUserAccountInfoDto dto, CancellationToken ct = default)
+        public async Task UpdateUserAccountInfo(Guid userId, UpdateUserAccountInfoDto dto, ClaimsPrincipal currentUser, CancellationToken ct = default)
         {
+            var currentUserId = currentUser.GetUserId();
+            var isInternalService = currentUser.IsInRole(Roles.InternalService);
+
+            if (!isInternalService && currentUserId != userId)
+            {
+                throw new ForbiddenException(BllMessages.ForbiddenAccessMessage);
+            }
+
             var user = await unitOfWork.UserRepository.GetByIdAsync(userId, ct)
                 ?? throw new UserNotFoundException();
 

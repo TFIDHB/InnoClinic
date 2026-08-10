@@ -70,6 +70,15 @@ namespace BLL {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to access this account information.
+        /// </summary>
+        public static string ForbiddenAccessMessage {
+            get {
+                return ResourceManager.GetString("ForbiddenAccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This entity has &quot;Inactive&quot; status.
         /// </summary>
         public static string InactiveEntityMessage {

@@ -54,10 +54,9 @@ namespace InnoClinic.Profiles.API.Controllers
         public async Task<ActionResult<ReceptionistProfileDto>> UpdateReceptionist(
             Guid id,
             [FromBody] UpdateReceptionistProfileRequestDto dto,
-            Guid? accountOwnerId = null,
             CancellationToken ct = default)
         {
-            var result = await receptionistProfilesService.UpdateAsync(id, dto, accountOwnerId, ct);
+            var result = await receptionistProfilesService.UpdateAsync(id, dto, null, ct);
             return Ok(result);
         }
 

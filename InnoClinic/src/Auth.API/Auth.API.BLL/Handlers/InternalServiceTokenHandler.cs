@@ -1,9 +1,9 @@
 ﻿using BLL.Interfaces;
 using System.Net.Http.Headers;
 
-namespace BLL.Clients
+namespace BLL.Handlers
 {
-    public class InternalServiceTokenClient(ITokenService tokenService) : DelegatingHandler
+    public class InternalServiceTokenHandler(ITokenService tokenService) : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
         {

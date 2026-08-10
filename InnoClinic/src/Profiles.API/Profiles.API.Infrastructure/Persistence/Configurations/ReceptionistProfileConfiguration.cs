@@ -16,7 +16,9 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(e => e.FirstName).IsRequired();
             builder.Property(e => e.LastName).IsRequired();
             builder.Property(e => e.MiddleName);
-            builder.HasIndex(e => e.AccountId).IsUnique();
+            builder.HasIndex(e => e.AccountId).IsUnique()
+                .IsUnique()
+                .HasFilter("[AccountId] IS NOT NULL");
         }
     }
 }

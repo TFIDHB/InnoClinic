@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Clients;
+using Infrastructure.Handlers;
 using Infrastructure.Options;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
@@ -27,14 +28,14 @@ namespace Infrastructure.Extensions
             services.AddHostedService<DatabaseMigrator<ProfilesDbContext>>();
 
             services.AddHttpContextAccessor();
-            services.AddTransient<AuthHeaderDelegationClient>();
+            services.AddTransient<AuthHeaderDelegationHandler>();
 
             services.Configure<AuthApiOptions>(configuration.GetSection("AuthApi"));
             services.AddHttpClient<IAuthClient, AuthClient>((sp, client) =>
             {
                 var options = sp.GetRequiredService<IOptions<AuthApiOptions>>().Value;
                 client.BaseAddress = new Uri(options.BaseUrl);
-            }).AddHttpMessageHandler<AuthHeaderDelegationClient>();
+            }).AddHttpMessageHandler<AuthHeaderDelegationHandler>();
 
             return services;
         }

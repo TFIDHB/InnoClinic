@@ -61,11 +61,47 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Date of birth cannot be in the future.
+        /// </summary>
+        public static string DateInFutureMessage {
+            get {
+                return ResourceManager.GetString("DateInFutureMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date of birth cannot be more than {0} years ago.
+        /// </summary>
+        public static string DateOfBirthConstraintMessage {
+            get {
+                return ResourceManager.GetString("DateOfBirthConstraintMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You don&apos;t have access to this resource.
         /// </summary>
         public static string ForbiddenAccessMessage {
             get {
                 return ResourceManager.GetString("ForbiddenAccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Career start year must be between {0} and {1}.
+        /// </summary>
+        public static string InvalidCareerStartYearMesage {
+            get {
+                return ResourceManager.GetString("InvalidCareerStartYearMesage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phone number must be a valid international number, e.g. +1234567890.
+        /// </summary>
+        public static string InvalidPhoneNumberMessage {
+            get {
+                return ResourceManager.GetString("InvalidPhoneNumberMessage", resourceCulture);
             }
         }
         

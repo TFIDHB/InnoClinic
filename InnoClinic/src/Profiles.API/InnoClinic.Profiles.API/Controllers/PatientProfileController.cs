@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Profiles.API.Controllers
 {
-    [Authorize(Roles = Roles.Patient + "," + Roles.Doctor + "," + Roles.Receptionist)]
+    [Authorize(Roles = Roles.AllRoles)]
     [ApiController]
     [Route("api/v1/patients")]
     public class PatientProfileController(
@@ -117,7 +117,7 @@ namespace InnoClinic.Profiles.API.Controllers
         [Authorize(Roles = Roles.Patient)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PatientProfileDto>> LinkProfileToAccount(Guid id, CreatePatientProfileRequestDto dto, CancellationToken ct = default)
+        public async Task<ActionResult<PatientProfileDto>> LinkProfileToAccount(Guid id, [FromBody] CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
             var accountId = User.GetUserId();
             var result = await patientProfilesService.LinkProfileToAccountAsync(id, accountId, dto, ct);

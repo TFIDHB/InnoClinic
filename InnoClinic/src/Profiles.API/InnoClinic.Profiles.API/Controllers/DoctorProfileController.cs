@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Profiles.API.Controllers
 {
-    [Authorize(Roles = Roles.Patient + "," + Roles.Doctor + "," + Roles.Receptionist)]
+    [Authorize(Roles = Roles.AllRoles)]
     [ApiController]
     [Route("api/v1/doctors")]
     public class DoctorProfileController(
@@ -41,7 +41,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = Roles.Patient + "," + Roles.Doctor + "," + Roles.Receptionist)]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

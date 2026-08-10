@@ -6,5 +6,6 @@
         public const string Doctor = "Doctor";
         public const string Receptionist = "Receptionist";
         public const string InternalService = "InternalService";
+        public const string AllRoles = Patient + "," + Doctor + "," + Receptionist;
     }
 }

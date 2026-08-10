@@ -19,7 +19,9 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(e => e.CareerStartYear).IsRequired();
             builder.Property(e => e.Status).HasConversion<string>();
             builder.Property(e => e.SpecializationId).IsRequired();
-            builder.HasIndex(e => e.AccountId).IsUnique();
+            builder.HasIndex(e => e.AccountId).IsUnique()
+                .IsUnique()
+                .HasFilter("[AccountId] IS NOT NULL");
         }
     }
 }

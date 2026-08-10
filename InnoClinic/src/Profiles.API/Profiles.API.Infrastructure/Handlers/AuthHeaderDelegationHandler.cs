@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Infrastructure.Clients
+namespace Infrastructure.Handlers
 {
-    public class AuthHeaderDelegationClient(IHttpContextAccessor httpContextAccessor) : DelegatingHandler
+    public class AuthHeaderDelegationHandler(IHttpContextAccessor httpContextAccessor) : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct = default)
         {

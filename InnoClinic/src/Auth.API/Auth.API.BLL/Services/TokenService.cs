@@ -1,5 +1,7 @@
 ﻿using BLL.Interfaces;
 using DAL.Entities;
+using InnoClinic.Shared.Constants;
+using InnoClinic.Shared.Generators;
 using InnoClinic.Shared.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -44,23 +46,7 @@ namespace BLL.Services
 
         public string GenerateInternalServiceToken()
         {
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Role, "InternalService")
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-              issuer: _jwtSettings.Issuer,
-              audience: _jwtSettings.Audience,
-              claims: claims,
-              expires: DateTime.UtcNow.AddMinutes(1),
-              signingCredentials: credentials
-          );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return InternalServiceTokenGenerator.Generate(_jwtSettings);
         }
 
         public string GenerateRefreshToken()

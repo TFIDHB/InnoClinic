@@ -1,5 +1,6 @@
 ﻿using BLL.AutoMapper;
 using BLL.Clients;
+using BLL.Handlers;
 using BLL.Interfaces;
 using BLL.Options;
 using BLL.Services;
@@ -20,12 +21,12 @@ namespace BLL.Extensions
 
             services.Configure<ProfilesApiOptions>(configuration.GetSection("ProfilesApi"));
 
-            services.AddTransient<InternalServiceTokenClient>();
+            services.AddTransient<InternalServiceTokenHandler>();
             services.AddHttpClient<IProfilesClient, ProfilesClient>((sp, client) =>
             {
                 var options = sp.GetRequiredService<IOptions<ProfilesApiOptions>>().Value;
                 client.BaseAddress = new Uri(options.BaseUrl);
-            }).AddHttpMessageHandler<InternalServiceTokenClient>();
+            }).AddHttpMessageHandler<InternalServiceTokenHandler>();
             return services;
         }
     }

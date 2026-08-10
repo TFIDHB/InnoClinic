@@ -123,7 +123,7 @@ namespace Auth.API.Tests.Integration
         {
             var email = "wrongpassword@test.com";
 
-            await _client.PostAsJsonAsync("api/auth/register", new RegisterRequestDto { Email = email, Password = "123456" });
+            await _client.PostAsJsonAsync("api/v1/auth/register", new RegisterRequestDto { Email = email, Password = "123456" });
             var result = await _client.PostAsJsonAsync("api/v1/auth/login", new LoginRequestDto { Email = email, Password = "wrong-password" });
 
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
