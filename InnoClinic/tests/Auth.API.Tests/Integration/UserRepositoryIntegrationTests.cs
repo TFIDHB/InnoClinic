@@ -81,7 +81,7 @@ namespace Auth.API.Tests.Integration
         public async Task GetByRefreshTokenAsync_WhenTokenExists_ReturnsUser()
         {
             var refreshToken = "valid-refresh-token";
-            var expectedUser = new User {Id = Guid.NewGuid(), Email = "owner@test.com", PasswordHash = "passwordHash", RefreshToken = refreshToken };
+            var expectedUser = new User { Id = Guid.NewGuid(), Email = "owner@test.com", PasswordHash = "passwordHash", RefreshToken = refreshToken };
             using (var context = CreateContext())
             {
                 await context.Users.AddAsync(expectedUser);

@@ -62,7 +62,7 @@ namespace InnoClinic.Auth.API.Controllers
         public async Task<IActionResult> CreateStaffAccount([FromBody] CreateStaffAccountRequestDto dto, CancellationToken ct = default)
         {
             var result = await authService.CreateStaffAccountAsync(dto, ct);
-            return CreatedAtAction(nameof(AccountsController.GetAccountInfo),"Accounts", new { id = result.AccountId }, result);
+            return CreatedAtAction(nameof(AccountsController.GetAccountInfo), "Accounts", new { id = result.AccountId }, result);
         }
     }
 }

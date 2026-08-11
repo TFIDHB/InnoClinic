@@ -53,7 +53,7 @@ namespace Auth.API.Tests.Unit
                 .ReturnsAsync(false);
             _mapperMock
                 .Setup(e => e.Map<User>(dto))
-                .Returns(new User { Id = Guid.NewGuid(), Email = dto.Email, PasswordHash = "placeholder"});
+                .Returns(new User { Id = Guid.NewGuid(), Email = dto.Email, PasswordHash = "placeholder" });
 
             await _authService.RegisterAsync(dto);
 

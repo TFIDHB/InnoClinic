@@ -95,12 +95,12 @@ namespace Application.Services
             var patientProfile = await unitOfWork.PatientProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(PatientProfile));
 
-            var dto =  mapper.Map<PatientProfileDto>(patientProfile);
+            var dto = mapper.Map<PatientProfileDto>(patientProfile);
 
             var accountInfo = await authClient.GetAccountInfoAsStaffAsync(id, ct);
 
             if (accountInfo != null)
-            { 
+            {
                 mapper.Map(accountInfo, dto);
             }
 

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using InnoClinic.Documents.API.Domain.Entities;
 using InnoClinic.Documents.API.Application.DTOs;
+using InnoClinic.Documents.API.Domain.Entities;
 
 namespace InnoClinic.Documents.API.Application.AutoMapper
 {

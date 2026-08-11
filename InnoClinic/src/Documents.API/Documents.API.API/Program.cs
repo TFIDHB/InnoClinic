@@ -1,6 +1,6 @@
 using InnoClinic.Documents.API.Application.Extensions;
-using InnoClinic.Documents.API.Infrastructure.Extensions;
 using InnoClinic.Documents.API.Extensions;
+using InnoClinic.Documents.API.Infrastructure.Extensions;
 using InnoClinic.Shared.Extensions;
 using InnoClinic.Shared.Middleware;
 

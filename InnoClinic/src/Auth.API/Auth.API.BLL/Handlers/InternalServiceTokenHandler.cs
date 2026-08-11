@@ -1,13 +1,15 @@
-﻿using BLL.Interfaces;
+﻿using InnoClinic.Shared.Generators;
+using InnoClinic.Shared.Settings;
+using Microsoft.Extensions.Options;
 using System.Net.Http.Headers;
 
 namespace BLL.Handlers
 {
-    public class InternalServiceTokenHandler(ITokenService tokenService) : DelegatingHandler
+    public class InternalServiceTokenHandler(IOptions<JwtSettings> jwtSettings) : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
         {
-            var token = tokenService.GenerateInternalServiceToken();
+            var token = InternalServiceTokenGenerator.Generate(jwtSettings.Value);
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             return base.SendAsync(request, ct);
         }

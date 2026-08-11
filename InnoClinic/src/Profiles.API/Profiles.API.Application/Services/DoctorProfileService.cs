@@ -79,10 +79,10 @@ namespace Application.Services
             if (doctorProfile == null)
                 return null;
 
-            return new AccountProfileInfoDto 
-            { 
-                Role = "Doctor", 
-                Status = doctorProfile.Status.ToString() 
+            return new AccountProfileInfoDto
+            {
+                Role = "Doctor",
+                Status = doctorProfile.Status.ToString()
             };
         }
 

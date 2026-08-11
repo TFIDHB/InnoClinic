@@ -56,7 +56,7 @@ namespace InnoClinic.Profiles.API.Controllers
             [FromBody] UpdateReceptionistProfileRequestDto dto,
             CancellationToken ct = default)
         {
-            var result = await receptionistProfilesService.UpdateAsync(id, dto, null, ct);
+            var result = await receptionistProfilesService.UpdateAsync(id, dto, ct: ct);
             return Ok(result);
         }
 

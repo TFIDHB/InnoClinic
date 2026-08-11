@@ -1,11 +1,9 @@
 ﻿using BLL.Interfaces;
 using DAL.Entities;
-using InnoClinic.Shared.Constants;
 using InnoClinic.Shared.Generators;
 using InnoClinic.Shared.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -42,11 +40,6 @@ namespace BLL.Services
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
-        public string GenerateInternalServiceToken()
-        {
-            return InternalServiceTokenGenerator.Generate(_jwtSettings);
         }
 
         public string GenerateRefreshToken()

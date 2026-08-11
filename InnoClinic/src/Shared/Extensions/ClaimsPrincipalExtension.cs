@@ -4,7 +4,7 @@ namespace InnoClinic.Shared.Extensions
 {
     public static class ClaimsPrincipalExtension
     {
-        public static Guid GetUserId(this ClaimsPrincipal claimsPrincipal) 
+        public static Guid GetUserId(this ClaimsPrincipal claimsPrincipal)
         {
             var value = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 

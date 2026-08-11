@@ -9,7 +9,7 @@ namespace InnoClinic.Shared.Extensions
 {
     public static class JwtExtension
     {
-        public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration configuration) 
+        public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
             var jwtSettings = configuration.GetSection("JwtSettings").Get<JwtSettings>()

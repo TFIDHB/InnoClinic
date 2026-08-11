@@ -1,5 +1,4 @@
-﻿using Application.DTOs;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Domain.Enums;
 using InnoClinic.Shared.Interfaces;
 

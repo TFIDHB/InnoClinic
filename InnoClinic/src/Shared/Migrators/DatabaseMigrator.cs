@@ -16,11 +16,11 @@ namespace InnoClinic.Shared.Migrators
             using var scope = serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<TContext>();
 
-            for (int attempt = 1; attempt <= MaxAttempts; attempt ++)
+            for (int attempt = 1; attempt <= MaxAttempts; attempt++)
             {
                 try
                 {
-                    logger.LogInformation("Applying migrations for {DbContext} (Attempt {Attempt}/{MaxAttempts})...", 
+                    logger.LogInformation("Applying migrations for {DbContext} (Attempt {Attempt}/{MaxAttempts})...",
                         typeof(TContext).Name, attempt, MaxAttempts);
 
                     await context.Database.MigrateAsync(cancellationToken);
@@ -36,6 +36,12 @@ namespace InnoClinic.Shared.Migrators
                         typeof(TContext).Name, attempt, MaxAttempts, Delay.TotalSeconds);
 
                     await Task.Delay(Delay, cancellationToken);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex,
+                        "Database migration failed after {Max} attempts, giving up", MaxAttempts);
+                    throw;
                 }
             }
         }

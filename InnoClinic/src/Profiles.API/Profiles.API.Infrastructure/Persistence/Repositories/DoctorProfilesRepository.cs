@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class DoctorProfilesRepository(ProfilesDbContext context) 
+    public class DoctorProfilesRepository(ProfilesDbContext context)
         : BaseRepository<DoctorProfile, Guid>(context), IDoctorProfilesRepository
     {
         public async Task<DoctorProfile?> GetByAccountIdAsync(Guid id, CancellationToken ct = default)
