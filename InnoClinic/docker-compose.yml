@@ -16,6 +16,11 @@ services:
       - MSSQL_SA_PASSWORD=${MSSQL_PASSWORD}
     volumes:
       - sqlserver_data:/var/opt/mssql
+    healthcheck:
+        test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q 'SELECT 1' || exit 1"]
+        interval: 10s
+        timeout: 5s
+        retries: 10
 
   postgres:
     image: postgres:17
@@ -91,9 +96,46 @@ services:
       - azurite
       - sqlserver
 
+  innoclinic.auth.api:
+    image: ${DOCKER_REGISTRY-}innoclinicauthapi
+    build:
+      context: .
+      dockerfile: src/Auth.API/Auth.API.API/Dockerfile
+    ports:
+      - "5005:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__AuthConnection=${AUTH_CONNECTION}
+      - ProfilesApi__BaseUrl=http://innoclinic.profiles.api:8080
+      - JwtSettings__Secret=${JWT_SECRET}
+      - JwtSettings__Issuer=InnoClinic.Auth.API
+      - JwtSettings__Audience=InnoClinic.Clients
+      - JwtSettings__ExpirationMinutes=5
+    depends_on:
+        sqlserver:
+            condition: service_healthy
+
+  innoclinic.profiles.api:
+    image: ${DOCKER_REGISTRY-}innoclinicprofilesapi
+    build:
+      context: .
+      dockerfile: src/Profiles.API/InnoClinic.Profiles.API/Dockerfile
+    ports:
+      - "5006:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ProfilesConnection=${PROFILES_CONNECTION}
+      - AuthApi__BaseUrl=http://innoclinic.auth.api:8080
+      - JwtSettings__Secret=${JWT_SECRET}
+      - JwtSettings__Issuer=InnoClinic.Auth.API
+      - JwtSettings__Audience=InnoClinic.Clients
+      - JwtSettings__ExpirationMinutes=5
+    depends_on:
+        sqlserver:
+            condition: service_healthy
+
 volumes:
   mongo_data:
   sqlserver_data:
   postgres_data:
   azurite_data:
-

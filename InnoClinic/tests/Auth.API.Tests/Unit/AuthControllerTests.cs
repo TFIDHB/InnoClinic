@@ -10,6 +10,7 @@ namespace Auth.API.Tests.Unit
 {
     public class AuthControllerTests
     {
+        private static readonly Guid TestUserId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         private readonly Mock<IAuthService> _authService;
         private readonly AuthController _authController;
 
@@ -19,7 +20,7 @@ namespace Auth.API.Tests.Unit
             _authController = new AuthController(_authService.Object);
         }
 
-        public void SetUserClaims(int? userId)
+        public void SetUserClaims(Guid? userId)
         {
             var claims = userId.HasValue ? new[] { new Claim(ClaimTypes.NameIdentifier, userId.ToString()) } : null;
 
@@ -35,7 +36,7 @@ namespace Auth.API.Tests.Unit
         [Fact]
         public async Task Logout_WhenUserIsAuthorized_ReturnsOk()
         {
-            SetUserClaims(1);
+            SetUserClaims(TestUserId);
             var dto = new LogOutRequestDto { RefreshToken = "some-token" };
 
             var result = await _authController.Logout(dto);

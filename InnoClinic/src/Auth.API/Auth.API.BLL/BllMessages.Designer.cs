@@ -63,36 +63,54 @@ namespace BLL {
         /// <summary>
         ///   Looks up a localized string similar to User with this email already exists.
         /// </summary>
-        public static string EmailExists {
+        public static string EmailExistsMessage {
             get {
-                return ResourceManager.GetString("EmailExists", resourceCulture);
+                return ResourceManager.GetString("EmailExistsMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to access this account information.
+        /// </summary>
+        public static string ForbiddenAccessMessage {
+            get {
+                return ResourceManager.GetString("ForbiddenAccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This entity has &quot;Inactive&quot; status.
+        /// </summary>
+        public static string InactiveEntityMessage {
+            get {
+                return ResourceManager.GetString("InactiveEntityMessage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The password is incorrect.
         /// </summary>
-        public static string InvalidPassword {
+        public static string InvalidPasswordMessage {
             get {
-                return ResourceManager.GetString("InvalidPassword", resourceCulture);
+                return ResourceManager.GetString("InvalidPasswordMessage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The token is invalid.
         /// </summary>
-        public static string InvalidToken {
+        public static string InvalidTokenMessage {
             get {
-                return ResourceManager.GetString("InvalidToken", resourceCulture);
+                return ResourceManager.GetString("InvalidTokenMessage", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to User with this email doesn&apos;t exist.
         /// </summary>
-        public static string UserNotFound {
+        public static string UserNotFoundMessage {
             get {
-                return ResourceManager.GetString("UserNotFound", resourceCulture);
+                return ResourceManager.GetString("UserNotFoundMessage", resourceCulture);
             }
         }
     }

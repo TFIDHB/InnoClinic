@@ -14,5 +14,6 @@ namespace Application.DTOs
         public Guid OfficeId { get; set; }
         public int CareerStartYear { get; set; }
         public DoctorStatus Status { get; set; }
+        public string? TemporaryFakePassword { get; set; }
     }
 }

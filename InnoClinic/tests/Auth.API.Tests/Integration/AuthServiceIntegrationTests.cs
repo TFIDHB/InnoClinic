@@ -2,17 +2,23 @@
 using BLL.AutoMapper;
 using BLL.DTOs;
 using BLL.Exceptions;
+using BLL.Interfaces;
 using BLL.Services;
-using BLL.Settings;
 using DAL;
 using DAL.Interfaces;
 using DAL.Repositories;
+using InnoClinic.Shared.Settings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Auth.API.Tests.Integration
 {
+    public class FakeProfilesClient : IProfilesClient
+    {
+        public Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
+            => Task.FromResult<AccountProfileInfoDto?>(null);
+    }
     public class ServiceAssemblyResult
     {
         public AuthDbContext DbContext { get; set; }
@@ -22,6 +28,7 @@ namespace Auth.API.Tests.Integration
     [Collection("SqlCollection")]
     public class AuthServiceIntegrationTests : IAsyncLifetime
     {
+        private static readonly Guid TestUserId = Guid.Parse("11111111-1111-1111-1111-111111111111");
         private readonly SqlContainerFixture _fixture;
         private readonly IMapper _mapper;
         private readonly TokenService _tokenService;
@@ -52,7 +59,10 @@ namespace Auth.API.Tests.Integration
             var serviceProvider = services.BuildServiceProvider();
 
             var unitOfWork = new AuthUnitOfWork(dbContext, serviceProvider);
-            var authService = new AuthService(unitOfWork, _mapper, _tokenService);
+            var profilesClient = new FakeProfilesClient();
+            var passwordGenerator = new PasswordGenerator();
+
+            var authService = new AuthService(_tokenService, unitOfWork, _mapper, profilesClient, passwordGenerator);
 
             return new ServiceAssemblyResult
             {
@@ -167,7 +177,7 @@ namespace Auth.API.Tests.Integration
 
             await Assert.ThrowsAsync<UserNotFoundException>(async () =>
             {
-                await assembly.AuthService.LogoutAsync(logoutDto, userId: 9999);
+                await assembly.AuthService.LogoutAsync(logoutDto, userId: TestUserId);
             });
         }
 

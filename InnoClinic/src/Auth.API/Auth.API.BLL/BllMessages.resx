@@ -117,16 +117,22 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EmailExists" xml:space="preserve">
+  <data name="EmailExistsMessage" xml:space="preserve">
     <value>User with this email already exists</value>
   </data>
-  <data name="InvalidPassword" xml:space="preserve">
+  <data name="ForbiddenAccessMessage" xml:space="preserve">
+    <value>You are not allowed to access this account information</value>
+  </data>
+  <data name="InactiveEntityMessage" xml:space="preserve">
+    <value>This entity has "Inactive" status</value>
+  </data>
+  <data name="InvalidPasswordMessage" xml:space="preserve">
     <value>The password is incorrect</value>
   </data>
-  <data name="InvalidToken" xml:space="preserve">
+  <data name="InvalidTokenMessage" xml:space="preserve">
     <value>The token is invalid</value>
   </data>
-  <data name="UserNotFound" xml:space="preserve">
+  <data name="UserNotFoundMessage" xml:space="preserve">
     <value>User with this email doesn't exist</value>
   </data>
 </root>

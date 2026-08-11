@@ -5,6 +5,8 @@ namespace Application.Interfaces
 {
     public interface IPatientProfilesRepository : IRepository<PatientProfile, Guid>
     {
-        //future functionality according to US
+        Task<PatientProfile?> GetByAccountIdAsync(Guid id, CancellationToken ct = default);
+        Task<IEnumerable<PatientProfile>> GetUnlinkedProfilesAsync(CancellationToken ct = default);
+        Task<IEnumerable<PatientProfile>> GetFilteredAsync(string? search, CancellationToken ct = default);
     }
 }

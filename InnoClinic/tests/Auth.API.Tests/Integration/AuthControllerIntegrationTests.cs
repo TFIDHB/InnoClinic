@@ -1,4 +1,5 @@
 ﻿using BLL.DTOs;
+using BLL.Interfaces;
 using DAL;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +35,14 @@ namespace Auth.API.Tests.Integration
                         }
 
                         services.AddDbContext<AuthDbContext>(opt => opt.UseSqlServer(_fixture.SqlContainer.GetConnectionString()));
+
+                        var profilesDescriptor = services.SingleOrDefault(e => e.ServiceType == typeof(IProfilesClient));
+                        if (profilesDescriptor != null)
+                        {
+                            services.Remove(profilesDescriptor);
+                        }
+
+                        services.AddScoped<IProfilesClient, FakeProfilesClient>();
                     });
                 });
 
@@ -56,7 +65,7 @@ namespace Auth.API.Tests.Integration
             var email = "test@test.com";
             var dto = new RegisterRequestDto { Email = email, Password = "123456" };
 
-            var result = await _client.PostAsJsonAsync("api/auth/register", dto);
+            var result = await _client.PostAsJsonAsync("api/v1/auth/register", dto);
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             using var scope = _factory.Services.CreateScope();
@@ -70,7 +79,7 @@ namespace Auth.API.Tests.Integration
         {
             var dto = new RegisterRequestDto { Email = "1111", Password = "123456" };
 
-            var result = await _client.PostAsJsonAsync("api/auth/register", dto);
+            var result = await _client.PostAsJsonAsync("api/v1/auth/register", dto);
 
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
@@ -80,9 +89,9 @@ namespace Auth.API.Tests.Integration
         {
             var email = "duplicate@test.com";
             var dto = new RegisterRequestDto { Email = email, Password = "123456" };
-            await _client.PostAsJsonAsync("api/auth/register", dto);
+            await _client.PostAsJsonAsync("api/v1/auth/register", dto);
 
-            var result = await _client.PostAsJsonAsync("api/auth/register", dto);
+            var result = await _client.PostAsJsonAsync("api/v1/auth/register", dto);
 
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
@@ -93,8 +102,8 @@ namespace Auth.API.Tests.Integration
             var email = "login@test.com";
             var password = "123456";
 
-            await _client.PostAsJsonAsync("api/auth/register", new RegisterRequestDto { Email = email, Password = password });
-            var result = await _client.PostAsJsonAsync("api/auth/login", new LoginRequestDto { Email = email, Password = password });
+            await _client.PostAsJsonAsync("api/v1/auth/register", new RegisterRequestDto { Email = email, Password = password });
+            var result = await _client.PostAsJsonAsync("api/v1/auth/login", new LoginRequestDto { Email = email, Password = password });
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             var tokens = await result.Content.ReadFromJsonAsync<AuthTokenDto>();
@@ -104,7 +113,7 @@ namespace Auth.API.Tests.Integration
         [Fact]
         public async Task Login_WhenUserDoesNotExist_ReturnsBadRequest()
         {
-            var result = await _client.PostAsJsonAsync("api/auth/login", new LoginRequestDto { Email = "doesnotexist@test.com", Password = "123456" });
+            var result = await _client.PostAsJsonAsync("api/v1/auth/login", new LoginRequestDto { Email = "doesnotexist@test.com", Password = "123456" });
 
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
@@ -114,8 +123,8 @@ namespace Auth.API.Tests.Integration
         {
             var email = "wrongpassword@test.com";
 
-            await _client.PostAsJsonAsync("api/auth/register", new RegisterRequestDto { Email = email, Password = "123456" });
-            var result = await _client.PostAsJsonAsync("api/auth/login", new LoginRequestDto { Email = email, Password = "wrong-password" });
+            await _client.PostAsJsonAsync("api/v1/auth/register", new RegisterRequestDto { Email = email, Password = "123456" });
+            var result = await _client.PostAsJsonAsync("api/v1/auth/login", new LoginRequestDto { Email = email, Password = "wrong-password" });
 
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
@@ -126,12 +135,12 @@ namespace Auth.API.Tests.Integration
             var email = "logout@test.com";
             var password = "123456";
 
-            await _client.PostAsJsonAsync("api/auth/register", new RegisterRequestDto { Email = email, Password = password });
-            var loginResult = await _client.PostAsJsonAsync("api/auth/login", new LoginRequestDto { Email = email, Password = password });
+            await _client.PostAsJsonAsync("api/v1/auth/register", new RegisterRequestDto { Email = email, Password = password });
+            var loginResult = await _client.PostAsJsonAsync("api/v1/auth/login", new LoginRequestDto { Email = email, Password = password });
             var tokens = await loginResult.Content.ReadFromJsonAsync<AuthTokenDto>();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokens.AccessToken);
 
-            var result = await _client.PostAsJsonAsync("api/auth/logout", new LogOutRequestDto { RefreshToken = tokens.RefreshToken });
+            var result = await _client.PostAsJsonAsync("api/v1/auth/logout", new LogOutRequestDto { RefreshToken = tokens.RefreshToken });
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             using var scope = _factory.Services.CreateScope();
@@ -146,7 +155,7 @@ namespace Auth.API.Tests.Integration
         {
             _client.DefaultRequestHeaders.Authorization = null;
 
-            var result = await _client.PostAsJsonAsync("api/auth/logout", new LogOutRequestDto { RefreshToken = "" });
+            var result = await _client.PostAsJsonAsync("api/v1/auth/logout", new LogOutRequestDto { RefreshToken = "" });
 
             Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
         }
@@ -157,12 +166,12 @@ namespace Auth.API.Tests.Integration
             var email = "invalidrefreshtoken@test.com";
             var password = "123456";
 
-            await _client.PostAsJsonAsync("api/auth/register", new RegisterRequestDto { Email = email, Password = password });
-            var loginResult = await _client.PostAsJsonAsync("api/auth/login", new LoginRequestDto { Email = email, Password = password });
+            await _client.PostAsJsonAsync("api/v1/auth/register", new RegisterRequestDto { Email = email, Password = password });
+            var loginResult = await _client.PostAsJsonAsync("api/v1/auth/login", new LoginRequestDto { Email = email, Password = password });
             var tokens = await loginResult.Content.ReadFromJsonAsync<AuthTokenDto>();
             _client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", tokens.AccessToken);
 
-            var result = await _client.PostAsJsonAsync("api/auth/logout", new LogOutRequestDto { RefreshToken = "wrong-refresh-token" });
+            var result = await _client.PostAsJsonAsync("api/v1/auth/logout", new LogOutRequestDto { RefreshToken = "wrong-refresh-token" });
 
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }

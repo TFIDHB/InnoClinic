@@ -2,19 +2,32 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
 {
-    public class DoctorProfileService(IProfilesUnitOfWork unitOfWork, IMapper mapper) : IProfilesService<DoctorProfileDto, CreateDoctorProfileRequestDto, UpdateDoctorProfileRequestDto>
+    public class DoctorProfileService(
+        IProfilesUnitOfWork unitOfWork,
+        IMapper mapper,
+        IAuthClient authClient
+        ) : IDoctorProfileService
     {
         public async Task<DoctorProfileDto> CreateAsync(CreateDoctorProfileRequestDto dto, CancellationToken ct = default)
         {
+            var accountResult = await authClient.CreateStaffAccountAsync(dto.Email, ct);
+
             var doctorProfile = mapper.Map<DoctorProfile>(dto);
+            doctorProfile.AccountId = accountResult.AccountId;
+
             await unitOfWork.DoctorProfilesRepository.CreateAsync(doctorProfile, ct);
             await unitOfWork.SaveChangesAsync(ct);
 
-            return mapper.Map<DoctorProfileDto>(doctorProfile);
+            var responseDto = mapper.Map<DoctorProfileDto>(doctorProfile);
+
+            responseDto.TemporaryFakePassword = accountResult.TemporaryFakePassword;
+
+            return responseDto;
         }
 
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
@@ -32,6 +45,14 @@ namespace Application.Services
             return mapper.Map<IEnumerable<DoctorProfileDto>>(doctorProfiles);
         }
 
+        public async Task<DoctorProfileDto> GetByAccountIdAsync(Guid accountId, CancellationToken ct = default)
+        {
+            var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByAccountIdAsync(accountId, ct)
+                    ?? throw new NotFoundException(nameof(DoctorProfile));
+
+            return mapper.Map<DoctorProfileDto>(doctorProfile);
+        }
+
         public async Task<DoctorProfileDto> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByIdAsync(id, ct)
@@ -40,10 +61,42 @@ namespace Application.Services
             return mapper.Map<DoctorProfileDto>(doctorProfile);
         }
 
-        public async Task<DoctorProfileDto> UpdateAsync(Guid id, UpdateDoctorProfileRequestDto dto, CancellationToken ct = default)
+        public async Task<IEnumerable<DoctorProfileDto>> GetFilteredDoctorsAsync(
+            Guid? specializationId,
+            Guid? officeId,
+            string? search,
+            DoctorStatus? status,
+            CancellationToken ct = default)
+        {
+            var doctors = await unitOfWork.DoctorProfilesRepository.GetFilteredAsync(specializationId, officeId, search, status, ct);
+            return mapper.Map<IEnumerable<DoctorProfileDto>>(doctors);
+        }
+
+        public async Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
+        {
+            var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByAccountIdAsync(id, ct);
+
+            if (doctorProfile == null)
+                return null;
+
+            return new AccountProfileInfoDto
+            {
+                Role = "Doctor",
+                Status = doctorProfile.Status.ToString()
+            };
+        }
+
+        public async Task<DoctorProfileDto> UpdateAsync(
+            Guid id,
+            UpdateDoctorProfileRequestDto dto,
+            Guid? accountOwnerId = null,
+            CancellationToken ct = default)
         {
             var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(DoctorProfile));
+
+            if (accountOwnerId.HasValue && accountOwnerId.Value != doctorProfile.AccountId)
+                throw new ForbiddenException(ProfilesApplicationMessages.ForbiddenAccessMessage);
 
             mapper.Map(dto, doctorProfile);
             await unitOfWork.DoctorProfilesRepository.UpdateAsync(doctorProfile, ct);

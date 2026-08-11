@@ -10,6 +10,8 @@ namespace BLL.AutoMapper
         {
             CreateMap<RegisterRequestDto, User>()
                 .ForMember(p => p.PasswordHash, o => o.Ignore());
+            CreateMap<User, UserAccountInfoDto>();
+            CreateMap<UpdateUserAccountInfoDto, User>();
         }
     }
 }

@@ -7,6 +7,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Packages.props", "./"]
 COPY ["src/Appointments.API/Appointments.API.API/InnoClinic.Appointments.API.csproj", "src/Appointments.API/Appointments.API.API/"]
 COPY ["src/Appointments.API/Appointments.API.Application/Application.csproj", "src/Appointments.API/Appointments.API.Application/"]
 COPY ["src/Appointments.API/Appointments.API.Domain/Domain.csproj", "src/Appointments.API/Appointments.API.Domain/"]

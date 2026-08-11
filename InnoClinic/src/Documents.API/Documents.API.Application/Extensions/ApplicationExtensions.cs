@@ -1,5 +1,4 @@
-﻿using InnoClinic.Documents.API.Application;
-using InnoClinic.Documents.API.Application.Interfaces;
+﻿using InnoClinic.Documents.API.Application.Interfaces;
 using InnoClinic.Documents.API.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 

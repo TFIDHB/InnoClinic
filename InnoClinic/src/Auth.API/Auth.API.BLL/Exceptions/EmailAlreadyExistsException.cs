@@ -4,6 +4,6 @@ namespace BLL.Exceptions
 {
     public class EmailAlreadyExistsException : BadRequestException
     {
-        public EmailAlreadyExistsException() : base(BllMessages.EmailExists) { }
+        public EmailAlreadyExistsException() : base(BllMessages.EmailExistsMessage) { }
     }
 }

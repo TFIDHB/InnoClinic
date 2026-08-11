@@ -22,7 +22,7 @@ namespace Auth.API.Tests.Integration
             var email = "exists@test.com";
             using (var context = CreateContext())
             {
-                await context.Users.AddAsync(new User { Email = email, PasswordHash = "passwordHash" });
+                await context.Users.AddAsync(new User { Id = Guid.NewGuid(), Email = email, PasswordHash = "passwordHash" });
                 await context.SaveChangesAsync();
             }
 
@@ -49,7 +49,7 @@ namespace Auth.API.Tests.Integration
         public async Task GetByEmailAsync_WhenEmailExists_ReturnsUser()
         {
             var email = "getbyemail@test.com";
-            var expectedUser = new User { Email = email, PasswordHash = "passwordHash" };
+            var expectedUser = new User { Id = Guid.NewGuid(), Email = email, PasswordHash = "passwordHash" };
             using (var context = CreateContext())
             {
                 await context.Users.AddAsync(expectedUser);
@@ -81,7 +81,7 @@ namespace Auth.API.Tests.Integration
         public async Task GetByRefreshTokenAsync_WhenTokenExists_ReturnsUser()
         {
             var refreshToken = "valid-refresh-token";
-            var expectedUser = new User { Email = "owner@test.com", PasswordHash = "passwordHash", RefreshToken = refreshToken };
+            var expectedUser = new User { Id = Guid.NewGuid(), Email = "owner@test.com", PasswordHash = "passwordHash", RefreshToken = refreshToken };
             using (var context = CreateContext())
             {
                 await context.Users.AddAsync(expectedUser);

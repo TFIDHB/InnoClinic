@@ -5,6 +5,6 @@ namespace Application.Interfaces
 {
     public interface IReceptionistProfilesRepository : IRepository<ReceptionistProfile, Guid>
     {
-        //future functionality according to US
+        Task<ReceptionistProfile?> GetByAccountIdAsync(Guid id, CancellationToken ct = default);
     }
 }
