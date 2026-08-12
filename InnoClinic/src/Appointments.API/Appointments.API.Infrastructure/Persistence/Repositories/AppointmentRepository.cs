@@ -24,7 +24,7 @@ namespace Infrastructure.Persistence.Repositories
             CancellationToken ct = default)
         {
             return await context.Appointments
-                .Where(a => a.Date <= startDate && a.Date >= endDate && (doctorId == null || a.DoctorId == doctorId))
+                .Where(a => a.Date >= startDate && a.Date >= endDate && (doctorId == null || a.DoctorId == doctorId))
                 .ToListAsync(ct);
         }
     }

@@ -1,0 +1,10 @@
+﻿namespace Application.DTOs
+{
+    public class DoctorInfoDto
+    {
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+        public string? MiddleName { get; set; }
+        public Guid SpecializationId { get; set; }
+    }
+}

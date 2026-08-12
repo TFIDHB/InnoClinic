@@ -3,7 +3,7 @@ using InnoClinic.Shared.Exceptions;
 using System.Net;
 using System.Net.Http.Json;
 
-namespace Infrastructure.Persistence.Repositories
+namespace Infrastructure.Clients
 {
     public class ServicesClient(HttpClient httpClient) : IServicesClient
     {

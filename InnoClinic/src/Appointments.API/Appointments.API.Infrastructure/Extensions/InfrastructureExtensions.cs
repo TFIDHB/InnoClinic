@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces;
+using Infrastructure.Clients;
 using Infrastructure.Options;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
@@ -24,6 +25,14 @@ namespace Infrastructure.Extensions
             services.AddHttpClient<IServicesClient, ServicesClient>((sp, client) =>
             {
                 var options = sp.GetRequiredService<IOptions<ServicesApiOptions>>().Value;
+                client.BaseAddress = new Uri(options.BaseUrl);
+            });
+
+            services.Configure<ServicesApiOptions>(configuration.GetSection("ProfilesApi"));
+
+            services.AddHttpClient<IProfilesClient, ProfilesClient>((sp, client) =>
+            {
+                var options = sp.GetRequiredService<IOptions<ProfilesApiOptions>>().Value;
                 client.BaseAddress = new Uri(options.BaseUrl);
             });
 
