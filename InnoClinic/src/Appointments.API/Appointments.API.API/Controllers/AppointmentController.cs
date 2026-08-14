@@ -1,6 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using InnoClinic.Shared.Constants;
+using InnoClinic.Shared.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,6 +55,7 @@ namespace InnoClinic.Appointments.API.Controllers
         [Authorize(Roles = Roles.Patient + "," + Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> GetAppointmentsByRange(
             [FromQuery] DateOnly startDate,
@@ -62,6 +64,20 @@ namespace InnoClinic.Appointments.API.Controllers
             CancellationToken ct = default)
         {
             var result = await appointmentService.GetSlotsByDateRangeAndDoctorAsync(startDate, endDate, doctorId, ct);
+            return Ok(result);
+        }
+
+        [HttpGet("my-schedule")]
+        [Authorize(Roles = Roles.Doctor)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetMySchedule([FromQuery] DateOnly? date, CancellationToken ct) 
+        {
+            var doctorId = User.GetUserId();
+            var requiredDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
+            var result = appointmentService.GetDoctorAppointmentScheduleAsync(doctorId, requiredDate, ct);
             return Ok(result);
         }
     }

@@ -29,7 +29,9 @@ namespace Infrastructure.Extensions
                 client.BaseAddress = new Uri(options.BaseUrl);
             });
 
-            services.Configure<ServicesApiOptions>(configuration.GetSection("ProfilesApi"));
+            services.AddHttpContextAccessor();
+            services.AddTransient<AuthHeaderDelegationHandler>();
+            services.Configure<ProfilesApiOptions>(configuration.GetSection("ProfilesApi"));
 
             services.AddHttpClient<IProfilesClient, ProfilesClient>((sp, client) =>
             {
