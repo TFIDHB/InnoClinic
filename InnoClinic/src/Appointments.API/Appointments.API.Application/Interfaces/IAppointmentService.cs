@@ -19,5 +19,12 @@ namespace Application.Interfaces
             Guid doctorId,
             DateOnly date,
             CancellationToken ct = default);
+        Task<IEnumerable<AppointmentListItemDto>> GetFilteredAppointmentsAsync(
+            DateOnly? date,
+            Guid? officeId,
+            bool? isApproved,
+            string? doctorFullName,
+            string? serviceName,
+            CancellationToken ct = default);
     }
 }

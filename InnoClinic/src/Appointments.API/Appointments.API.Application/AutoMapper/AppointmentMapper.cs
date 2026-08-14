@@ -26,6 +26,16 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.ServiceName, opt => opt.Ignore())
                 .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => src.Status == AppointmentStatus.Approved))
                 .ForMember(dest => dest.HasResult, opt => opt.MapFrom(src => false));
+
+            CreateMap<Appointment, AppointmentListItemDto>()
+                .ForMember(dest => dest.AppointmentId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Time))
+                .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Time.Add(src.Duration)))
+                .ForMember(dest => dest.DoctorFullName, opt => opt.Ignore())
+                .ForMember(dest => dest.PatientFullName, opt => opt.Ignore())
+                .ForMember(dest => dest.PatientPhoneNumber, opt => opt.Ignore())
+                .ForMember(dest => dest.ServiceName, opt => opt.Ignore())
+                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => src.Status == AppointmentStatus.Approved));
         }
     }
 }

@@ -93,5 +93,48 @@ namespace Application.Services
 
             return appointmentsList;
         }
+
+        public async Task<IEnumerable<AppointmentListItemDto>> GetFilteredAppointmentsAsync(
+            DateOnly? date,
+            Guid? officeId,
+            bool? isApproved,
+            string? doctorFullName,
+            string? serviceName,
+            CancellationToken ct = default)
+        {
+            var appointments = await unitOfWork.AppointmentRepository.GetFilteredAsync(date, officeId, isApproved, ct);
+            var enrichedAppointments = new List<AppointmentListItemDto>();
+
+            foreach (var appointment in appointments)
+            {
+                var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
+                var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct);
+                var service = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
+
+                var entry = mapper.Map<AppointmentListItemDto>(appointment);
+                entry.DoctorFullName = doctorInfo == null 
+                    ? "Unknown doctor" 
+                    : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
+                entry.PatientFullName = patientInfo == null 
+                    ? "Unknown patient" 
+                    : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
+                entry.PatientPhoneNumber = patientInfo?.PhoneNumber;
+                entry.ServiceName = service ?? "Unknown service";
+
+                enrichedAppointments.Add(entry);
+            }
+
+            if (!string.IsNullOrWhiteSpace(doctorFullName))
+                enrichedAppointments = enrichedAppointments.Where(e => e.DoctorFullName.Contains(doctorFullName, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if (!string.IsNullOrWhiteSpace(serviceName))
+                enrichedAppointments = enrichedAppointments.Where(e => e.ServiceName.Contains(serviceName, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            return enrichedAppointments
+                .OrderBy(e => e.StartTime)
+                .ThenBy(e => e.DoctorFullName, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(e => e.ServiceName, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
     }
 }
