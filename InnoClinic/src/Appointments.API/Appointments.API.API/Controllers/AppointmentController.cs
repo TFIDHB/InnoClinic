@@ -98,5 +98,17 @@ namespace InnoClinic.Appointments.API.Controllers
             var result = await appointmentService.GetFilteredAppointmentsAsync(date, officeId, isApproved, doctorFullName, serviceName, ct);
             return Ok(result);
         }
+
+        [HttpPatch("{id}")]
+        [Authorize(Roles = Roles.Receptionist)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> ApproveAppointment(Guid id, CancellationToken ct = default)
+        {
+            await appointmentService.ApproveAsync(id, ct);
+            return Ok();
+        }
     }
 }

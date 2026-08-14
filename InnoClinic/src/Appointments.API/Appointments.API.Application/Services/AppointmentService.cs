@@ -3,6 +3,7 @@ using Application.Exceptions;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Enums;
 using Infrastructure.Clients;
 using InnoClinic.Shared.Exceptions;
 
@@ -135,6 +136,17 @@ namespace Application.Services
                 .ThenBy(e => e.DoctorFullName, StringComparer.OrdinalIgnoreCase)
                 .ThenBy(e => e.ServiceName, StringComparer.OrdinalIgnoreCase)
                 .ToList();
+        }
+
+        public async Task ApproveAsync(Guid id, CancellationToken ct = default)
+        {
+            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(id, ct)
+                ?? throw new NotFoundException(nameof(Appointment));
+
+            appointment.Status = AppointmentStatus.Approved;
+
+            await unitOfWork.AppointmentRepository.UpdateAsync(appointment, ct);
+            await unitOfWork.SaveChangesAsync(ct);
         }
     }
 }

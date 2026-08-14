@@ -26,5 +26,6 @@ namespace Application.Interfaces
             string? doctorFullName,
             string? serviceName,
             CancellationToken ct = default);
+        Task ApproveAsync(Guid id, CancellationToken ct = default);
     }
 }

@@ -17,6 +17,7 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
 
             CreateMap<Appointment, AppointmentSlotDto>();
+
             CreateMap<Appointment, ScheduleDto>()
                 .ForMember(dest => dest.AppointmentId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Time))
