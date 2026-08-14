@@ -1,4 +1,5 @@
-﻿using Application.Interfaces;
+﻿using Application.DTOs;
+using Application.Interfaces;
 using InnoClinic.Shared.Exceptions;
 using System.Net;
 using System.Net.Http.Json;
@@ -17,6 +18,18 @@ namespace Infrastructure.Clients
             response.EnsureSuccessStatusCode();
             var result = await response.Content.ReadFromJsonAsync<int>();
             return result;
+        }
+
+        public async Task<string?> GetServiceNameAsync(Guid serviceId, CancellationToken ct = default)
+        {
+            var response = await httpClient.GetAsync($"/api/v1/services/{serviceId}", ct);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                return null;
+
+            response.EnsureSuccessStatusCode();
+            var service = await response.Content.ReadFromJsonAsync<ServiceDto>(ct);
+            return service?.Name;
         }
     }
 }

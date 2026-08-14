@@ -15,5 +15,9 @@ namespace Application.Interfaces
             DateOnly endDate,
             Guid? doctorId,
             CancellationToken ct = default);
+        Task<IEnumerable<ScheduleDto>> GetDoctorAppointmentScheduleAsync(
+            Guid doctorId,
+            DateOnly date,
+            CancellationToken ct = default);
     }
 }

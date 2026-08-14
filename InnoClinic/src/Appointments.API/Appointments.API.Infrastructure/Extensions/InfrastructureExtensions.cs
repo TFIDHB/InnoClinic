@@ -1,5 +1,6 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Clients;
+using Infrastructure.Handlers;
 using Infrastructure.Options;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
@@ -34,7 +35,7 @@ namespace Infrastructure.Extensions
             {
                 var options = sp.GetRequiredService<IOptions<ProfilesApiOptions>>().Value;
                 client.BaseAddress = new Uri(options.BaseUrl);
-            });
+            }).AddHttpMessageHandler<AuthHeaderDelegationHandler>();
 
             services.AddScoped<IAppointmentUnitOfWork, AppointmentUnitOfWork>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();

@@ -3,6 +3,7 @@ using Application.Exceptions;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
+using Infrastructure.Clients;
 using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
@@ -10,7 +11,8 @@ namespace Application.Services
     public class AppointmentService(
         IAppointmentUnitOfWork unitOfWork,
         IMapper mapper,
-        IServicesClient servicesClient) : IAppointmentService
+        IServicesClient servicesClient,
+        IProfilesClient profilesClient) : IAppointmentService
     {
         public async Task<AppointmentResponseDto> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
@@ -62,6 +64,34 @@ namespace Application.Services
         {
             var appointments = await unitOfWork.AppointmentRepository.GetByDateRangeAndDoctorAsync(startDate, endDate, doctorId, ct);
             return mapper.Map<IEnumerable<AppointmentSlotDto>>(appointments);
+        }
+
+        public async Task<IEnumerable<ScheduleDto>> GetDoctorAppointmentScheduleAsync(
+            Guid doctorId,
+            DateOnly date,
+            CancellationToken ct = default)
+        {
+            var appointments = await unitOfWork.AppointmentRepository.GetByDateAndDoctorAsync(date, doctorId, ct);
+            var orderedAppointments = appointments.OrderBy(e => e.Time).ToList();
+
+            var appointmentsList = new List<ScheduleDto>(orderedAppointments.Count);
+
+            foreach (var appointment in orderedAppointments) 
+            {
+                var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
+                var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct);
+
+                var entry = mapper.Map<ScheduleDto>(appointment);
+
+                entry.PatientFullName = patientInfo == null 
+                    ? "Unknown patient" 
+                    : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
+                entry.ServiceName = serviceName ?? "Unknown service";
+
+                appointmentsList.Add(entry);
+            }
+
+            return appointmentsList;
         }
     }
 }
