@@ -148,5 +148,14 @@ namespace Application.Services
             await unitOfWork.AppointmentRepository.UpdateAsync(appointment, ct);
             await unitOfWork.SaveChangesAsync(ct);
         }
+
+        public async Task CancelAsync(Guid id, CancellationToken ct = default)
+        {
+            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(id, ct)
+                ?? throw new NotFoundException(nameof(Appointment));
+
+            await unitOfWork.AppointmentRepository.DeleteAsync(id, ct);
+            await unitOfWork.SaveChangesAsync(ct);
+        }
     }
 }

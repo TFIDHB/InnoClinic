@@ -110,5 +110,17 @@ namespace InnoClinic.Appointments.API.Controllers
             await appointmentService.ApproveAsync(id, ct);
             return Ok();
         }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = Roles.Receptionist)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> CancelAppointment(Guid id, CancellationToken ct = default)
+        {
+            await appointmentService.CancelAsync(id, ct);
+            return NoContent();
+        }
     }
 }
