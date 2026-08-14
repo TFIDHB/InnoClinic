@@ -1,9 +1,9 @@
 ﻿using Application.Interfaces;
 using Infrastructure.Clients;
-using Infrastructure.Handlers;
 using Infrastructure.Options;
 using Infrastructure.Persistence;
 using Infrastructure.Persistence.Repositories;
+using InnoClinic.Shared.Handlers;
 using InnoClinic.Shared.Migrators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
