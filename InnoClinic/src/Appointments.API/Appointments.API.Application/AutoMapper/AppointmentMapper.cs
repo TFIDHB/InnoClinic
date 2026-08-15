@@ -1,7 +1,6 @@
 ﻿using Application.DTOs;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 
 namespace Application.AutoMapper
 {
@@ -10,11 +9,11 @@ namespace Application.AutoMapper
         public AppointmentMapper()
         {
             CreateMap<CreateAppointmentRequestDto, Appointment>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => AppointmentStatus.Created))
+                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => false))
                 .ForMember(dest => dest.Duration, opt => opt.Ignore());
 
             CreateMap<Appointment, AppointmentResponseDto>()
-                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
+                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => false));
 
             CreateMap<Appointment, AppointmentSlotDto>();
 
@@ -25,7 +24,7 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.PatientId, opt => opt.Ignore())
                 .ForMember(dest => dest.PatientFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.ServiceName, opt => opt.Ignore())
-                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => src.Status == AppointmentStatus.Approved))
+                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => false))
                 .ForMember(dest => dest.HasResult, opt => opt.MapFrom(src => false));
 
             CreateMap<Appointment, AppointmentListItemDto>()
@@ -36,7 +35,7 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.PatientFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.PatientPhoneNumber, opt => opt.Ignore())
                 .ForMember(dest => dest.ServiceName, opt => opt.Ignore())
-                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => src.Status == AppointmentStatus.Approved));
+                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => false));
 
             CreateMap<Appointment, AppointmentHistoryItemDto>()
                 .ForMember(dest => dest.AppointmentId, opt => opt.MapFrom(src => src.Id))

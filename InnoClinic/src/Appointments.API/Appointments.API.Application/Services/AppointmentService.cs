@@ -3,7 +3,6 @@ using Application.Exceptions;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Domain.Enums;
 using Infrastructure.Clients;
 using InnoClinic.Shared.Exceptions;
 
@@ -87,15 +86,15 @@ namespace Application.Services
 
             var appointmentsList = new List<ScheduleDto>(orderedAppointments.Count);
 
-            foreach (var appointment in orderedAppointments) 
+            foreach (var appointment in orderedAppointments)
             {
                 var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
                 var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct);
 
                 var entry = mapper.Map<ScheduleDto>(appointment);
 
-                entry.PatientFullName = patientInfo == null 
-                    ? "Unknown patient" 
+                entry.PatientFullName = patientInfo == null
+                    ? "Unknown patient"
                     : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
                 entry.ServiceName = serviceName ?? "Unknown service";
 
@@ -123,11 +122,11 @@ namespace Application.Services
                 var service = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
 
                 var entry = mapper.Map<AppointmentListItemDto>(appointment);
-                entry.DoctorFullName = doctorInfo == null 
-                    ? "Unknown doctor" 
+                entry.DoctorFullName = doctorInfo == null
+                    ? "Unknown doctor"
                     : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
-                entry.PatientFullName = patientInfo == null 
-                    ? "Unknown patient" 
+                entry.PatientFullName = patientInfo == null
+                    ? "Unknown patient"
                     : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
                 entry.PatientPhoneNumber = patientInfo?.PhoneNumber;
                 entry.ServiceName = service ?? "Unknown service";
@@ -153,7 +152,7 @@ namespace Application.Services
             var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
 
-            appointment.Status = AppointmentStatus.Approved;
+            appointment.IsApproved = true;
 
             await unitOfWork.AppointmentRepository.UpdateAsync(appointment, ct);
             await unitOfWork.SaveChangesAsync(ct);

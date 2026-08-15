@@ -1,6 +1,5 @@
 ﻿using Application.Interfaces;
 using Domain.Entities;
-using Domain.Enums;
 using InnoClinic.Shared.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -55,8 +54,8 @@ namespace Infrastructure.Persistence.Repositories
             if (isApproved != null)
             {
                 query = isApproved.Value
-                    ? query.Where(a => a.Status == AppointmentStatus.Approved)
-                    : query.Where(a => a.Status == AppointmentStatus.Created);
+                    ? query.Where(a => a.IsApproved)
+                    : query.Where(a => a.IsApproved);
             }
 
             return await query.ToListAsync(ct);

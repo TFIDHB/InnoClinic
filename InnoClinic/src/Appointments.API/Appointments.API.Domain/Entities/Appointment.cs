@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Domain.Entities
+﻿namespace Domain.Entities
 {
     public class Appointment
     {
@@ -18,7 +16,7 @@ namespace Domain.Entities
         public DateTime StartDateTime => Date.ToDateTime(Time);
         public DateTime EndDateTime => StartDateTime.Add(Duration);
 
-        public required AppointmentStatus Status { get; set; }
+        public bool IsApproved { get; set; }
         public required DateTime CreatedAt { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Application.DTOs
+﻿namespace Application.DTOs
 {
     public class AppointmentResponseDto
     {
@@ -12,6 +10,6 @@ namespace Application.DTOs
         public Guid OfficeId { get; set; }
         public DateOnly Date { get; set; }
         public TimeOnly Time { get; set; }
-        public AppointmentStatus Status { get; set; }
+        public bool IsApproved { get; set; }
     }
 }
