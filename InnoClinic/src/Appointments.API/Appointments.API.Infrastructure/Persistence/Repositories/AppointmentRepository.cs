@@ -29,6 +29,15 @@ namespace Infrastructure.Persistence.Repositories
                 .ToListAsync(ct);
         }
 
+        public async Task<IEnumerable<Appointment>> GetByPatientAsync(Guid patientId, CancellationToken ct = default)
+        {
+            return await context.Appointments
+                .Where(a => a.PatientId == patientId)
+                .OrderByDescending(a => a.Date)
+                .ThenBy(a => a.Time)
+                .ToListAsync(ct);
+        }
+
         public async Task<IEnumerable<Appointment>> GetFilteredAsync(
             DateOnly? date,
             Guid? officeId,

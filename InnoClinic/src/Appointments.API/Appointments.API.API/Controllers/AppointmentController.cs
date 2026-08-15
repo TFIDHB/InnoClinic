@@ -127,5 +127,29 @@ namespace InnoClinic.Appointments.API.Controllers
             await appointmentService.CancelAsync(id, ct);
             return NoContent();
         }
+
+        [HttpGet("patients/{patientId}/history")]
+        [Authorize(Roles = Roles.Doctor + "," + Roles.Receptionist)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<AppointmentHistoryItemDto>>> GetPatientHistory(Guid patientId, CancellationToken ct = default)
+        {
+            var result = await appointmentService.GetPatientHistoryAsync(patientId, ct);
+            return Ok(result);
+        }
+
+        [HttpGet("my-history")]
+        [Authorize(Roles = Roles.Patient)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<AppointmentHistoryItemDto>>> GetMyHistory(CancellationToken ct = default)
+        {
+            var patientId = User.GetUserId();
+            var result = await appointmentService.GetPatientHistoryAsync(patientId, ct);
+            return Ok(result);
+        }
     }
 }

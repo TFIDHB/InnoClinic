@@ -32,5 +32,6 @@ namespace Application.Interfaces
             CancellationToken ct = default);
         Task ApproveAsync(Guid id, CancellationToken ct = default);
         Task CancelAsync(Guid id, CancellationToken ct = default);
+        Task<IEnumerable<AppointmentHistoryItemDto>> GetPatientHistoryAsync(Guid patientId, CancellationToken ct = default);
     }
 }

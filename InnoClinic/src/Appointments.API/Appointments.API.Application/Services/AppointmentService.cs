@@ -164,5 +164,31 @@ namespace Application.Services
             await unitOfWork.AppointmentRepository.DeleteAsync(id, ct);
             await unitOfWork.SaveChangesAsync(ct);
         }
+
+        public async Task<IEnumerable<AppointmentHistoryItemDto>> GetPatientHistoryAsync(Guid patientId, CancellationToken ct = default)
+        {
+            var appointments = await unitOfWork.AppointmentRepository.GetByPatientAsync(patientId, ct);
+
+            var appointmentsList = new List<AppointmentHistoryItemDto>();
+
+            foreach (var appointment in appointments)
+            {
+                var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
+                var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
+
+                var entry = mapper.Map<AppointmentHistoryItemDto>(appointment);
+                entry.DoctorFullName = doctorInfo == null
+                    ? "Unknown doctor"
+                    : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
+                entry.ServiceName = serviceName ?? "Unknown service";
+                entry.HasResult = false;
+                entry.CanReschedule = appointment.Date > DateOnly.FromDateTime(DateTime.UtcNow) ||
+                    (appointment.Date == DateOnly.FromDateTime(DateTime.UtcNow) && appointment.Time > TimeOnly.FromDateTime(DateTime.UtcNow));
+
+                appointmentsList.Add(entry);
+            }
+
+            return appointmentsList;
+        }
     }
 }
