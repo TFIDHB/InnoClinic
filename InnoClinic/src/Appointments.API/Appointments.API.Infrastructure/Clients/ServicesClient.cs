@@ -31,5 +31,17 @@ namespace Infrastructure.Clients
             var service = await response.Content.ReadFromJsonAsync<ServiceDto>(ct);
             return service?.Name;
         }
+
+        public async Task<string?> GetSpecializationNameAsync(Guid specializationId, CancellationToken ct = default)
+        {
+            var response = await httpClient.GetAsync($"/api/v1/specializations/{specializationId}", ct);
+
+            if (response.StatusCode == HttpStatusCode.NotFound)
+                return null;
+
+            response.EnsureSuccessStatusCode();
+            var spec = await response.Content.ReadFromJsonAsync<SpecializationDto>(ct);
+            return spec?.Name;
+        }
     }
 }

@@ -45,6 +45,21 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.ServiceName, opt => opt.Ignore())
                 .ForMember(dest => dest.HasResult, opt => opt.Ignore())
                 .ForMember(dest => dest.CanReschedule, opt => opt.Ignore());
+
+            CreateMap<CreateResultRequestDto, Result>();
+            CreateMap<UpdateResultRequestDto, Result>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.AppointmentId, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
+
+            CreateMap<Result, ResultDto>()
+                .ForMember(dest => dest.Date, opt => opt.Ignore()) 
+                .ForMember(dest => dest.PatientFullName, opt => opt.Ignore())
+                .ForMember(dest => dest.PatientDateOfBirth, opt => opt.Ignore())
+                .ForMember(dest => dest.DoctorFullName, opt => opt.Ignore())
+                .ForMember(dest => dest.DoctorSpecialization, opt => opt.Ignore())
+                .ForMember(dest => dest.ServiceName, opt => opt.Ignore())
+                .ForMember(dest => dest.CanEdit, opt => opt.Ignore());
         }
     }
 }

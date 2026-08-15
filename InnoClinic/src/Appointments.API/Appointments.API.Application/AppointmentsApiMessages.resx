@@ -123,6 +123,12 @@
   <data name="AppointmentInPastMessage" xml:space="preserve">
     <value>Appointment date cannot be in the past</value>
   </data>
+  <data name="ComplainsRequiredMessage" xml:space="preserve">
+    <value>Please, enter the complaints</value>
+  </data>
+  <data name="ConclusionIsRequiredMessage" xml:space="preserve">
+    <value>Please, enter the conclusion</value>
+  </data>
   <data name="ForbiddenAccessMessage" xml:space="preserve">
     <value>You don't have access to this resource</value>
   </data>
@@ -134,5 +140,8 @@
   </data>
   <data name="OverlappingAppointmentMessage" xml:space="preserve">
     <value>This time is already taken by another patient.</value>
+  </data>
+  <data name="RecommendationsAreRequiredMessage" xml:space="preserve">
+    <value>Please, enter the recommendations</value>
   </data>
 </root>

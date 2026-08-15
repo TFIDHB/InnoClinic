@@ -52,11 +52,7 @@ namespace Infrastructure.Persistence.Repositories
                 query = query.Where(a => a.OfficeId == officeId.Value);
 
             if (isApproved != null)
-            {
-                query = isApproved.Value
-                    ? query.Where(a => a.IsApproved)
-                    : query.Where(a => a.IsApproved);
-            }
+                query = query.Where(a => a.IsApproved == isApproved.Value);
 
             return await query.ToListAsync(ct);
         }

@@ -6,5 +6,6 @@ namespace Application.Interfaces
     {
         Task<int> GetTimeSlotSizeAsync(Guid serviceId, CancellationToken ct = default);
         Task<string?> GetServiceNameAsync(Guid serviceId, CancellationToken ct = default);
+        Task<string?> GetSpecializationNameAsync(Guid specializationId, CancellationToken ct = default);
     }
 }

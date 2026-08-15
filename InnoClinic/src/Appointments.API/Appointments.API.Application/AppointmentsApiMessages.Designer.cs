@@ -79,6 +79,24 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please, enter the complaints.
+        /// </summary>
+        public static string ComplainsRequiredMessage {
+            get {
+                return ResourceManager.GetString("ComplainsRequiredMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please, enter the conclusion.
+        /// </summary>
+        public static string ConclusionIsRequiredMessage {
+            get {
+                return ResourceManager.GetString("ConclusionIsRequiredMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You don&apos;t have access to this resource.
         /// </summary>
         public static string ForbiddenAccessMessage {
@@ -111,6 +129,15 @@ namespace Application {
         public static string OverlappingAppointmentMessage {
             get {
                 return ResourceManager.GetString("OverlappingAppointmentMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please, enter the recommendations.
+        /// </summary>
+        public static string RecommendationsAreRequiredMessage {
+            get {
+                return ResourceManager.GetString("RecommendationsAreRequiredMessage", resourceCulture);
             }
         }
     }

@@ -8,7 +8,7 @@
         public required Guid PatientId { get; set; }
         public string PatientFullName { get; set; } = "Unknown patient";
         public string ServiceName { get; set; } = "Unknown service";
-        public bool IsApproved { get; set; }
-        public bool HasResult { get; set; }
+        public required bool IsApproved { get; set; }
+        public required bool HasResult { get; set; }
     }
 }
