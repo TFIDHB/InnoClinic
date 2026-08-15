@@ -24,11 +24,11 @@ namespace Application.Validators
             RuleFor(x => x.Date)
                 .NotEmpty()
                 .GreaterThanOrEqualTo(DateOnly.FromDateTime(DateTime.Today))
-                .WithMessage(Messages.AppointmentInPastMessage);
+                .WithMessage(AppointmentsApiMessages.AppointmentInPastMessage);
             RuleFor(x => x.Time)
                 .NotEmpty()
                 .Must(time => time >= workingHours.Start && time < workingHours.End)
-                .WithMessage(string.Format(Messages.AppointmentBetweenMessage, workingHours.Start, workingHours.End));
+                .WithMessage(string.Format(AppointmentsApiMessages.AppointmentBetweenMessage, workingHours.Start, workingHours.End));
         }
     }
 }

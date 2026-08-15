@@ -15,10 +15,20 @@ namespace Application.Services
         IServicesClient servicesClient,
         IProfilesClient profilesClient) : IAppointmentService
     {
-        public async Task<AppointmentResponseDto> GetByIdAsync(Guid id, CancellationToken ct = default)
+        public async Task<AppointmentResponseDto> GetByIdAsync(
+            Guid appointmentId,
+            Guid? patientId,
+            Guid? doctorId,
+            CancellationToken ct = default)
         {
-            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(id, ct)
+            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
+
+            if (patientId.HasValue && patientId.Value != appointment.PatientId)
+                throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+
+            if (doctorId.HasValue && doctorId.Value != appointment.DoctorId)
+                throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
 
             return mapper.Map<AppointmentResponseDto>(appointment);
         }
@@ -151,9 +161,6 @@ namespace Application.Services
 
         public async Task CancelAsync(Guid id, CancellationToken ct = default)
         {
-            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(id, ct)
-                ?? throw new NotFoundException(nameof(Appointment));
-
             await unitOfWork.AppointmentRepository.DeleteAsync(id, ct);
             await unitOfWork.SaveChangesAsync(ct);
         }
