@@ -39,6 +39,13 @@ namespace Infrastructure.Extensions
                 client.BaseAddress = new Uri(options.BaseUrl);
             }).AddHttpMessageHandler<AuthHeaderDelegationHandler>();
 
+            services.Configure<DocumentsApiOptions>(configuration.GetSection("DocumentsApi"));
+            services.AddHttpClient<IDocumentsClient, DocumentsClient>((sp, client) =>
+            {
+                var options = sp.GetRequiredService<IOptions<DocumentsApiOptions>>().Value;
+                client.BaseAddress = new Uri(options.BaseUrl);
+            }).AddHttpMessageHandler<AuthHeaderDelegationHandler>();
+
             services.AddScoped<IAppointmentUnitOfWork, AppointmentUnitOfWork>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
             services.AddScoped<IResultRepository, ResultRepository>();

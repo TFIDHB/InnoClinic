@@ -1,18 +1,23 @@
 ﻿using InnoClinic.Documents.API.Application.DTOs;
 using InnoClinic.Documents.API.Application.Interfaces;
+using InnoClinic.Shared.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Documents.API.Controllers
 {
-    //[Authorize]
+    [Authorize(Roles = Roles.AllRoles)]
     [ApiController]
     [Route("api/v1/documents")]
     public class DocumentsController(IDocumentsService documentsService) : ControllerBase
     {
         [HttpGet("{id}")]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DocumentDto>> GetDocument(Guid id, CancellationToken ct = default)
         {
             var result = await documentsService.GetByIdAsync(id, ct);
@@ -20,8 +25,11 @@ namespace InnoClinic.Documents.API.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<DocumentDto>>> GetAllDocuments(CancellationToken ct = default)
         {
             var result = await documentsService.GetAllAsync(ct);
@@ -29,9 +37,11 @@ namespace InnoClinic.Documents.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.Doctor)]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DocumentDto>> UploadDocument([FromForm] UploadDocumentRequestDto dto, CancellationToken ct = default)
         {
             var result = await documentsService.UploadAsync(dto, ct);
@@ -39,10 +49,12 @@ namespace InnoClinic.Documents.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Roles.Doctor)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<DocumentDto>> UpdateDocument(Guid id, [FromForm] UpdateDocumentRequestDto dto, CancellationToken ct = default)
         {
             var result = await documentsService.UpdateAsync(id, dto, ct);
@@ -50,10 +62,13 @@ namespace InnoClinic.Documents.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Roles.Doctor)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> DeleteDocument(Guid id, CancellationToken ct = default)
         {
             await documentsService.DeleteAsync(id, ct);
