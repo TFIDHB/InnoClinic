@@ -140,5 +140,14 @@ namespace Application {
                 return ResourceManager.GetString("RecommendationsAreRequiredMessage", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This appointment already has a result..
+        /// </summary>
+        public static string ResultAlreadyExists {
+            get {
+                return ResourceManager.GetString("ResultAlreadyExists", resourceCulture);
+            }
+        }
     }
 }

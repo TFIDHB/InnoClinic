@@ -144,4 +144,7 @@
   <data name="RecommendationsAreRequiredMessage" xml:space="preserve">
     <value>Please, enter the recommendations</value>
   </data>
+  <data name="ResultAlreadyExists" xml:space="preserve">
+    <value>This appointment already has a result.</value>
+  </data>
 </root>

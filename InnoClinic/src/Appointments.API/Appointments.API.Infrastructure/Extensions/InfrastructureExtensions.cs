@@ -41,6 +41,7 @@ namespace Infrastructure.Extensions
 
             services.AddScoped<IAppointmentUnitOfWork, AppointmentUnitOfWork>();
             services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            services.AddScoped<IResultRepository, ResultRepository>();
             services.AddHostedService<DatabaseMigrator<AppointmentDbContext>>();
             return services;
         }

@@ -14,6 +14,7 @@ namespace Application.Extensions
         {
             services.Configure<WorkingHoursOptions>(configuration.GetSection("WorkingHours"));
             services.AddScoped<IAppointmentService, AppointmentService>();
+            services.AddScoped<IResultService, ResultService>();
             services.AddAutoMapper(AssemblyReference.Assembly);
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssembly(AssemblyReference.Assembly);
