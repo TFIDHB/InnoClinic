@@ -11,7 +11,8 @@ namespace Application.Services
         IAppointmentUnitOfWork unitOfWork,
         IMapper mapper,
         IServicesClient servicesClient,
-        IProfilesClient profilesClient) : IResultService
+        IProfilesClient profilesClient,
+        IDocumentsClient documentsClient) : IResultService
     {
         private async Task<ResultDto> EnrichDtoAsync(
             Appointment appointment,
@@ -113,6 +114,23 @@ namespace Application.Services
             await unitOfWork.SaveChangesAsync(ct);
 
             return await EnrichDtoAsync(appointment, result, canEdit: true, ct);
+        }
+
+        public async Task<byte[]> GetOrGenerateResultFileAsync(
+            Guid appointmentId,
+            Guid patientId,
+            CancellationToken ct = default)
+        {
+            var dto = await GetByAppointmentIdAsync(appointmentId, doctorId: null, patientId, ct);
+
+            var existingDocument = await documentsClient.GetByResultIdAsync(dto.Id, ct);
+            if (existingDocument != null)
+                return await documentsClient.DownloadAsync(existingDocument.Url, ct);
+
+            var pdfBytes = ResultPdfGeneratorService.Generate(dto);
+            await documentsClient.UploadAsync(dto.Id, pdfBytes, $"appointment-result-{dto.Id}.pdf", ct);
+
+            return pdfBytes;
         }
     }
 }

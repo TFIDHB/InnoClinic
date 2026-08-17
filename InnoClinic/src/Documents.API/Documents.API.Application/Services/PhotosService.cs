@@ -6,7 +6,10 @@ using InnoClinic.Shared.Exceptions;
 
 namespace InnoClinic.Documents.API.Application.Services
 {
-    public class PhotosService(IDocumentsUnitOfWork unitOfWork, IBlobService blobService, IMapper mapper) : IPhotosService
+    public class PhotosService(
+        IDocumentsUnitOfWork unitOfWork,
+        IBlobService blobService,
+        IMapper mapper) : IPhotosService
     {
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
         {
@@ -30,7 +33,10 @@ namespace InnoClinic.Documents.API.Application.Services
             return mapper.Map<PhotoDto>(photo);
         }
 
-        public async Task<PhotoDto> UpdateAsync(Guid id, UpdatePhotoRequestDto dto, CancellationToken ct = default)
+        public async Task<PhotoDto> UpdateAsync(
+            Guid id,
+            UpdatePhotoRequestDto dto,
+            CancellationToken ct = default)
         {
             var photo = await unitOfWork.PhotosRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Photo));

@@ -59,5 +59,19 @@ namespace InnoClinic.Appointments.API.Controllers
             var result = await resultService.GetByAppointmentIdAsync(appointmentId, doctorId, patientId, ct);
             return Ok(result);
         }
+
+        [HttpGet("download")]
+        [Authorize(Roles = Roles.Patient)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> DownloadResult(Guid appointmentId, CancellationToken ct = default)
+        {
+            var patientId = User.GetUserId();
+            var fileBytes = await resultService.GetOrGenerateResultFileAsync(appointmentId, patientId, ct);
+            return File(fileBytes, "application/pdf", "appointment-result.pdf");
+        }
     }
 }

@@ -20,5 +20,9 @@ namespace Application.Interfaces
             Guid? doctorId,
             Guid? patientId,
             CancellationToken ct = default);
+        Task<byte[]> GetOrGenerateResultFileAsync(
+            Guid appointmentId,
+            Guid patientId,
+            CancellationToken ct = default);
     }
 }
