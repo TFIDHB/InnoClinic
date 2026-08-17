@@ -33,5 +33,10 @@ namespace Application.Interfaces
         Task ApproveAsync(Guid id, CancellationToken ct = default);
         Task CancelAsync(Guid id, CancellationToken ct = default);
         Task<IEnumerable<AppointmentHistoryItemDto>> GetPatientHistoryAsync(Guid patientId, CancellationToken ct = default);
+        Task<AppointmentResponseDto> RescheduleAsync(
+            Guid appointmentId,
+            RescheduleAppointmentRequestDto dto,
+            Guid? patientId,
+            CancellationToken ct = default);
     }
 }

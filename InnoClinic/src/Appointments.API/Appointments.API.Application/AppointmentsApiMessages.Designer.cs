@@ -79,6 +79,15 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only appointments that aren&apos;t approved can be rescheduled..
+        /// </summary>
+        public static string CannotBeRescheduledMessage {
+            get {
+                return ResourceManager.GetString("CannotBeRescheduledMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please, enter the complaints.
         /// </summary>
         public static string ComplainsRequiredMessage {

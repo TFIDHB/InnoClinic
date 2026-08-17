@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Clients;
 using InnoClinic.Shared.Exceptions;
+using System.Numerics;
 
 namespace Application.Services
 {
@@ -14,6 +15,22 @@ namespace Application.Services
         IServicesClient servicesClient,
         IProfilesClient profilesClient) : IAppointmentService
     {
+        private async Task<bool> IsOverlappingAsync(
+            Guid doctorId,
+            DateOnly date,
+            TimeOnly newStart,
+            TimeOnly newEnd,
+            Guid? excludeAppointmentId,
+            CancellationToken ct)
+        {
+            return await unitOfWork.AppointmentRepository.AnyAsync(a =>
+                a.DoctorId == doctorId &&
+                a.Date == date &&
+                (excludeAppointmentId == null || a.Id != excludeAppointmentId.Value) &&
+                newStart < a.Time.Add(a.Duration) &&
+                newEnd > a.Time, ct);
+        }
+
         public async Task<AppointmentResponseDto> GetByIdAsync(
             Guid appointmentId,
             Guid? patientId,
@@ -39,12 +56,7 @@ namespace Application.Services
             var newStart = dto.Time;
             var newEnd = dto.Time.AddMinutes(durationMinutes);
 
-            var isOverlapping = await unitOfWork.AppointmentRepository.AnyAsync(a =>
-                a.DoctorId == dto.DoctorId &&
-                a.Date == dto.Date &&
-                newStart < a.Time.Add(a.Duration) &&
-                newEnd > a.Time, ct);
-
+            var isOverlapping = await IsOverlappingAsync(dto.DoctorId, dto.Date, newStart, newEnd, excludeAppointmentId: null, ct);
             if (isOverlapping)
                 throw new OverlappingAppointmentException();
 
@@ -188,6 +200,41 @@ namespace Application.Services
             }
 
             return appointmentsList;
+        }
+
+        public async Task<AppointmentResponseDto> RescheduleAsync(
+            Guid appointmentId,
+            RescheduleAppointmentRequestDto dto,
+            Guid? patientId,
+            CancellationToken ct = default)
+        {
+            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
+                ?? throw new NotFoundException(nameof(Appointment));
+
+            if (patientId.HasValue && appointment.PatientId != patientId.Value)
+                throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+
+            if (appointment.IsApproved)
+                throw new BadRequestException(AppointmentsApiMessages.CannotBeRescheduledMessage);
+
+            var newStart = dto.Time;
+            var newEnd = dto.Time.Add(appointment.Duration);
+
+            var isOverlapping = await IsOverlappingAsync(dto.DoctorId, dto.Date, newStart, newEnd, appointmentId, ct);
+            if (isOverlapping)
+                throw new OverlappingAppointmentException();
+
+            var doctorInfo = await profilesClient.GetDoctorInfoAsync(dto.DoctorId, ct)
+                ?? throw new NotFoundException("Doctor");
+            appointment.DoctorId = dto.DoctorId;
+            appointment.OfficeId = doctorInfo.OfficeId;
+            appointment.Date = dto.Date;
+            appointment.Time = dto.Time;
+
+            await unitOfWork.AppointmentRepository.UpdateAsync(appointment, ct);
+            await unitOfWork.SaveChangesAsync(ct);
+
+            return mapper.Map<AppointmentResponseDto>(appointment);
         }
     }
 }

@@ -151,5 +151,23 @@ namespace InnoClinic.Appointments.API.Controllers
             var result = await appointmentService.GetPatientHistoryAsync(patientId, ct);
             return Ok(result);
         }
+
+        [HttpPut("{id}/reschedule")]
+        [Authorize(Roles = Roles.Patient + "," + Roles.Receptionist)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<AppointmentResponseDto>> RescheduleAppointment(
+            Guid id,
+            [FromBody] RescheduleAppointmentRequestDto dto,
+            CancellationToken ct = default)
+        {
+            Guid? patientId = User.IsInRole(Roles.Patient) ? User.GetUserId() : null;
+            var result = await appointmentService.RescheduleAsync(id, dto, patientId, ct);
+            return Ok(result);
+        }
     }
 }

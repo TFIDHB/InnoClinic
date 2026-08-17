@@ -123,6 +123,9 @@
   <data name="AppointmentInPastMessage" xml:space="preserve">
     <value>Appointment date cannot be in the past</value>
   </data>
+  <data name="CannotBeRescheduledMessage" xml:space="preserve">
+    <value>Only appointments that aren't approved can be rescheduled.</value>
+  </data>
   <data name="ComplainsRequiredMessage" xml:space="preserve">
     <value>Please, enter the complaints</value>
   </data>
