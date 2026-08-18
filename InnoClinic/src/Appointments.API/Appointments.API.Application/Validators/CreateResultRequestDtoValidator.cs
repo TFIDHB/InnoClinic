@@ -7,7 +7,7 @@ namespace Application.Validators
     {
         public CreateResultRequestDtoValidator()
         {
-            RuleFor(x => x.Complaints).NotEmpty().WithMessage(AppointmentsApiMessages.ComplainsRequiredMessage);
+            RuleFor(x => x.Complaints).NotEmpty().WithMessage(AppointmentsApiMessages.ComplaintsRequiredMessage);
             RuleFor(x => x.Conclusion).NotEmpty().WithMessage(AppointmentsApiMessages.ConclusionIsRequiredMessage);
             RuleFor(x => x.Recommendations).NotEmpty().WithMessage(AppointmentsApiMessages.RecommendationsAreRequiredMessage);
         }

@@ -28,7 +28,7 @@ namespace InnoClinic.Profiles.API.Controllers
         }
 
         [HttpGet("{id}")]
-        [Authorize(Roles = Roles.Doctor + "," + Roles.Receptionist)]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

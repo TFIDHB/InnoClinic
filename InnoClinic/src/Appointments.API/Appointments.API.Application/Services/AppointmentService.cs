@@ -1,10 +1,11 @@
 ﻿using Application.DTOs;
 using Application.Exceptions;
 using Application.Interfaces;
+using Application.Options;
 using AutoMapper;
 using Domain.Entities;
-using Infrastructure.Clients;
 using InnoClinic.Shared.Exceptions;
+using Microsoft.Extensions.Options;
 
 namespace Application.Services
 {
@@ -12,7 +13,8 @@ namespace Application.Services
         IAppointmentUnitOfWork unitOfWork,
         IMapper mapper,
         IServicesClient servicesClient,
-        IProfilesClient profilesClient) : IAppointmentService
+        IProfilesClient profilesClient,
+        IOptions<WorkingHoursOptions> workingHoursOptions) : IAppointmentService
     {
         private async Task<bool> IsOverlappingAsync(
             Guid doctorId,
@@ -28,6 +30,16 @@ namespace Application.Services
                 (excludeAppointmentId == null || a.Id != excludeAppointmentId.Value) &&
                 newStart < a.Time.Add(a.Duration) &&
                 newEnd > a.Time, ct);
+        }
+
+        private void EnsureWithinWorkingHours(TimeOnly start, TimeOnly end)
+        {
+            var workingHours = workingHoursOptions.Value;
+            if (start < workingHours.Start || end > workingHours.End)
+                throw new BadRequestException(string.Format(
+                    AppointmentsApiMessages.AppointmentBetweenMessage,
+                    workingHours.Start,
+                    workingHours.End));
         }
 
         public async Task<AppointmentResponseDto> GetByIdAsync(
@@ -50,10 +62,18 @@ namespace Application.Services
 
         public async Task<AppointmentResponseDto> CreateAsync(CreateAppointmentRequestDto dto, CancellationToken ct = default)
         {
+            var doctorInfo = await profilesClient.GetDoctorInfoAsync(dto.DoctorId, ct)
+                ?? throw new NotFoundException("Doctor");
+
+            if (doctorInfo.SpecializationId != dto.SpecializationId || doctorInfo.OfficeId != dto.OfficeId)
+                throw new BadRequestException(AppointmentsApiMessages.DoctorDoesNotMatchMessage);
+
             var timeSlotSize = await servicesClient.GetTimeSlotSizeAsync(dto.ServiceId, ct);
             var durationMinutes = timeSlotSize * 10;
             var newStart = dto.Time;
             var newEnd = dto.Time.AddMinutes(durationMinutes);
+
+            EnsureWithinWorkingHours(newStart, newEnd);
 
             var isOverlapping = await IsOverlappingAsync(dto.DoctorId, dto.Date, newStart, newEnd, excludeAppointmentId: null, ct);
             if (isOverlapping)
@@ -61,6 +81,7 @@ namespace Application.Services
 
             var appointment = mapper.Map<Appointment>(dto);
             appointment.Duration = TimeSpan.FromMinutes(durationMinutes);
+            appointment.OfficeId = doctorInfo.OfficeId;
 
             await unitOfWork.AppointmentRepository.CreateAsync(appointment, ct);
             await unitOfWork.SaveChangesAsync(ct);
@@ -95,13 +116,16 @@ namespace Application.Services
             var appointments = await unitOfWork.AppointmentRepository.GetByDateAndDoctorAsync(date, doctorId, ct);
             var orderedAppointments = appointments.OrderBy(e => e.Time).ToList();
 
+            var existingResultAppointmentIds = await unitOfWork.ResultRepository.GetExistingAppointmentIdsAsync(orderedAppointments.Select(a => a.Id), ct);
+
             var appointmentsList = new List<ScheduleDto>(orderedAppointments.Count);
 
+            //I realize this creates an N + 1 problem because we make sequential external HTTP calls for each entity.
+            // How should I fix this properly?
             foreach (var appointment in orderedAppointments)
             {
                 var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
                 var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct);
-                var result = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointment.Id, ct);
 
                 var entry = mapper.Map<ScheduleDto>(appointment);
 
@@ -109,7 +133,7 @@ namespace Application.Services
                     ? "Unknown patient"
                     : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
                 entry.ServiceName = serviceName ?? "Unknown service";
-                entry.HasResult = result;
+                entry.HasResult = existingResultAppointmentIds.Contains(appointment.Id);
 
                 appointmentsList.Add(entry);
             }
@@ -128,6 +152,8 @@ namespace Application.Services
             var appointments = await unitOfWork.AppointmentRepository.GetFilteredAsync(date, officeId, isApproved, ct);
             var enrichedAppointments = new List<AppointmentListItemDto>();
 
+            //I realize this creates an N + 1 problem because we make sequential external HTTP calls for each entity.
+            // How should I fix this properly?
             foreach (var appointment in appointments)
             {
                 var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
@@ -173,30 +199,40 @@ namespace Application.Services
 
         public async Task CancelAsync(Guid id, CancellationToken ct = default)
         {
+            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(id, ct)
+                ?? throw new NotFoundException(nameof(Appointment));
+
             await unitOfWork.AppointmentRepository.DeleteAsync(id, ct);
             await unitOfWork.SaveChangesAsync(ct);
         }
 
         public async Task<IEnumerable<AppointmentHistoryItemDto>> GetPatientHistoryAsync(Guid patientId, CancellationToken ct = default)
         {
-            var appointments = await unitOfWork.AppointmentRepository.GetByPatientAsync(patientId, ct);
+            var appointments = (await unitOfWork.AppointmentRepository.GetByPatientAsync(patientId, ct)).ToList();
 
-            var appointmentsList = new List<AppointmentHistoryItemDto>();
+            var existingResultAppointmentIds = await unitOfWork.ResultRepository.GetExistingAppointmentIdsAsync(appointments.Select(a => a.Id), ct);
 
+            var now = DateTime.UtcNow;
+            var today = DateOnly.FromDateTime(now);
+            var currentTime = TimeOnly.FromDateTime(now);
+
+            var appointmentsList = new List<AppointmentHistoryItemDto>(appointments.Count);
+
+            //I realize this creates an N + 1 problem because we make sequential external HTTP calls for each entity.
+            // How should I fix this properly?
             foreach (var appointment in appointments)
             {
                 var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
                 var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
-                var result = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointment.Id, ct);
 
                 var entry = mapper.Map<AppointmentHistoryItemDto>(appointment);
                 entry.DoctorFullName = doctorInfo == null
                     ? "Unknown doctor"
                     : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
                 entry.ServiceName = serviceName ?? "Unknown service";
-                entry.HasResult = result;
-                entry.CanReschedule = appointment.Date > DateOnly.FromDateTime(DateTime.UtcNow) ||
-                    (appointment.Date == DateOnly.FromDateTime(DateTime.UtcNow) && appointment.Time > TimeOnly.FromDateTime(DateTime.UtcNow));
+                entry.HasResult = existingResultAppointmentIds.Contains(appointment.Id);
+                entry.CanReschedule = appointment.Date > today ||
+                    (appointment.Date == today && appointment.Time > currentTime);
 
                 appointmentsList.Add(entry);
             }
@@ -221,6 +257,8 @@ namespace Application.Services
 
             var newStart = dto.Time;
             var newEnd = dto.Time.Add(appointment.Duration);
+
+            EnsureWithinWorkingHours(newStart, newEnd);
 
             var isOverlapping = await IsOverlappingAsync(dto.DoctorId, dto.Date, newStart, newEnd, appointmentId, ct);
             if (isOverlapping)

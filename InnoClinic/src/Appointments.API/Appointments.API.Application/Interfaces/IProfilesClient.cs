@@ -1,6 +1,6 @@
 ﻿using Application.DTOs;
 
-namespace Infrastructure.Clients
+namespace Application.Interfaces
 {
     public interface IProfilesClient
     {

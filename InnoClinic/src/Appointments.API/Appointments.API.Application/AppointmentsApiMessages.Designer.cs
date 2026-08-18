@@ -90,9 +90,9 @@ namespace Application {
         /// <summary>
         ///   Looks up a localized string similar to Please, enter the complaints.
         /// </summary>
-        public static string ComplainsRequiredMessage {
+        public static string ComplaintsRequiredMessage {
             get {
-                return ResourceManager.GetString("ComplainsRequiredMessage", resourceCulture);
+                return ResourceManager.GetString("ComplaintsRequiredMessage", resourceCulture);
             }
         }
         
@@ -102,6 +102,15 @@ namespace Application {
         public static string ConclusionIsRequiredMessage {
             get {
                 return ResourceManager.GetString("ConclusionIsRequiredMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected doctor does not match the specified specialization or office.
+        /// </summary>
+        public static string DoctorDoesNotMatchMessage {
+            get {
+                return ResourceManager.GetString("DoctorDoesNotMatchMessage", resourceCulture);
             }
         }
         

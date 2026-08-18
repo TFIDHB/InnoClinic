@@ -1,4 +1,5 @@
 ﻿using Application.DTOs;
+using Application.Interfaces;
 using InnoClinic.Shared.Exceptions;
 using System.Net;
 using System.Net.Http.Json;

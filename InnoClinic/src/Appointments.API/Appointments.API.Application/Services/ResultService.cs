@@ -2,7 +2,6 @@
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
-using Infrastructure.Clients;
 using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
@@ -14,6 +13,8 @@ namespace Application.Services
         IProfilesClient profilesClient,
         IDocumentsClient documentsClient) : IResultService
     {
+        //I realize this creates an N + 1 problem because we make sequential external HTTP calls for each entity.
+        // How should I fix this properly?
         private async Task<ResultDto> EnrichDtoAsync(
             Appointment appointment,
             Result result,
@@ -79,9 +80,6 @@ namespace Application.Services
         {
             var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
-
-            if (doctorId.HasValue && doctorId.Value != appointment.DoctorId)
-                throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
 
             if (patientId.HasValue && patientId.Value != appointment.PatientId)
                 throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);

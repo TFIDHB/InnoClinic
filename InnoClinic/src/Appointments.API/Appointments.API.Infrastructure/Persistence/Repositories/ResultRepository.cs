@@ -11,5 +11,19 @@ namespace Infrastructure.Persistence.Repositories
         {
             return await DbSet.FirstOrDefaultAsync(e => e.AppointmentId == appointmentId, ct);
         }
+
+        public async Task<HashSet<Guid>> GetExistingAppointmentIdsAsync(IEnumerable<Guid> appointmentIds, CancellationToken ct = default)
+        {
+            var ids = appointmentIds.ToList();
+            if (ids.Count == 0)
+                return [];
+
+            var existing = await DbSet
+                .Where(e => ids.Contains(e.AppointmentId))
+                .Select(e => e.AppointmentId)
+                .ToListAsync(ct);
+
+            return existing.ToHashSet();
+        }
     }
 }
