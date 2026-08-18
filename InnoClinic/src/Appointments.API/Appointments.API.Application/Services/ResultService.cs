@@ -96,7 +96,12 @@ namespace Application.Services
             var result = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Result));
 
-            var canEdit = doctorId.HasValue && appointment.DoctorId == doctorId.Value;
+            var canEdit = false;
+            if (doctorId.HasValue)
+            {
+                var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
+                canEdit = doctorInfo != null && doctorInfo.AccountId == doctorId.Value;
+            }
             return await EnrichDtoAsync(appointment, result, canEdit, ct);
         }
 
@@ -108,10 +113,10 @@ namespace Application.Services
         {
             var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
-            
+
             var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct)
                 ?? throw new NotFoundException("Doctor");
-            
+
             if (doctorInfo.AccountId != doctorId)
                 throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
 
