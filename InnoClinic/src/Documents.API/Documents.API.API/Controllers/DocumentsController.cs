@@ -74,5 +74,18 @@ namespace InnoClinic.Documents.API.Controllers
             await documentsService.DeleteAsync(id, ct);
             return NoContent();
         }
+
+        [HttpGet("by-result/{resultId}")]
+        [Authorize(Roles = Roles.AllRoles)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<DocumentDto>> GetDocumentByResultId(Guid resultId, CancellationToken ct = default)
+        {
+            var result = await documentsService.GetByResultIdAsync(resultId, ct);
+            return result == null ? NotFound() : Ok(result);
+        }
     }
 }

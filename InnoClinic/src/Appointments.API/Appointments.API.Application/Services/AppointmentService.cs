@@ -5,7 +5,6 @@ using AutoMapper;
 using Domain.Entities;
 using Infrastructure.Clients;
 using InnoClinic.Shared.Exceptions;
-using System.Numerics;
 
 namespace Application.Services
 {
@@ -102,6 +101,7 @@ namespace Application.Services
             {
                 var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
                 var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct);
+                var result = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointment.Id, ct);
 
                 var entry = mapper.Map<ScheduleDto>(appointment);
 
@@ -109,6 +109,7 @@ namespace Application.Services
                     ? "Unknown patient"
                     : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
                 entry.ServiceName = serviceName ?? "Unknown service";
+                entry.HasResult = result;
 
                 appointmentsList.Add(entry);
             }
@@ -186,13 +187,14 @@ namespace Application.Services
             {
                 var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
                 var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
+                var result = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointment.Id, ct);
 
                 var entry = mapper.Map<AppointmentHistoryItemDto>(appointment);
                 entry.DoctorFullName = doctorInfo == null
                     ? "Unknown doctor"
                     : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
                 entry.ServiceName = serviceName ?? "Unknown service";
-                entry.HasResult = false;
+                entry.HasResult = result;
                 entry.CanReschedule = appointment.Date > DateOnly.FromDateTime(DateTime.UtcNow) ||
                     (appointment.Date == DateOnly.FromDateTime(DateTime.UtcNow) && appointment.Time > TimeOnly.FromDateTime(DateTime.UtcNow));
 

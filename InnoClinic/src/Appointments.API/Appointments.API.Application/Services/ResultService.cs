@@ -29,13 +29,13 @@ namespace Application.Services
 
             var dto = mapper.Map<ResultDto>(result);
             dto.Date = appointment.Date;
-            dto.PatientFullName = patientInfo == null 
-                ? "Unknown patient" 
+            dto.PatientFullName = patientInfo == null
+                ? "Unknown patient"
                 : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
 
             dto.PatientDateOfBirth = patientInfo?.DateOfBirth;
-            dto.DoctorFullName = doctorInfo == null 
-                ? "Unknown doctor" 
+            dto.DoctorFullName = doctorInfo == null
+                ? "Unknown doctor"
                 : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
 
             dto.DoctorSpecialization = specializationName ?? "Unknown specialization";
@@ -51,13 +51,13 @@ namespace Application.Services
             Guid doctorId,
             CancellationToken ct = default)
         {
-            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId)
+            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
 
             if (appointment.DoctorId != doctorId)
                 throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
 
-            var existing = await unitOfWork.ResultRepository.GetByIdAsync(appointmentId, ct);
+            var existing = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointmentId, ct);
             if (existing != null)
                 throw new BadRequestException(AppointmentsApiMessages.ResultAlreadyExists);
 
@@ -80,7 +80,7 @@ namespace Application.Services
             var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
 
-            if(doctorId.HasValue && doctorId.Value != appointment.DoctorId)
+            if (doctorId.HasValue && doctorId.Value != appointment.DoctorId)
                 throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
 
             if (patientId.HasValue && patientId.Value != appointment.PatientId)
@@ -99,7 +99,7 @@ namespace Application.Services
             Guid doctorId,
             CancellationToken ct = default)
         {
-            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId)
+            var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
 
             if (appointment.DoctorId != doctorId)

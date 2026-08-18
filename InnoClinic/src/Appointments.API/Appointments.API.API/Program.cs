@@ -28,4 +28,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 app.Run();

@@ -12,8 +12,7 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => false))
                 .ForMember(dest => dest.Duration, opt => opt.Ignore());
 
-            CreateMap<Appointment, AppointmentResponseDto>()
-                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => false));
+            CreateMap<Appointment, AppointmentResponseDto>();
 
             CreateMap<Appointment, AppointmentSlotDto>();
 
@@ -24,7 +23,6 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.PatientId, opt => opt.Ignore())
                 .ForMember(dest => dest.PatientFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.ServiceName, opt => opt.Ignore())
-                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => false))
                 .ForMember(dest => dest.HasResult, opt => opt.MapFrom(src => false));
 
             CreateMap<Appointment, AppointmentListItemDto>()
@@ -34,8 +32,7 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.DoctorFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.PatientFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.PatientPhoneNumber, opt => opt.Ignore())
-                .ForMember(dest => dest.ServiceName, opt => opt.Ignore())
-                .ForMember(dest => dest.IsApproved, opt => opt.MapFrom(src => false));
+                .ForMember(dest => dest.ServiceName, opt => opt.Ignore());
 
             CreateMap<Appointment, AppointmentHistoryItemDto>()
                 .ForMember(dest => dest.AppointmentId, opt => opt.MapFrom(src => src.Id))
@@ -53,7 +50,7 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
 
             CreateMap<Result, ResultDto>()
-                .ForMember(dest => dest.Date, opt => opt.Ignore()) 
+                .ForMember(dest => dest.Date, opt => opt.Ignore())
                 .ForMember(dest => dest.PatientFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.PatientDateOfBirth, opt => opt.Ignore())
                 .ForMember(dest => dest.DoctorFullName, opt => opt.Ignore())

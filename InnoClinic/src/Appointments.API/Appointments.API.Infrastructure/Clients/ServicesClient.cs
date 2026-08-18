@@ -16,7 +16,7 @@ namespace Infrastructure.Clients
                 throw new NotFoundException("Service");
 
             response.EnsureSuccessStatusCode();
-            var result = await response.Content.ReadFromJsonAsync<int>();
+            var result = await response.Content.ReadFromJsonAsync<int>(ct);
             return result;
         }
 

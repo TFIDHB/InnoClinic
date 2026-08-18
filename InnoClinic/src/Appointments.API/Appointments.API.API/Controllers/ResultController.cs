@@ -9,7 +9,7 @@ namespace InnoClinic.Appointments.API.Controllers
 {
     [Authorize(Roles = Roles.AllRoles)]
     [ApiController]
-    [Route("api/v1/results")]
+    [Route("api/v1/appointments/{appointmentId}/result")]
     public class ResultController(IResultService resultService) : ControllerBase
     {
         [HttpPost]
@@ -52,7 +52,7 @@ namespace InnoClinic.Appointments.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> GetResult(Guid appointmentId, CancellationToken ct = default)
+        public async Task<ActionResult<ResultDto>> GetResult(Guid appointmentId, CancellationToken ct = default)
         {
             Guid? doctorId = User.IsInRole(Roles.Doctor) ? User.GetUserId() : null;
             Guid? patientId = User.IsInRole(Roles.Patient) ? User.GetUserId() : null;
