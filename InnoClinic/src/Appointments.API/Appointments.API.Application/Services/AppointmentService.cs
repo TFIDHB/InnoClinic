@@ -51,11 +51,23 @@ namespace Application.Services
             var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
 
-            if (patientId.HasValue && patientId.Value != appointment.PatientId)
-                throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+            if (patientId.HasValue)
+            {
+                var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct)
+                    ?? throw new NotFoundException("Patient");
 
-            if (doctorId.HasValue && doctorId.Value != appointment.DoctorId)
-                throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+                if (patientInfo.AccountId != patientId.Value)
+                    throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+            }
+
+            if (doctorId.HasValue)
+            {
+                var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct)
+                    ?? throw new NotFoundException("Doctor");
+
+                if (doctorInfo.AccountId != doctorId.Value)
+                    throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+            }
 
             return mapper.Map<AppointmentResponseDto>(appointment);
         }

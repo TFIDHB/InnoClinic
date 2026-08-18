@@ -7,5 +7,6 @@
         public string? MiddleName { get; set; }
         public required Guid SpecializationId { get; set; }
         public required Guid OfficeId { get; set; }
+        public required Guid AccountId { get; set; }
     }
 }

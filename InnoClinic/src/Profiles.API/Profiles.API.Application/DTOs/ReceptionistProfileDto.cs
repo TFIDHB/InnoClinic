@@ -8,6 +8,6 @@
         public string? MiddleName { get; set; }
         public Guid AccountId { get; set; }
         public Guid OfficeId { get; set; }
-        public string? TemporaryFakePassword { get; set; }
+        public string? TemporaryPassword { get; set; }
     }
 }

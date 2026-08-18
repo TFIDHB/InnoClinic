@@ -25,7 +25,7 @@ namespace Application.Services
 
             var responseDto = mapper.Map<DoctorProfileDto>(doctorProfile);
 
-            responseDto.TemporaryFakePassword = accountResult.TemporaryFakePassword;
+            responseDto.TemporaryPassword = accountResult.TemporaryPassword;
 
             return responseDto;
         }
