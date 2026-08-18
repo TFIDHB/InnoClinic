@@ -27,7 +27,7 @@ namespace InnoClinic.Appointments.API.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = Roles.Receptionist)]
+        [Authorize(Roles = Roles.Patient + "," + Roles.Receptionist)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -36,7 +36,8 @@ namespace InnoClinic.Appointments.API.Controllers
             [FromBody] CreateAppointmentRequestDto dto,
             CancellationToken ct = default)
         {
-            var result = await appointmentService.CreateAsync(dto, ct);
+            var isPatient = User.IsInRole(Roles.Patient);
+            var result = await appointmentService.CreateAsync(dto, isPatient, ct);
             return CreatedAtAction(nameof(GetAppointment), new { id = result.Id }, result);
         }
 
@@ -70,6 +71,22 @@ namespace InnoClinic.Appointments.API.Controllers
             return Ok(result);
         }
 
+        [HttpGet("doctors/{doctorId}/schedule")]
+        [Authorize(Roles = Roles.Receptionist)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetDoctorSchedule(
+            Guid doctorId,
+            [FromQuery] DateOnly? date,
+            CancellationToken ct = default)
+        {
+            var requiredDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
+            var result = await appointmentService.GetDoctorAppointmentScheduleAsync(doctorId, requiredDate, ct);
+            return Ok(result);
+        }
+
         [HttpGet("my-schedule")]
         [Authorize(Roles = Roles.Doctor)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -78,9 +95,8 @@ namespace InnoClinic.Appointments.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<ScheduleDto>>> GetMySchedule([FromQuery] DateOnly? date, CancellationToken ct = default)
         {
-            var doctorId = User.GetUserId();
             var requiredDate = date ?? DateOnly.FromDateTime(DateTime.UtcNow);
-            var result = await appointmentService.GetDoctorAppointmentScheduleAsync(doctorId, requiredDate, ct);
+            var result = await appointmentService.GetMyScheduleAsync(requiredDate, ct);
             return Ok(result);
         }
 
@@ -147,8 +163,7 @@ namespace InnoClinic.Appointments.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<IEnumerable<AppointmentHistoryItemDto>>> GetMyHistory(CancellationToken ct = default)
         {
-            var patientId = User.GetUserId();
-            var result = await appointmentService.GetPatientHistoryAsync(patientId, ct);
+            var result = await appointmentService.GetMyHistoryAsync(ct);
             return Ok(result);
         }
 

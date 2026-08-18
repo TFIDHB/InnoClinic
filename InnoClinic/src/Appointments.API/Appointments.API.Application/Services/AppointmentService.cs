@@ -16,6 +16,7 @@ namespace Application.Services
         IProfilesClient profilesClient,
         IOptions<WorkingHoursOptions> workingHoursOptions) : IAppointmentService
     {
+        private const int _atWorkStatus = 0;
         private async Task<bool> IsOverlappingAsync(
             Guid doctorId,
             DateOnly date,
@@ -72,13 +73,25 @@ namespace Application.Services
             return mapper.Map<AppointmentResponseDto>(appointment);
         }
 
-        public async Task<AppointmentResponseDto> CreateAsync(CreateAppointmentRequestDto dto, CancellationToken ct = default)
+        public async Task<AppointmentResponseDto> CreateAsync(
+            CreateAppointmentRequestDto dto,
+            bool isPatient,
+            CancellationToken ct = default)
         {
+            if (isPatient)
+            {
+                var currentPatientId = await profilesClient.GetMyPatientProfileIdAsync(ct);
+                dto.PatientId = currentPatientId;
+            }
+
             var doctorInfo = await profilesClient.GetDoctorInfoAsync(dto.DoctorId, ct)
                 ?? throw new NotFoundException("Doctor");
 
             if (doctorInfo.SpecializationId != dto.SpecializationId || doctorInfo.OfficeId != dto.OfficeId)
                 throw new BadRequestException(AppointmentsApiMessages.DoctorDoesNotMatchMessage);
+
+            if (doctorInfo.Status != _atWorkStatus)
+                throw new BadRequestException(AppointmentsApiMessages.DoctorNotAvailableMessage);
 
             var timeSlotSize = await servicesClient.GetTimeSlotSizeAsync(dto.ServiceId, ct);
             var durationMinutes = timeSlotSize * 10;
@@ -243,8 +256,8 @@ namespace Application.Services
                     : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
                 entry.ServiceName = serviceName ?? "Unknown service";
                 entry.HasResult = existingResultAppointmentIds.Contains(appointment.Id);
-                entry.CanReschedule = appointment.Date > today ||
-                    (appointment.Date == today && appointment.Time > currentTime);
+                entry.CanReschedule = !appointment.IsApproved &&
+                    (appointment.Date > today || (appointment.Date == today && appointment.Time > currentTime));
 
                 appointmentsList.Add(entry);
             }
@@ -261,8 +274,14 @@ namespace Application.Services
             var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
 
-            if (patientId.HasValue && appointment.PatientId != patientId.Value)
-                throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+            if (patientId.HasValue)
+            {
+                var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct)
+                    ?? throw new NotFoundException("Patient");
+
+                if (patientInfo.AccountId != patientId.Value)
+                    throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+            }
 
             if (appointment.IsApproved)
                 throw new BadRequestException(AppointmentsApiMessages.CannotBeRescheduledMessage);
@@ -287,6 +306,18 @@ namespace Application.Services
             await unitOfWork.SaveChangesAsync(ct);
 
             return mapper.Map<AppointmentResponseDto>(appointment);
+        }
+
+        public async Task<IEnumerable<AppointmentHistoryItemDto>> GetMyHistoryAsync(CancellationToken ct = default)
+        {
+            var patientProfileId = await profilesClient.GetMyPatientProfileIdAsync(ct);
+            return await GetPatientHistoryAsync(patientProfileId, ct);
+        }
+
+        public async Task<IEnumerable<ScheduleDto>> GetMyScheduleAsync(DateOnly date, CancellationToken ct = default)
+        {
+            var doctorProfileId = await profilesClient.GetMyDoctorProfileIdAsync(ct);
+            return await GetDoctorAppointmentScheduleAsync(doctorProfileId, date, ct);
         }
     }
 }

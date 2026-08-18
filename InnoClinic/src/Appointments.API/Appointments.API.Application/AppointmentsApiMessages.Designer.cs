@@ -115,6 +115,15 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected doctor is not available.
+        /// </summary>
+        public static string DoctorNotAvailableMessage {
+            get {
+                return ResourceManager.GetString("DoctorNotAvailableMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You don&apos;t have access to this resource.
         /// </summary>
         public static string ForbiddenAccessMessage {

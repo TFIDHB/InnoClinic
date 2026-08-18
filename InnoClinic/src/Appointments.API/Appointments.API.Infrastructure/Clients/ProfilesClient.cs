@@ -29,5 +29,25 @@ namespace Infrastructure.Clients
             return await response.Content.ReadFromJsonAsync<DoctorInfoDto>(ct)
                 ?? throw new ExternalServiceException("Profiles.API");
         }
+
+        public async Task<Guid> GetMyPatientProfileIdAsync(CancellationToken ct = default)
+        {
+            var response = await httpClient.GetAsync($"/api/v1/patients/me", ct);
+            response.EnsureSuccessStatusCode();
+
+            var profile = await response.Content.ReadFromJsonAsync<PatientInfoDto>(ct)
+                ?? throw new ExternalServiceException("Profiles.API");
+            return profile.Id;
+        }
+
+        public async Task<Guid> GetMyDoctorProfileIdAsync(CancellationToken ct = default)
+        {
+            var response = await httpClient.GetAsync($"/api/v1/doctors/me", ct);
+            response.EnsureSuccessStatusCode();
+
+            var profile = await response.Content.ReadFromJsonAsync<DoctorInfoDto>(ct)
+                ?? throw new ExternalServiceException("Profiles.API");
+            return profile.Id;
+        }
     }
 }

@@ -84,8 +84,14 @@ namespace Application.Services
             var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
 
-            if (patientId.HasValue && patientId.Value != appointment.PatientId)
-                throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+            if (patientId.HasValue)
+            {
+                var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct)
+                    ?? throw new NotFoundException("Patient");
+
+                if (patientInfo.AccountId != patientId.Value)
+                    throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+            }
 
             var result = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Result));
@@ -102,8 +108,11 @@ namespace Application.Services
         {
             var appointment = await unitOfWork.AppointmentRepository.GetByIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Appointment));
-
-            if (appointment.DoctorId != doctorId)
+            
+            var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct)
+                ?? throw new NotFoundException("Doctor");
+            
+            if (doctorInfo.AccountId != doctorId)
                 throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
 
             var result = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointmentId, ct)

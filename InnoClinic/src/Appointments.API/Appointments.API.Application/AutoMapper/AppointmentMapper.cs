@@ -13,14 +13,12 @@ namespace Application.AutoMapper
                 .ForMember(dest => dest.Duration, opt => opt.Ignore());
 
             CreateMap<Appointment, AppointmentResponseDto>();
-
             CreateMap<Appointment, AppointmentSlotDto>();
 
             CreateMap<Appointment, ScheduleDto>()
                 .ForMember(dest => dest.AppointmentId, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.StartTime, opt => opt.MapFrom(src => src.Time))
                 .ForMember(dest => dest.EndTime, opt => opt.MapFrom(src => src.Time.Add(src.Duration)))
-                .ForMember(dest => dest.PatientId, opt => opt.Ignore())
                 .ForMember(dest => dest.PatientFullName, opt => opt.Ignore())
                 .ForMember(dest => dest.ServiceName, opt => opt.Ignore())
                 .ForMember(dest => dest.HasResult, opt => opt.MapFrom(src => false));

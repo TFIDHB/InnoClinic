@@ -135,6 +135,9 @@
   <data name="DoctorDoesNotMatchMessage" xml:space="preserve">
     <value>Selected doctor does not match the specified specialization or office</value>
   </data>
+  <data name="DoctorNotAvailableMessage" xml:space="preserve">
+    <value>Selected doctor is not available</value>
+  </data>
   <data name="ForbiddenAccessMessage" xml:space="preserve">
     <value>You don't have access to this resource</value>
   </data>
