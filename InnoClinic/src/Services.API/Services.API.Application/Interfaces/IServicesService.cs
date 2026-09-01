@@ -13,5 +13,6 @@ namespace Application.Interfaces
         Task<IEnumerable<TimeOnly>> GetAvailableSlotsAsync(GetAvailableSlotsRequestDto dto, CancellationToken ct = default);
         Task<IEnumerable<DateOnly>> GetAvailableDatesAsync(GetAvailableDatesRequestDto dto, CancellationToken ct = default);
         Task<int> GetTimeSlotSizeAsync(Guid serviceId, CancellationToken ct = default);
+        Task<IEnumerable<ServiceDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default);
     }
 }

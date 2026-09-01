@@ -191,5 +191,11 @@ namespace Application.Services
             return mapper.Map<IEnumerable<PatientProfileDto>>(patients);
 
         }
+
+        public async Task<IEnumerable<PatientProfileDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
+        {
+            var patients = await unitOfWork.PatientProfilesRepository.GetByIdsAsync(ids, ct);
+            return mapper.Map<IEnumerable<PatientProfileDto>>(patients);
+        }
     }
 }

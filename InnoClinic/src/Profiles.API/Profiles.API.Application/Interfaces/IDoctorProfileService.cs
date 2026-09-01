@@ -12,5 +12,6 @@ namespace Application.Interfaces
             string? search,
             DoctorStatus? status,
             CancellationToken ct = default);
+        Task<IEnumerable<DoctorProfileDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default);
     }
 }

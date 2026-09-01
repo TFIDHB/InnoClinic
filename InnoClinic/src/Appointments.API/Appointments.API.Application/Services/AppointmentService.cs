@@ -141,29 +141,28 @@ namespace Application.Services
             var appointments = await unitOfWork.AppointmentRepository.GetByDateAndDoctorAsync(date, doctorId, ct);
             var orderedAppointments = appointments.OrderBy(e => e.Time).ToList();
 
-            var existingResultAppointmentIds = await unitOfWork.ResultRepository.GetExistingAppointmentIdsAsync(orderedAppointments.Select(a => a.Id), ct);
+            var existingResultAppointmentIds = await unitOfWork.ResultRepository
+                .GetExistingAppointmentIdsAsync(orderedAppointments.Select(e => e.Id), ct);
 
-            var appointmentsList = new List<ScheduleDto>(orderedAppointments.Count);
+            var serviceNames = await servicesClient.GetServiceNamesAsync(
+                orderedAppointments.Select(e => e.ServiceId), ct);
+            var patients = await profilesClient.GetPatientsInfoAsync(
+                orderedAppointments.Select(e => e.PatientId), ct);
 
-            //I realize this creates an N + 1 problem because we make sequential external HTTP calls for each entity.
-            // How should I fix this properly?
-            foreach (var appointment in orderedAppointments)
+            return orderedAppointments.Select(appointment =>
             {
-                var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
-                var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct);
-
                 var entry = mapper.Map<ScheduleDto>(appointment);
-
-                entry.PatientFullName = patientInfo == null
-                    ? "Unknown patient"
-                    : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
-                entry.ServiceName = serviceName ?? "Unknown service";
+                
+                entry.PatientFullName = patients.TryGetValue(appointment.PatientId, out var patientInfo)
+                    ? $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim()
+                    : "Unknown patient";
+                entry.ServiceName = serviceNames.TryGetValue(appointment.ServiceId, out var serviceName)
+                    ? serviceName
+                    : "Unknown service";
                 entry.HasResult = existingResultAppointmentIds.Contains(appointment.Id);
 
-                appointmentsList.Add(entry);
-            }
-
-            return appointmentsList;
+                return entry;
+            }).ToList();
         }
 
         public async Task<IEnumerable<AppointmentListItemDto>> GetFilteredAppointmentsAsync(
@@ -175,34 +174,37 @@ namespace Application.Services
             CancellationToken ct = default)
         {
             var appointments = await unitOfWork.AppointmentRepository.GetFilteredAsync(date, officeId, isApproved, ct);
-            var enrichedAppointments = new List<AppointmentListItemDto>();
 
-            //I realize this creates an N + 1 problem because we make sequential external HTTP calls for each entity.
-            // How should I fix this properly?
-            foreach (var appointment in appointments)
+            var doctors = await profilesClient.GetDoctorsInfoAsync(
+                appointments.Select(e => e.DoctorId), ct);
+            var patients = await profilesClient.GetPatientsInfoAsync(
+                appointments.Select(e => e.PatientId), ct);
+            var serviceNames = await servicesClient.GetServiceNamesAsync(
+                appointments.Select(e => e.ServiceId), ct);
+
+            var enrichedAppointments = appointments.Select(appointment =>
             {
-                var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
-                var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct);
-                var service = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
-
                 var entry = mapper.Map<AppointmentListItemDto>(appointment);
-                entry.DoctorFullName = doctorInfo == null
-                    ? "Unknown doctor"
-                    : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
-                entry.PatientFullName = patientInfo == null
-                    ? "Unknown patient"
-                    : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
-                entry.PatientPhoneNumber = patientInfo?.PhoneNumber;
-                entry.ServiceName = service ?? "Unknown service";
 
-                enrichedAppointments.Add(entry);
-            }
+                entry.DoctorFullName = doctors.TryGetValue(appointment.DoctorId, out var doctorInfo)
+                    ? $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim()
+                    : "Unknown doctor";
+                entry.PatientFullName = patients.TryGetValue(appointment.PatientId, out var patientInfo)
+                    ? $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim()
+                    : "Unknown patient";
+                entry.PatientPhoneNumber = patients.TryGetValue(appointment.PatientId, out var pi) ? pi.PhoneNumber : null;
+                entry.ServiceName = serviceNames.TryGetValue(appointment.ServiceId, out var name) ? name : "Unknown service";
+
+                return entry;
+            }).ToList();
 
             if (!string.IsNullOrWhiteSpace(doctorFullName))
-                enrichedAppointments = enrichedAppointments.Where(e => e.DoctorFullName.Contains(doctorFullName, StringComparison.OrdinalIgnoreCase)).ToList();
+                enrichedAppointments = enrichedAppointments
+                    .Where(e => e.DoctorFullName.Contains(doctorFullName, StringComparison.OrdinalIgnoreCase)).ToList();
 
             if (!string.IsNullOrWhiteSpace(serviceName))
-                enrichedAppointments = enrichedAppointments.Where(e => e.ServiceName.Contains(serviceName, StringComparison.OrdinalIgnoreCase)).ToList();
+                enrichedAppointments = enrichedAppointments
+                    .Where(e => e.ServiceName.Contains(serviceName, StringComparison.OrdinalIgnoreCase)).ToList();
 
             return enrichedAppointments
                 .OrderBy(e => e.StartTime)
@@ -235,34 +237,34 @@ namespace Application.Services
         {
             var appointments = (await unitOfWork.AppointmentRepository.GetByPatientAsync(patientId, ct)).ToList();
 
-            var existingResultAppointmentIds = await unitOfWork.ResultRepository.GetExistingAppointmentIdsAsync(appointments.Select(a => a.Id), ct);
+            var existingResultAppointmentIds = await unitOfWork.ResultRepository
+                .GetExistingAppointmentIdsAsync(appointments.Select(a => a.Id), ct);
+
+            var doctors = await profilesClient.GetDoctorsInfoAsync(
+                appointments.Select(a => a.DoctorId), ct);
+            var serviceNames = await servicesClient.GetServiceNamesAsync(
+                appointments.Select(a => a.ServiceId), ct);
 
             var now = DateTime.UtcNow;
             var today = DateOnly.FromDateTime(now);
             var currentTime = TimeOnly.FromDateTime(now);
 
-            var appointmentsList = new List<AppointmentHistoryItemDto>(appointments.Count);
-
-            //I realize this creates an N + 1 problem because we make sequential external HTTP calls for each entity.
-            // How should I fix this properly?
-            foreach (var appointment in appointments)
+            return appointments.Select(appointment =>
             {
-                var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
-                var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
-
                 var entry = mapper.Map<AppointmentHistoryItemDto>(appointment);
-                entry.DoctorFullName = doctorInfo == null
-                    ? "Unknown doctor"
-                    : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
-                entry.ServiceName = serviceName ?? "Unknown service";
+
+                entry.DoctorFullName = doctors.TryGetValue(appointment.DoctorId, out var doctorInfo)
+                    ? $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim()
+                    : "Unknown doctor";
+                entry.ServiceName = serviceNames.TryGetValue(appointment.ServiceId, out var serviceName)
+                    ? serviceName
+                    : "Unknown service";
                 entry.HasResult = existingResultAppointmentIds.Contains(appointment.Id);
                 entry.CanReschedule = !appointment.IsApproved &&
                     (appointment.Date > today || (appointment.Date == today && appointment.Time > currentTime));
 
-                appointmentsList.Add(entry);
-            }
-
-            return appointmentsList;
+                return entry;
+            }).ToList();
         }
 
         public async Task<AppointmentResponseDto> RescheduleAsync(

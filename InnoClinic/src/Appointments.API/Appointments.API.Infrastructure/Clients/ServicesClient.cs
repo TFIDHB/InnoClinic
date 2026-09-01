@@ -43,5 +43,22 @@ namespace Infrastructure.Clients
             var spec = await response.Content.ReadFromJsonAsync<SpecializationDto>(ct);
             return spec?.Name;
         }
+
+        public async Task<IReadOnlyDictionary<Guid, string>> GetServiceNamesAsync(
+            IEnumerable<Guid> serviceIds,
+            CancellationToken ct = default)
+        {
+            var ids = serviceIds.Distinct().ToList();
+            if (ids.Count == 0) 
+                return new Dictionary<Guid, string>();
+
+            var response = await httpClient.PostAsJsonAsync("/api/v1/services/batch", ids, ct);
+            response.EnsureSuccessStatusCode();
+
+            var services = await response.Content.ReadFromJsonAsync<IEnumerable<ServiceDto>>(ct)
+                ?? throw new ExternalServiceException("Services.API");
+
+            return services.ToDictionary(s => s.Id, s => s.Name);
+        }
     }
 }

@@ -61,6 +61,12 @@ namespace Application.Services
             return mapper.Map<DoctorProfileDto>(doctorProfile);
         }
 
+        public async Task<IEnumerable<DoctorProfileDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
+        {
+            var doctors = await unitOfWork.DoctorProfilesRepository.GetByIdsAsync(ids, ct);
+            return mapper.Map<IEnumerable<DoctorProfileDto>>(doctors);
+        }
+
         public async Task<IEnumerable<DoctorProfileDto>> GetFilteredDoctorsAsync(
             Guid? specializationId,
             Guid? officeId,

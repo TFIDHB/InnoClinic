@@ -1,15 +1,18 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using InnoClinic.Shared.Constants;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InnoClinic.Services.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/v1/services")]
     public class ServicesController(IServicesService servicesService) : ControllerBase
     {
         [HttpGet("{id}")]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -18,6 +21,18 @@ namespace InnoClinic.Services.API.Controllers
         {
             var result = await servicesService.GetByIdAsync(id, ct);
             return Ok(result);
+        }
+
+        [HttpPost("batch")]
+        [Authorize(Roles = Roles.AllRoles)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<ServiceDto>>> GetServicesByIds(IEnumerable<Guid> ids, CancellationToken ct = default)
+        {
+            var services = await servicesService.GetByIdsAsync(ids, ct);
+            return Ok(services);
         }
 
         [HttpGet]
@@ -31,6 +46,7 @@ namespace InnoClinic.Services.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -44,6 +60,7 @@ namespace InnoClinic.Services.API.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -59,6 +76,7 @@ namespace InnoClinic.Services.API.Controllers
         }
 
         [HttpPatch("{id}/status")]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -74,6 +92,7 @@ namespace InnoClinic.Services.API.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -86,6 +105,7 @@ namespace InnoClinic.Services.API.Controllers
         }
 
         [HttpGet("{id}/time-slot-size")]
+        [Authorize(Roles = Roles.AllRoles)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

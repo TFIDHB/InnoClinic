@@ -1,5 +1,6 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
+using Application.Services;
 using Domain.Enums;
 using InnoClinic.Shared.Constants;
 using InnoClinic.Shared.Extensions;
@@ -37,6 +38,21 @@ namespace InnoClinic.Profiles.API.Controllers
         public async Task<ActionResult<DoctorProfileDto>> GetDoctor(Guid id, CancellationToken ct = default)
         {
             var result = await doctorProfilesService.GetByIdAsync(id, ct);
+            return Ok(result);
+        }
+
+        [HttpPost("batch")]
+        [Authorize(Roles = Roles.AllRoles)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<DoctorProfileDto>> GetDoctorsByIds(
+            [FromBody] IEnumerable<Guid> ids,
+            CancellationToken ct = default)
+        {
+            var result = await doctorProfilesService.GetByIdsAsync(ids, ct);
             return Ok(result);
         }
 

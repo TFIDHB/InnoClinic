@@ -158,5 +158,11 @@ namespace Application.Services
                 slot = slot.AddMinutes(SlotGranularityMinutes);
             }
         }
+
+        public async Task<IEnumerable<ServiceDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
+        {
+            var services = await unitOfWork.ServicesRepository.GetByIdsAsync(ids, ct);
+            return mapper.Map<IEnumerable<ServiceDto>>(services);
+        }
     }
 }

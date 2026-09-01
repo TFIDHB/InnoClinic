@@ -40,5 +40,11 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(p => !p.IsLinkedToAccount)
                 .ToListAsync(ct);
         }
+
+        public async Task<IEnumerable<PatientProfile>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
+        {
+            var idSet = ids.ToHashSet();
+            return await context.PatientProfiles.Where(p => idSet.Contains(p.Id)).ToListAsync();
+        }
     }
 }

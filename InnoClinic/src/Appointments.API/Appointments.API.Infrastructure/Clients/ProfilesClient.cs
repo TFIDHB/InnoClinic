@@ -49,5 +49,39 @@ namespace Infrastructure.Clients
                 ?? throw new ExternalServiceException("Profiles.API");
             return profile.Id;
         }
+
+        public async Task<IReadOnlyDictionary<Guid, PatientInfoDto>> GetPatientsInfoAsync(
+            IEnumerable<Guid> patientIds,
+            CancellationToken ct = default)
+        {
+            var ids = patientIds.Distinct().ToList();
+            if (ids.Count == 0) 
+                return new Dictionary<Guid, PatientInfoDto>();
+
+            var response = await httpClient.PostAsJsonAsync("/api/v1/patients/batch", ids, ct);
+            response.EnsureSuccessStatusCode();
+
+            var patients = await response.Content.ReadFromJsonAsync<IEnumerable<PatientInfoDto>>(ct)
+                ?? throw new ExternalServiceException("Profiles.API");
+
+            return patients.ToDictionary(p => p.Id);
+        }
+
+        public async Task<IReadOnlyDictionary<Guid, DoctorInfoDto>> GetDoctorsInfoAsync(
+            IEnumerable<Guid> doctorsIds,
+            CancellationToken ct = default)
+        {
+            var ids = doctorsIds.Distinct().ToList();
+            if (ids.Count == 0) 
+                return new Dictionary<Guid, DoctorInfoDto>();
+
+            var response = await httpClient.PostAsJsonAsync("/api/v1/doctors/batch", ids, ct);
+            response.EnsureSuccessStatusCode();
+
+            var doctors = await response.Content.ReadFromJsonAsync<IEnumerable<DoctorInfoDto>>(ct)
+                ?? throw new ExternalServiceException("Profiles.API");
+
+            return doctors.ToDictionary(p => p.Id);
+        }
     }
 }
