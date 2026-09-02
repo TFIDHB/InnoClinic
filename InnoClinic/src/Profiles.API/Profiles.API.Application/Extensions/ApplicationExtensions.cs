@@ -15,12 +15,6 @@ namespace Application.Extensions
             services.AddScoped<IPatientProfileService, PatientProfileService>();
             services.AddScoped<IAccountSearchService, AccountSearchService>();
 
-            services.AddScoped<IProfilesService<PatientProfileDto, CreatePatientProfileRequestDto, UpdatePatientProfileRequestDto>>(
-                sp => sp.GetRequiredService<IPatientProfileService>());
-
-            services.AddScoped<IProfilesService<DoctorProfileDto, CreateDoctorProfileRequestDto, UpdateDoctorProfileRequestDto>>(
-                sp => sp.GetRequiredService<IDoctorProfileService>());
-
             services.AddScoped<IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto>, ReceptionistProfileService>();
             services.AddFluentValidationAutoValidation();
             services.AddValidatorsFromAssembly(AssemblyReference.Assembly);

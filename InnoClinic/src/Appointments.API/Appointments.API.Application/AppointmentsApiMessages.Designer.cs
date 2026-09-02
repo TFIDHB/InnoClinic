@@ -88,7 +88,7 @@ namespace Application {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please, enter the complaints.
+        ///   Looks up a localized string similar to Complaints are required.
         /// </summary>
         public static string ComplaintsRequiredMessage {
             get {
@@ -97,7 +97,7 @@ namespace Application {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please, enter the conclusion.
+        ///   Looks up a localized string similar to Conclusion is required.
         /// </summary>
         public static string ConclusionIsRequiredMessage {
             get {
@@ -160,7 +160,7 @@ namespace Application {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please, enter the recommendations.
+        ///   Looks up a localized string similar to Recommendations are required.
         /// </summary>
         public static string RecommendationsAreRequiredMessage {
             get {

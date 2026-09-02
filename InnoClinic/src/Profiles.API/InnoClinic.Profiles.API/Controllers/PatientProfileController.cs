@@ -47,7 +47,7 @@ namespace InnoClinic.Profiles.API.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<PatientProfileDto>> GetPatientsByIds(
+        public async Task<ActionResult<IEnumerable<PatientProfileDto>>> GetPatientsByIds(
             [FromBody] IEnumerable<Guid> ids,
             CancellationToken ct = default)
         {
