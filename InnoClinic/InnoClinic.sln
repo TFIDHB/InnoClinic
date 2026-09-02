@@ -76,9 +76,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		Directory.Packages.props = Directory.Packages.props
 		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Appointments.API.Tests", "tests\Appointments.API.Tests\Appointments.API.Tests.csproj", "{537B611F-98C3-B6F3-97F9-BCA0C2154E9B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -190,6 +192,10 @@ Global
 		{D03BEAD7-7570-759D-9B54-377814A3CEB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D03BEAD7-7570-759D-9B54-377814A3CEB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D03BEAD7-7570-759D-9B54-377814A3CEB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{537B611F-98C3-B6F3-97F9-BCA0C2154E9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{537B611F-98C3-B6F3-97F9-BCA0C2154E9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{537B611F-98C3-B6F3-97F9-BCA0C2154E9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{537B611F-98C3-B6F3-97F9-BCA0C2154E9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -227,6 +233,7 @@ Global
 		{E8FCA739-3F32-2EB8-8C0A-7984B740ADF6} = {EDCD0DDE-2474-4C17-B6D5-9AA919CA1230}
 		{C1097987-DBE9-90CA-6B40-B4199CA8B8E1} = {EDCD0DDE-2474-4C17-B6D5-9AA919CA1230}
 		{D03BEAD7-7570-759D-9B54-377814A3CEB4} = {EDCD0DDE-2474-4C17-B6D5-9AA919CA1230}
+		{537B611F-98C3-B6F3-97F9-BCA0C2154E9B} = {5EF861A2-11BE-4655-913F-616FD60AD41B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF8979EF-3025-4F80-B7E4-E721C0792B9C}

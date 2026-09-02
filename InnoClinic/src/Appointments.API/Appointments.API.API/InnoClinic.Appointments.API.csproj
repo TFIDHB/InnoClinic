@@ -23,5 +23,9 @@
     <ProjectReference Include="..\..\Shared\InnoClinic.Shared.csproj" />
     <ProjectReference Include="..\Appointments.API.Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
+	
+	<ItemGroup>
+		<InternalsVisibleTo Include="Appointments.API.Tests" />
+	</ItemGroup>
 
 </Project>

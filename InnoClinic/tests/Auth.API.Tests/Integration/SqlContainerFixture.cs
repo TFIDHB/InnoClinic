@@ -7,7 +7,9 @@ namespace Auth.API.Tests.Integration
     public class SqlContainerFixture : IAsyncLifetime
     {
         public MsSqlContainer SqlContainer { get; private set; }
+
         public DbContextOptions<AuthDbContext> ContextOptions { get; private set; }
+
         public SqlContainerFixture()
         {
             SqlContainer = new MsSqlBuilder()

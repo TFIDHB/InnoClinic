@@ -13,8 +13,6 @@ namespace Application.Services
         IProfilesClient profilesClient,
         IDocumentsClient documentsClient) : IResultService
     {
-        //I realize this creates an N + 1 problem because we make sequential external HTTP calls for each entity.
-        // How should I fix this properly?
         private async Task<ResultDto> EnrichDtoAsync(
             Appointment appointment,
             Result result,

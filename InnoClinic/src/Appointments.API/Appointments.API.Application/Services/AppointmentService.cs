@@ -17,6 +17,7 @@ namespace Application.Services
         IOptions<WorkingHoursOptions> workingHoursOptions) : IAppointmentService
     {
         private const int _atWorkStatus = 0;
+
         private async Task<bool> IsOverlappingAsync(
             Guid doctorId,
             DateOnly date,
