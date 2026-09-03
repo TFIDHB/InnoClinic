@@ -55,7 +55,7 @@ namespace Infrastructure.Clients
             CancellationToken ct = default)
         {
             var ids = patientIds.Distinct().ToList();
-            if (ids.Count == 0) 
+            if (ids.Count == 0)
                 return new Dictionary<Guid, PatientInfoDto>();
 
             var response = await httpClient.PostAsJsonAsync("/api/v1/patients/batch", ids, ct);
@@ -72,7 +72,7 @@ namespace Infrastructure.Clients
             CancellationToken ct = default)
         {
             var ids = doctorsIds.Distinct().ToList();
-            if (ids.Count == 0) 
+            if (ids.Count == 0)
                 return new Dictionary<Guid, DoctorInfoDto>();
 
             var response = await httpClient.PostAsJsonAsync("/api/v1/doctors/batch", ids, ct);

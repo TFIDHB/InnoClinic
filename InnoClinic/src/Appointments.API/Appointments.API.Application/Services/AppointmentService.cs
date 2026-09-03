@@ -18,32 +18,6 @@ namespace Application.Services
     {
         private const int _atWorkStatus = 0;
 
-        private async Task<bool> IsOverlappingAsync(
-            Guid doctorId,
-            DateOnly date,
-            TimeOnly newStart,
-            TimeOnly newEnd,
-            Guid? excludeAppointmentId,
-            CancellationToken ct)
-        {
-            return await unitOfWork.AppointmentRepository.AnyAsync(a =>
-                a.DoctorId == doctorId &&
-                a.Date == date &&
-                (excludeAppointmentId == null || a.Id != excludeAppointmentId.Value) &&
-                newStart < a.Time.Add(a.Duration) &&
-                newEnd > a.Time, ct);
-        }
-
-        private void EnsureWithinWorkingHours(TimeOnly start, TimeOnly end)
-        {
-            var workingHours = workingHoursOptions.Value;
-            if (start < workingHours.Start || end > workingHours.End)
-                throw new BadRequestException(string.Format(
-                    AppointmentsApiMessages.AppointmentBetweenMessage,
-                    workingHours.Start,
-                    workingHours.End));
-        }
-
         public async Task<AppointmentResponseDto> GetByIdAsync(
             Guid appointmentId,
             Guid? patientId,
@@ -153,7 +127,7 @@ namespace Application.Services
             return orderedAppointments.Select(appointment =>
             {
                 var entry = mapper.Map<ScheduleDto>(appointment);
-                
+
                 entry.PatientFullName = patients.TryGetValue(appointment.PatientId, out var patientInfo)
                     ? $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim()
                     : "Unknown patient";
@@ -321,6 +295,32 @@ namespace Application.Services
         {
             var doctorProfileId = await profilesClient.GetMyDoctorProfileIdAsync(ct);
             return await GetDoctorAppointmentScheduleAsync(doctorProfileId, date, ct);
+        }
+
+        private async Task<bool> IsOverlappingAsync(
+            Guid doctorId,
+            DateOnly date,
+            TimeOnly newStart,
+            TimeOnly newEnd,
+            Guid? excludeAppointmentId,
+            CancellationToken ct)
+        {
+            return await unitOfWork.AppointmentRepository.AnyAsync(a =>
+                a.DoctorId == doctorId &&
+                a.Date == date &&
+                (excludeAppointmentId == null || a.Id != excludeAppointmentId.Value) &&
+                newStart < a.Time.Add(a.Duration) &&
+                newEnd > a.Time, ct);
+        }
+
+        private void EnsureWithinWorkingHours(TimeOnly start, TimeOnly end)
+        {
+            var workingHours = workingHoursOptions.Value;
+            if (start < workingHours.Start || end > workingHours.End)
+                throw new BadRequestException(string.Format(
+                    AppointmentsApiMessages.AppointmentBetweenMessage,
+                    workingHours.Start,
+                    workingHours.End));
         }
     }
 }

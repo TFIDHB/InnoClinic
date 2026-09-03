@@ -13,37 +13,6 @@ namespace Application.Services
         IProfilesClient profilesClient,
         IDocumentsClient documentsClient) : IResultService
     {
-        private async Task<ResultDto> EnrichDtoAsync(
-            Appointment appointment,
-            Result result,
-            bool canEdit,
-            CancellationToken ct)
-        {
-            var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct);
-            var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
-            var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
-            var specializationName = doctorInfo == null
-                ? null
-                : await servicesClient.GetSpecializationNameAsync(doctorInfo.SpecializationId, ct);
-
-            var dto = mapper.Map<ResultDto>(result);
-            dto.Date = appointment.Date;
-            dto.PatientFullName = patientInfo == null
-                ? "Unknown patient"
-                : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
-
-            dto.PatientDateOfBirth = patientInfo?.DateOfBirth;
-            dto.DoctorFullName = doctorInfo == null
-                ? "Unknown doctor"
-                : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
-
-            dto.DoctorSpecialization = specializationName ?? "Unknown specialization";
-            dto.ServiceName = serviceName ?? "Unknown service";
-            dto.CanEdit = canEdit;
-
-            return dto;
-        }
-
         public async Task<ResultDto> CreateAsync(
             Guid appointmentId,
             CreateResultRequestDto dto,
@@ -144,6 +113,37 @@ namespace Application.Services
             await documentsClient.UploadAsync(dto.Id, pdfBytes, $"appointment-result-{dto.Id}.pdf", ct);
 
             return pdfBytes;
+        }
+
+        private async Task<ResultDto> EnrichDtoAsync(
+            Appointment appointment,
+            Result result,
+            bool canEdit,
+            CancellationToken ct)
+        {
+            var patientInfo = await profilesClient.GetPatientInfoAsync(appointment.PatientId, ct);
+            var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
+            var serviceName = await servicesClient.GetServiceNameAsync(appointment.ServiceId, ct);
+            var specializationName = doctorInfo == null
+                ? null
+                : await servicesClient.GetSpecializationNameAsync(doctorInfo.SpecializationId, ct);
+
+            var dto = mapper.Map<ResultDto>(result);
+            dto.Date = appointment.Date;
+            dto.PatientFullName = patientInfo == null
+                ? "Unknown patient"
+                : $"{patientInfo.LastName} {patientInfo.FirstName} {patientInfo.MiddleName}".Trim();
+
+            dto.PatientDateOfBirth = patientInfo?.DateOfBirth;
+            dto.DoctorFullName = doctorInfo == null
+                ? "Unknown doctor"
+                : $"{doctorInfo.LastName} {doctorInfo.FirstName} {doctorInfo.MiddleName}".Trim();
+
+            dto.DoctorSpecialization = specializationName ?? "Unknown specialization";
+            dto.ServiceName = serviceName ?? "Unknown service";
+            dto.CanEdit = canEdit;
+
+            return dto;
         }
     }
 }

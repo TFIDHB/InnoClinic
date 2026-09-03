@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
@@ -12,6 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
 
 namespace Appointments.API.Tests.Integration
 {

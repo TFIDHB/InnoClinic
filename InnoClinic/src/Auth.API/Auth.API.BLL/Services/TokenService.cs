@@ -1,6 +1,5 @@
 ﻿using BLL.Interfaces;
 using DAL.Entities;
-using InnoClinic.Shared.Generators;
 using InnoClinic.Shared.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

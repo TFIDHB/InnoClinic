@@ -49,7 +49,7 @@ namespace Infrastructure.Clients
             CancellationToken ct = default)
         {
             var ids = serviceIds.Distinct().ToList();
-            if (ids.Count == 0) 
+            if (ids.Count == 0)
                 return new Dictionary<Guid, string>();
 
             var response = await httpClient.PostAsJsonAsync("/api/v1/services/batch", ids, ct);

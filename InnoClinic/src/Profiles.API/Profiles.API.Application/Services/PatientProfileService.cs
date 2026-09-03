@@ -13,16 +13,6 @@ namespace Application.Services
         IMapper mapper,
         IAuthClient authClient) : IPatientProfileService
     {
-        private static int CalculateMatchScore(PatientProfile profile, IPatientFields dto)
-        {
-            var score = 0;
-            if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (profile.MiddleName != null && string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (profile.DateOfBirth == dto.DateOfBirth) score += 3;
-            return score;
-        }
-
         public async Task<PatientProfileDto> CreateAsync(CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
             var patientProfile = mapper.Map<PatientProfile>(dto);
@@ -105,7 +95,6 @@ namespace Application.Services
             }
 
             return dto;
-
         }
 
         public async Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
@@ -189,13 +178,22 @@ namespace Application.Services
         {
             var patients = await unitOfWork.PatientProfilesRepository.GetFilteredAsync(search, ct);
             return mapper.Map<IEnumerable<PatientProfileDto>>(patients);
-
         }
 
         public async Task<IEnumerable<PatientProfileDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
         {
             var patients = await unitOfWork.PatientProfilesRepository.GetByIdsAsync(ids, ct);
             return mapper.Map<IEnumerable<PatientProfileDto>>(patients);
+        }
+
+        private static int CalculateMatchScore(PatientProfile profile, IPatientFields dto)
+        {
+            var score = 0;
+            if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (profile.MiddleName != null && string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase)) score += 5;
+            if (profile.DateOfBirth == dto.DateOfBirth) score += 3;
+            return score;
         }
     }
 }
