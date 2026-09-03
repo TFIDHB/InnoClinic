@@ -9,7 +9,7 @@ namespace InnoClinic.Documents.API.Application.Services
     public class PhotosService(
         IDocumentsUnitOfWork unitOfWork,
         IBlobService blobService,
-        IMapper mapper) : IPhotosService
+        IMapper mapper): IPhotosService
     {
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
         {

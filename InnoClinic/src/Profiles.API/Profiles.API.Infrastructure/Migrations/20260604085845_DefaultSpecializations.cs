@@ -19,7 +19,7 @@ namespace Infrastructure.Migrations
                 {
                     { new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"), true, "Therapist" },
                     { new Guid("a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2"), true, "Surgeon" },
-                    { new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3"), true, "Ophthalmologist" }
+                    { new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3"), true, "Ophthalmologist" },
                 });
         }
 

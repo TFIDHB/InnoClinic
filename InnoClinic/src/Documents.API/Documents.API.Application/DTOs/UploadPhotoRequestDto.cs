@@ -5,7 +5,8 @@ namespace InnoClinic.Documents.API.Application.DTOs
 {
     public class UploadPhotoRequestDto
     {
-        public IFormFile File { get; set; }
+        public required IFormFile File { get; set; }
+
         public PhotoType Type { get; set; }
     }
 }

@@ -10,6 +10,7 @@ namespace Auth.API.Tests.Integration
 
         public DbContextOptions<AuthDbContext> ContextOptions { get; private set; }
 
+        [Obsolete]
         public SqlContainerFixture()
         {
             SqlContainer = new MsSqlBuilder()
@@ -36,5 +37,7 @@ namespace Auth.API.Tests.Integration
     }
 
     [CollectionDefinition("SqlCollection")]
-    public class SqlCollection : ICollectionFixture<SqlContainerFixture> { }
+    public class SqlCollection : ICollectionFixture<SqlContainerFixture>
+    {
+    }
 }

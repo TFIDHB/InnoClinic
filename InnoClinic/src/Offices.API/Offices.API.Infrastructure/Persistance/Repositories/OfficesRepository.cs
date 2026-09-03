@@ -4,7 +4,7 @@ using MongoDB.Driver;
 
 namespace Infrastructure.Persistance.Repositories
 {
-    public class OfficesRepository(OfficesDbContext context) : IOfficesRepository
+    public class OfficesRepository(OfficesDbContext context): IOfficesRepository
     {
         private readonly IMongoCollection<Office> _collection = context.Offices;
 

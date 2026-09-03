@@ -19,10 +19,12 @@ namespace Auth.API.Tests.Integration
         public Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
             => Task.FromResult<AccountProfileInfoDto?>(null);
     }
+
     public class ServiceAssemblyResult
     {
-        public AuthDbContext DbContext { get; set; }
-        public AuthService AuthService { get; set; }
+        public required AuthDbContext DbContext { get; set; }
+
+        public required AuthService AuthService { get; set; }
     }
 
     [Collection("SqlCollection")]
@@ -44,7 +46,7 @@ namespace Auth.API.Tests.Integration
                 Secret = "test-secret-key-for-jwt-settings",
                 Issuer = "test",
                 Audience = "test",
-                ExpirationMinutes = 5
+                ExpirationMinutes = 5,
             });
             _tokenService = new TokenService(jwtSettings);
         }
@@ -67,7 +69,7 @@ namespace Auth.API.Tests.Integration
             return new ServiceAssemblyResult
             {
                 DbContext = dbContext,
-                AuthService = authService
+                AuthService = authService,
             };
         }
 
@@ -202,12 +204,14 @@ namespace Auth.API.Tests.Integration
                 await assembly.AuthService.LogoutAsync(logoutDto, user.Id);
             });
         }
+
         public async Task InitializeAsync()
         {
             using var context = new AuthDbContext(_fixture.ContextOptions);
             context.Users.RemoveRange(context.Users);
             await context.SaveChangesAsync();
         }
+
         public Task DisposeAsync() => Task.CompletedTask;
     }
 }

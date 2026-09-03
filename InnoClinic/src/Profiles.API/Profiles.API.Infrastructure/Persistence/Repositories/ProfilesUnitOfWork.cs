@@ -3,15 +3,18 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class ProfilesUnitOfWork(ProfilesDbContext context, IServiceProvider provider) : IProfilesUnitOfWork, IDisposable
+    public class ProfilesUnitOfWork(ProfilesDbContext context, IServiceProvider provider): IProfilesUnitOfWork, IDisposable
     {
         private IDoctorProfilesRepository? _doctorProfilesRepository;
         private IPatientProfilesRepository? _patientProfilesRepository;
         private IReceptionistProfilesRepository? _receptionistProfilesRepository;
+
         public IDoctorProfilesRepository DoctorProfilesRepository =>
             _doctorProfilesRepository ??= provider.GetRequiredService<IDoctorProfilesRepository>();
+
         public IPatientProfilesRepository PatientProfilesRepository =>
             _patientProfilesRepository ??= provider.GetRequiredService<IPatientProfilesRepository>();
+
         public IReceptionistProfilesRepository ReceptionistProfilesRepository =>
             _receptionistProfilesRepository ??= provider.GetRequiredService<IReceptionistProfilesRepository>();
 

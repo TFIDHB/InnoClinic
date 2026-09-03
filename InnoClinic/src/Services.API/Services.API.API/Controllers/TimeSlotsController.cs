@@ -6,7 +6,7 @@ namespace InnoClinic.Services.API.Controllers
 {
     [Route("api/v1/time-slots")]
     [ApiController]
-    public class TimeSlotsController(IServicesService servicesService) : ControllerBase
+    public class TimeSlotsController(IServicesService servicesService): ControllerBase
     {
         [HttpGet("slots")]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -4,7 +4,7 @@ using InnoClinic.Shared.Repositories;
 
 namespace InnoClinic.Documents.API.Infrastructure.Persistance.Repositories
 {
-    public class PhotosRepository(DocumentsDbContext context) : BaseRepository<Photo, Guid>(context), IPhotosRepository
+    public class PhotosRepository(DocumentsDbContext context): BaseRepository<Photo, Guid>(context), IPhotosRepository
     {
     }
 }

@@ -1,11 +1,11 @@
-﻿using BLL.DTOs;
+﻿using System.Net;
+using System.Net.Http.Json;
+using BLL.DTOs;
 using BLL.Interfaces;
 using DAL;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net;
-using System.Net.Http.Json;
 
 namespace Auth.API.Tests.Integration
 {
@@ -155,7 +155,7 @@ namespace Auth.API.Tests.Integration
         {
             _client.DefaultRequestHeaders.Authorization = null;
 
-            var result = await _client.PostAsJsonAsync("api/v1/auth/logout", new LogOutRequestDto { RefreshToken = "" });
+            var result = await _client.PostAsJsonAsync("api/v1/auth/logout", new LogOutRequestDto { RefreshToken = string.Empty });
 
             Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
         }

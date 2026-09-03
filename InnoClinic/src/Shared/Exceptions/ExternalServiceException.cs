@@ -2,7 +2,8 @@
 {
     public class ExternalServiceException : Exception
     {
-        public ExternalServiceException(string serviceName) : base(string.Format(SharedMessages.ExternalServiceMessage, serviceName))
+        public ExternalServiceException(string serviceName)
+            : base(string.Format(SharedMessages.ExternalServiceMessage, serviceName))
         {
         }
     }

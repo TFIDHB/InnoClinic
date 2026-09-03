@@ -6,7 +6,7 @@ using InnoClinic.Shared.Exceptions;
 
 namespace Application.Services
 {
-    public class OfficesService(IOfficesRepository officesRepository, IMapper mapper) : IOfficesService
+    public class OfficesService(IOfficesRepository officesRepository, IMapper mapper): IOfficesService
     {
         private readonly IOfficesRepository _officesRepository = officesRepository;
         private readonly IMapper _mapper = mapper;

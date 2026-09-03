@@ -9,7 +9,7 @@ namespace InnoClinic.Services.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/v1/services")]
-    public class ServicesController(IServicesService servicesService) : ControllerBase
+    public class ServicesController(IServicesService servicesService): ControllerBase
     {
         [HttpGet("{id}")]
         [Authorize(Roles = Roles.AllRoles)]

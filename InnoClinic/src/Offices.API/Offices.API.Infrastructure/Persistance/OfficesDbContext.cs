@@ -7,6 +7,7 @@ namespace Infrastructure.Persistance
     public class OfficesDbContext
     {
         private readonly IMongoDatabase _database;
+
         public OfficesDbContext(IConfiguration configuration)
         {
             var client = new MongoClient(configuration.GetConnectionString("OfficesConnection"));

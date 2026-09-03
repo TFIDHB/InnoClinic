@@ -19,6 +19,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseAppSwagger("InnoClinic.Appointments.API");
 }
+
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();

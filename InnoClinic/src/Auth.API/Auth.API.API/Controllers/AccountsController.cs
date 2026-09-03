@@ -8,9 +8,8 @@ namespace InnoClinic.Auth.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/v1/accounts")]
-    public class AccountsController(IAuthService authService) : ControllerBase
+    public class AccountsController(IAuthService authService): ControllerBase
     {
-
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

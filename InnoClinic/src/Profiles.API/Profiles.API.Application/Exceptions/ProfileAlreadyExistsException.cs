@@ -4,7 +4,8 @@ namespace Application.Exceptions
 {
     public class ProfileAlreadyExistsException : BadRequestException
     {
-        public ProfileAlreadyExistsException() : base(ProfilesApplicationMessages.ProfileAlreadyExistsMessage)
+        public ProfileAlreadyExistsException()
+            : base(ProfilesApplicationMessages.ProfileAlreadyExistsMessage)
         {
         }
     }

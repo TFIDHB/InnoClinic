@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Http;
 
 namespace InnoClinic.Documents.API.Infrastructure.Blob
 {
-    public class BlobService(BlobServiceClient blobServiceClient) : IBlobService
+    public class BlobService(BlobServiceClient blobServiceClient): IBlobService
     {
         private const string _documentsContainer = "documents";
         private const string _photosContainer = "photos";
 
         public async Task<string> UploadDocumentAsync(IFormFile file, CancellationToken ct = default)
         => await UploadInternalAsync(file, _documentsContainer, ct);
+
         public async Task<string> UploadPhotoAsync(IFormFile file, CancellationToken ct = default)
             => await UploadInternalAsync(file, _photosContainer, ct);
 

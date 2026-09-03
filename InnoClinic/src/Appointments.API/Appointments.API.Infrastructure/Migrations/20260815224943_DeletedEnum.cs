@@ -34,7 +34,7 @@ namespace Infrastructure.Migrations
                 table: "Appointments",
                 type: "text",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
         }
     }
 }

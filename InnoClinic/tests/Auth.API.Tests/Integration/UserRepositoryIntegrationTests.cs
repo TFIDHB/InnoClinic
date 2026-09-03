@@ -14,7 +14,7 @@ namespace Auth.API.Tests.Integration
             _fixture = fixture;
         }
 
-        private AuthDbContext CreateContext() => new(_fixture.ContextOptions);
+        private AuthDbContext CreateContext() => new (_fixture.ContextOptions);
 
         [Fact]
         public async Task ExistsByEmailAsync_WhenEmailExists_ReturnsTrue()
@@ -108,12 +108,14 @@ namespace Auth.API.Tests.Integration
 
             Assert.Null(result);
         }
+
         public async Task InitializeAsync()
         {
             using var context = new AuthDbContext(_fixture.ContextOptions);
             context.Users.RemoveRange(context.Users);
             await context.SaveChangesAsync();
         }
+
         public Task DisposeAsync() => Task.CompletedTask;
     }
 }

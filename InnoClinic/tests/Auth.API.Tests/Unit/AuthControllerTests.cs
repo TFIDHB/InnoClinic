@@ -1,10 +1,10 @@
-﻿using BLL.DTOs;
+﻿using System.Security.Claims;
+using BLL.DTOs;
 using BLL.Interfaces;
 using InnoClinic.Auth.API.Controllers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Security.Claims;
 
 namespace Auth.API.Tests.Unit
 {
@@ -20,6 +20,7 @@ namespace Auth.API.Tests.Unit
             _authController = new AuthController(_authService.Object);
         }
 
+        [Theory]
         public void SetUserClaims(Guid? userId)
         {
             var claims = userId.HasValue ? new[] { new Claim(ClaimTypes.NameIdentifier, userId.ToString()) } : null;
@@ -29,7 +30,7 @@ namespace Auth.API.Tests.Unit
 
             _authController.ControllerContext = new ControllerContext
             {
-                HttpContext = new DefaultHttpContext { User = principal }
+                HttpContext = new DefaultHttpContext { User = principal },
             };
         }
 

@@ -19,7 +19,7 @@ namespace Infrastructure.Migrations
                     Complaints = table.Column<string>(type: "text", nullable: false),
                     Conclusion = table.Column<string>(type: "text", nullable: false),
                     Recommendations = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                 },
                 constraints: table =>
                 {

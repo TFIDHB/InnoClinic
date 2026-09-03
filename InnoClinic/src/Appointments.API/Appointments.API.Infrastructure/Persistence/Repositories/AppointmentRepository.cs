@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class AppointmentRepository(AppointmentDbContext context) : BaseRepository<Appointment, Guid>(context), IAppointmentRepository
+    public class AppointmentRepository(AppointmentDbContext context): BaseRepository<Appointment, Guid>(context), IAppointmentRepository
     {
         public async Task<IEnumerable<Appointment>> GetByDateAndDoctorAsync(
             DateOnly date,
@@ -46,13 +46,19 @@ namespace Infrastructure.Persistence.Repositories
             var query = context.Appointments.AsQueryable();
 
             if (date != null)
+            {
                 query = query.Where(a => a.Date == date.Value);
+            }
 
             if (officeId != null)
+            {
                 query = query.Where(a => a.OfficeId == officeId.Value);
+            }
 
             if (isApproved != null)
+            {
                 query = query.Where(a => a.IsApproved == isApproved.Value);
+            }
 
             return await query.ToListAsync(ct);
         }

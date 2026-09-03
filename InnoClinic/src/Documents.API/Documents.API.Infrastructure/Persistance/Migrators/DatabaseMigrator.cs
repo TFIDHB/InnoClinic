@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace InnoClinic.Documents.API.Infrastructure.Persistance.Migrators
 {
-    public class DatabaseMigrator(IServiceProvider serviceProvider) : IHostedService
+    public class DatabaseMigrator(IServiceProvider serviceProvider): IHostedService
     {
         public async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -16,4 +16,3 @@ namespace InnoClinic.Documents.API.Infrastructure.Persistance.Migrators
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }
-

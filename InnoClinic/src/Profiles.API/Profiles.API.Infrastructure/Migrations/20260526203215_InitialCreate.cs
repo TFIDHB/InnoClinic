@@ -22,7 +22,7 @@ namespace Infrastructure.Migrations
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     IsLinkedToAccount = table.Column<bool>(type: "bit", nullable: false),
-                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -39,7 +39,7 @@ namespace Infrastructure.Migrations
                     MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AccountId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                 },
                 constraints: table =>
                 {
@@ -52,7 +52,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false)
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -73,7 +73,7 @@ namespace Infrastructure.Migrations
                     OfficeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CareerStartYear = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
-                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    PhotoId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                 },
                 constraints: table =>
                 {

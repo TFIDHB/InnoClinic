@@ -1,14 +1,14 @@
-﻿using Application.DTOs;
+﻿using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using Application.DTOs;
 using Application.Interfaces;
 using InnoClinic.Shared.Exceptions;
 using Microsoft.AspNetCore.Http;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 
 namespace Infrastructure.Clients
 {
-    public class DocumentsClient(HttpClient httpClient) : IDocumentsClient
+    public class DocumentsClient(HttpClient httpClient): IDocumentsClient
     {
         public async Task<byte[]> DownloadAsync(string url, CancellationToken ct = default)
         {
@@ -20,7 +20,10 @@ namespace Infrastructure.Clients
             var response = await httpClient.GetAsync($"/api/v1/documents/by-result/{resultId}", ct);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
+            {
                 return null;
+            }
+
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<DocumentDto>(ct);

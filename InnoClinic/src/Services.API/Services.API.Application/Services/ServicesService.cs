@@ -14,6 +14,7 @@ namespace Application.Services
         private const int SlotGranularityMinutes = 10;
         private const int StartTime = 8;
         private const int EndTime = 20;
+
         public async Task<ServiceDto> CreateAsync(CreateServiceRequestDto dto, CancellationToken ct = default)
         {
             if (dto.SpecializationId.HasValue)
@@ -122,7 +123,9 @@ namespace Application.Services
                 var appointments = allAppointments.Where(e => e.Date == date);
                 var busySlots = GetBusySlots(appointments);
                 if (HasFreeSlot(allSlots, busySlots, timeSlotSize))
+                {
                     result.Add(date);
+                }
             }
 
             return result;
@@ -132,14 +135,23 @@ namespace Application.Services
         {
             var timeSlotSize = await unitOfWork.ServicesRepository.GetTimeSlotSizeAsync(serviceId, ct);
             if (timeSlotSize == 0)
+            {
                 throw new NotFoundException(nameof(Service));
+            }
+
             return timeSlotSize;
+        }
+
+        public async Task<IEnumerable<ServiceDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
+        {
+            var services = await unitOfWork.ServicesRepository.GetByIdsAsync(ids, ct);
+            return mapper.Map<IEnumerable<ServiceDto>>(services);
         }
 
         private bool HasFreeSlot(IEnumerable<TimeOnly> allSlots, HashSet<TimeOnly> busySlots, int requiredSlots)
             => allSlots.Any(slot => Enumerable
-                .Range(0, requiredSlots)
-                .All(j => !busySlots.Contains(slot.AddMinutes(j * SlotGranularityMinutes))));
+            .Range(0, requiredSlots)
+            .All(j => !busySlots.Contains(slot.AddMinutes(j * SlotGranularityMinutes))));
 
         private static HashSet<TimeOnly> GetBusySlots(IEnumerable<AppointmentSlotDto> appointments)
             => appointments
@@ -157,12 +169,6 @@ namespace Application.Services
                 yield return slot;
                 slot = slot.AddMinutes(SlotGranularityMinutes);
             }
-        }
-
-        public async Task<IEnumerable<ServiceDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
-        {
-            var services = await unitOfWork.ServicesRepository.GetByIdsAsync(ids, ct);
-            return mapper.Map<IEnumerable<ServiceDto>>(services);
         }
     }
 }

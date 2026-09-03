@@ -1,17 +1,16 @@
-﻿using BLL.DTOs;
+﻿using System.Security.Claims;
+using BLL.DTOs;
 using BLL.Interfaces;
 using InnoClinic.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace InnoClinic.Auth.API.Controllers
 {
     [ApiController]
     [Route("api/v1/auth")]
-    public class AuthController(IAuthService authService) : ControllerBase
+    public class AuthController(IAuthService authService): ControllerBase
     {
-
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -47,7 +46,9 @@ namespace InnoClinic.Auth.API.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (!Guid.TryParse(userIdClaim, out var userId))
+            {
                 return Unauthorized();
+            }
 
             await authService.LogoutAsync(dto, userId, ct);
             return Ok();

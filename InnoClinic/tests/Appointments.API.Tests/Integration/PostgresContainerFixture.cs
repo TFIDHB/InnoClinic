@@ -10,6 +10,7 @@ namespace Appointments.API.Tests.Integration
 
         public DbContextOptions<AppointmentDbContext> ContextOptions { get; private set; } = null!;
 
+        [Obsolete]
         public PostgresContainerFixture()
         {
             PostgresContainer = new PostgreSqlBuilder()
@@ -36,5 +37,7 @@ namespace Appointments.API.Tests.Integration
     }
 
     [CollectionDefinition("PostgresCollection")]
-    public class PostgresCollection : ICollectionFixture<PostgresContainerFixture> { }
+    public class PostgresCollection : ICollectionFixture<PostgresContainerFixture>
+    {
+    }
 }

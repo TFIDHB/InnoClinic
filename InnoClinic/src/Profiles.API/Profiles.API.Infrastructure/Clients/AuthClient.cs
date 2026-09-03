@@ -1,16 +1,16 @@
-﻿using Application.DTOs;
+﻿using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using Application.DTOs;
 using Application.Interfaces;
 using BLL.DTOs;
 using InnoClinic.Shared.Exceptions;
 using InnoClinic.Shared.Generators;
 using InnoClinic.Shared.Settings;
 using Microsoft.Extensions.Options;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
 
 namespace Infrastructure.Clients
 {
-    public class AuthClient(HttpClient httpClient, IOptions<JwtSettings> jwtSettings) : IAuthClient
+    public class AuthClient(HttpClient httpClient, IOptions<JwtSettings> jwtSettings): IAuthClient
     {
         public async Task<CreateStaffAccountResponseDto> CreateStaffAccountAsync(string email, CancellationToken ct = default)
         {
@@ -30,7 +30,10 @@ namespace Infrastructure.Clients
 
             var response = await httpClient.SendAsync(request, ct);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
                 return null;
+            }
+
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<UserAccountInfoDto>(ct)
@@ -41,7 +44,10 @@ namespace Infrastructure.Clients
         {
             var response = await httpClient.GetAsync($"/api/v1/auth/accounts/{userId}", ct);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
                 return null;
+            }
+
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<UserAccountInfoDto>(ct)

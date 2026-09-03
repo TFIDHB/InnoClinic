@@ -1,5 +1,5 @@
-﻿using BLL.Interfaces;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
+using BLL.Interfaces;
 
 namespace BLL.Services
 {
@@ -7,6 +7,7 @@ namespace BLL.Services
     {
         private const string Chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%";
         private const int Length = 12;
+
         public string Generate()
         {
             return RandomNumberGenerator.GetString(Chars, Length);

@@ -3,6 +3,6 @@
     public enum PhotoType
     {
         Profile,
-        Office
+        Office,
     }
 }

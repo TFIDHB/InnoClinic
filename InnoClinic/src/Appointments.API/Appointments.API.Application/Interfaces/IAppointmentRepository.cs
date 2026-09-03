@@ -21,6 +21,7 @@ namespace Application.Interfaces
                 Guid? officeId,
                 bool? isApproved,
                 CancellationToken ct = default);
+
         Task<IEnumerable<Appointment>> GetByPatientAsync(Guid patientId, CancellationToken ct = default);
     }
 }

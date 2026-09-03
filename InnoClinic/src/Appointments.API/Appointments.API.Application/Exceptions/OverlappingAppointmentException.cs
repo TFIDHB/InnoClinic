@@ -4,6 +4,9 @@ namespace Application.Exceptions
 {
     public class OverlappingAppointmentException : BadRequestException
     {
-        public OverlappingAppointmentException() : base(AppointmentsApiMessages.OverlappingAppointmentMessage) { }
+        public OverlappingAppointmentException()
+            : base(AppointmentsApiMessages.OverlappingAppointmentMessage)
+        {
+        }
     }
 }

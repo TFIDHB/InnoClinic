@@ -9,7 +9,9 @@ namespace InnoClinic.Shared.Extensions
             var value = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             if (!Guid.TryParse(value, out var userId))
+            {
                 throw new UnauthorizedAccessException();
+            }
 
             return userId;
         }

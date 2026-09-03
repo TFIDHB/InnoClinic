@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using AutoMapper;
 using BLL.DTOs;
 using BLL.Exceptions;
 using BLL.Interfaces;
@@ -7,7 +8,6 @@ using DAL.Interfaces;
 using InnoClinic.Shared.Constants;
 using InnoClinic.Shared.Exceptions;
 using InnoClinic.Shared.Extensions;
-using System.Security.Claims;
 
 namespace BLL.Services
 {
@@ -16,7 +16,7 @@ namespace BLL.Services
         IAuthUnitOfWork unitOfWork,
         IMapper mapper,
         IProfilesClient profilesClient,
-        IPasswordGenerator passwordGenerator) : IAuthService
+        IPasswordGenerator passwordGenerator): IAuthService
     {
         public async Task RegisterAsync(RegisterRequestDto dto, CancellationToken ct = default)
         {
@@ -34,6 +34,7 @@ namespace BLL.Services
             await unitOfWork.UserRepository.CreateAsync(user, ct);
             await unitOfWork.SaveChangesAsync(ct);
         }
+
         public async Task<AuthTokenDto> LoginAsync(LoginRequestDto dto, CancellationToken ct = default)
         {
             var user = await unitOfWork.UserRepository.GetByEmailAsync(dto.Email, ct);
@@ -73,6 +74,7 @@ namespace BLL.Services
                 RefreshToken = refreshToken,
             };
         }
+
         public async Task LogoutAsync(LogOutRequestDto dto, Guid userId, CancellationToken ct = default)
         {
             var user = await unitOfWork.UserRepository.GetByIdAsync(userId, ct);
@@ -109,18 +111,17 @@ namespace BLL.Services
                 Id = Guid.NewGuid(),
                 Email = dto.Email,
                 PasswordHash = passwordHash,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
             };
 
             await unitOfWork.UserRepository.CreateAsync(user, ct);
             await unitOfWork.SaveChangesAsync(ct);
 
-            //Temporary decision for now. Password should be sent on email
-
+            // Temporary decision for now. Password should be sent on email
             return new CreateStaffAccountResponseDto
             {
                 AccountId = user.Id,
-                TemporaryPassword = temporaryPassword
+                TemporaryPassword = temporaryPassword,
             };
         }
 
