@@ -9,7 +9,7 @@ namespace InnoClinic.Documents.API.Controllers
     [Authorize(Roles = Roles.AllRoles)]
     [ApiController]
     [Route("api/v1/documents")]
-    public class DocumentsController(IDocumentsService documentsService): ControllerBase
+    public class DocumentsController(IDocumentsService documentsService) : ControllerBase
     {
         [HttpGet("{id}")]
         [Authorize(Roles = Roles.AllRoles)]

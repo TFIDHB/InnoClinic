@@ -1,4 +1,7 @@
-﻿using Application.DTOs;
+﻿using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
+using Application.DTOs;
 using Application.Interfaces;
 using Domain.Entities;
 using Infrastructure.Persistence;
@@ -9,9 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Moq;
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text;
 
 namespace Appointments.API.Tests.Integration
 {
@@ -30,7 +30,9 @@ namespace Appointments.API.Tests.Integration
         {
             var descriptor = services.SingleOrDefault(e => e.ServiceType == typeof(TInterface));
             if (descriptor != null)
+            {
                 services.Remove(descriptor);
+            }
 
             services.AddScoped(_ => instance);
         }
@@ -103,7 +105,9 @@ namespace Appointments.API.Tests.Integration
                     {
                         var dbDescriptor = services.SingleOrDefault(e => e.ServiceType == typeof(DbContextOptions<AppointmentDbContext>));
                         if (dbDescriptor != null)
+                        {
                             services.Remove(dbDescriptor);
+                        }
 
                         services.AddDbContext<AppointmentDbContext>(opt => opt.UseNpgsql(_fixture.PostgresContainer.GetConnectionString()));
 

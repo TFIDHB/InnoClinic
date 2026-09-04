@@ -10,7 +10,7 @@ namespace InnoClinic.Profiles.API.Controllers
     [ApiController]
     [Route("api/v1/receptionists")]
     public class ReceptionistProfilesController(
-        IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto> receptionistProfilesService): ControllerBase
+        IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto> receptionistProfilesService) : ControllerBase
     {
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

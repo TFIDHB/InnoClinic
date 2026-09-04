@@ -6,7 +6,7 @@ namespace InnoClinic.Services.API.Controllers
 {
     [Route("api/v1/specializations")]
     [ApiController]
-    public class SpecializationsController(ISpecializationsService specializationsService): ControllerBase
+    public class SpecializationsController(ISpecializationsService specializationsService) : ControllerBase
     {
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -1,16 +1,16 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Interfaces;
 using BLL.DTOs;
 using InnoClinic.Shared.Exceptions;
 using InnoClinic.Shared.Generators;
 using InnoClinic.Shared.Settings;
 using Microsoft.Extensions.Options;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace Infrastructure.Clients
 {
-    public class AuthClient(HttpClient httpClient, IOptions<JwtSettings> jwtSettings): IAuthClient
+    public class AuthClient(HttpClient httpClient, IOptions<JwtSettings> jwtSettings) : IAuthClient
     {
         public async Task<CreateStaffAccountResponseDto> CreateStaffAccountAsync(string email, CancellationToken ct = default)
         {

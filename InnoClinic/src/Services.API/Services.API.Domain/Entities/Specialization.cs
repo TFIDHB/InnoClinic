@@ -8,6 +8,6 @@
 
         public required bool IsActive { get; set; }
 
-        public virtual ICollection<Service> Services { get; set; } =[];
+        public virtual ICollection<Service> Services { get; set; } = [];
     }
 }

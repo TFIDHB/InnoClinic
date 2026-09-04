@@ -7,7 +7,7 @@ namespace Offices.API.Controllers
     // [Authorize]
     [ApiController]
     [Route("api/v1/offices")]
-    public class OfficesController(IOfficesService officesService): ControllerBase
+    public class OfficesController(IOfficesService officesService) : ControllerBase
     {
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

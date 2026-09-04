@@ -9,7 +9,7 @@ namespace Offices.API.Extensions
         {
             var corsOptions = configuration
                 .GetSection("Cors")
-                .Get<CorsOptions>() !;
+                .Get<CorsOptions>()!;
 
             services.AddControllers();
             services

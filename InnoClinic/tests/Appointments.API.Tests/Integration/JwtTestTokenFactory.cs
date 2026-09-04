@@ -1,8 +1,8 @@
-﻿using InnoClinic.Shared.Constants;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using InnoClinic.Shared.Constants;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Appointments.API.Tests.Integration
 {
@@ -17,7 +17,7 @@ namespace Appointments.API.Tests.Integration
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, accountId.ToString()),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secret));

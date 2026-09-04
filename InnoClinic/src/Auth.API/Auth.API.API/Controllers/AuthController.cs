@@ -1,15 +1,15 @@
-﻿using System.Security.Claims;
-using BLL.DTOs;
+﻿using BLL.DTOs;
 using BLL.Interfaces;
 using InnoClinic.Shared.Constants;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace InnoClinic.Auth.API.Controllers
 {
     [ApiController]
     [Route("api/v1/auth")]
-    public class AuthController(IAuthService authService): ControllerBase
+    public class AuthController(IAuthService authService) : ControllerBase
     {
         [HttpPost("register")]
         [ProducesResponseType(StatusCodes.Status200OK)]

@@ -20,7 +20,6 @@ namespace Auth.API.Tests.Unit
             _authController = new AuthController(_authService.Object);
         }
 
-        [Theory]
         public void SetUserClaims(Guid? userId)
         {
             var claims = userId.HasValue ? new[] { new Claim(ClaimTypes.NameIdentifier, userId.ToString()) } : null;

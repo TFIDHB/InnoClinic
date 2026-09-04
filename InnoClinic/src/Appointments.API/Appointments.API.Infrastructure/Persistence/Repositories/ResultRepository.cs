@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class ResultRepository(AppointmentDbContext context): BaseRepository<Result, Guid>(context), IResultRepository
+    public class ResultRepository(AppointmentDbContext context) : BaseRepository<Result, Guid>(context), IResultRepository
     {
         public async Task<Result?> GetByAppointmentIdAsync(Guid appointmentId, CancellationToken ct = default)
         {
@@ -17,7 +17,7 @@ namespace Infrastructure.Persistence.Repositories
             var ids = appointmentIds.ToList();
             if (ids.Count == 0)
             {
-                return[];
+                return [];
             }
 
             var existing = await DbSet

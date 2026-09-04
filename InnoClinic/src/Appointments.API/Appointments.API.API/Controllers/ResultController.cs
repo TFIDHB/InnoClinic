@@ -10,7 +10,7 @@ namespace InnoClinic.Appointments.API.Controllers
     [Authorize(Roles = Roles.AllRoles)]
     [ApiController]
     [Route("api/v1/appointments/{appointmentId}/result")]
-    public class ResultController(IResultService resultService): ControllerBase
+    public class ResultController(IResultService resultService) : ControllerBase
     {
         [HttpPost]
         [Authorize(Roles = Roles.Doctor)]

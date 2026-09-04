@@ -1,18 +1,21 @@
-﻿using Application.DTOs;
+﻿using System.Net;
+using System.Net.Http.Json;
+using Application.DTOs;
 using Application.Interfaces;
 using InnoClinic.Shared.Exceptions;
-using System.Net;
-using System.Net.Http.Json;
 
 namespace Infrastructure.Clients
 {
-    public class ProfilesClient(HttpClient httpClient) : IProfilesClient
+    public class ProfilesClient(HttpClient httpClient): IProfilesClient
     {
         public async Task<PatientInfoDto?> GetPatientInfoAsync(Guid patientId, CancellationToken ct = default)
         {
             var response = await httpClient.GetAsync($"/api/v1/patients/{patientId}", ct);
             if (response.StatusCode == HttpStatusCode.NotFound)
+            {
                 return null;
+            }
+
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<PatientInfoDto>(ct)
@@ -23,7 +26,10 @@ namespace Infrastructure.Clients
         {
             var response = await httpClient.GetAsync($"/api/v1/doctors/{doctorId}", ct);
             if (response.StatusCode == HttpStatusCode.NotFound)
+            {
                 return null;
+            }
+
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<DoctorInfoDto>(ct)
@@ -56,7 +62,9 @@ namespace Infrastructure.Clients
         {
             var ids = patientIds.Distinct().ToList();
             if (ids.Count == 0)
+            {
                 return new Dictionary<Guid, PatientInfoDto>();
+            }
 
             var response = await httpClient.PostAsJsonAsync("/api/v1/patients/batch", ids, ct);
             response.EnsureSuccessStatusCode();
@@ -73,7 +81,9 @@ namespace Infrastructure.Clients
         {
             var ids = doctorsIds.Distinct().ToList();
             if (ids.Count == 0)
+            {
                 return new Dictionary<Guid, DoctorInfoDto>();
+            }
 
             var response = await httpClient.PostAsJsonAsync("/api/v1/doctors/batch", ids, ct);
             response.EnsureSuccessStatusCode();

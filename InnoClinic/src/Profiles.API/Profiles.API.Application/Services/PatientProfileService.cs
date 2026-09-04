@@ -11,7 +11,7 @@ namespace Application.Services
     public class PatientProfileService(
         IProfilesUnitOfWork unitOfWork,
         IMapper mapper,
-        IAuthClient authClient) : IPatientProfileService
+        IAuthClient authClient): IPatientProfileService
     {
         public async Task<PatientProfileDto> CreateAsync(CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
@@ -102,7 +102,9 @@ namespace Application.Services
             var patientProfile = await unitOfWork.PatientProfilesRepository.GetByAccountIdAsync(id, ct);
 
             if (patientProfile == null)
+            {
                 return null;
+            }
 
             return new AccountProfileInfoDto { Role = "Patient" };
         }
@@ -117,7 +119,9 @@ namespace Application.Services
                 ?? throw new NotFoundException(nameof(PatientProfile));
 
             if (accountOwnerId.HasValue && accountOwnerId.Value != patientProfile.AccountId)
+            {
                 throw new ForbiddenException(ProfilesApplicationMessages.ForbiddenAccessMessage);
+            }
 
             mapper.Map(dto, patientProfile);
             await unitOfWork.PatientProfilesRepository.UpdateAsync(patientProfile, ct);
@@ -143,10 +147,14 @@ namespace Application.Services
                 ?? throw new NotFoundException(nameof(PatientProfile));
 
             if (profile.IsLinkedToAccount)
+            {
                 throw new BadRequestException(ProfilesApplicationMessages.ProfileAlreadyLinkedMessage);
+            }
 
             if (CalculateMatchScore(profile, fields) < 13)
+            {
                 throw new BadRequestException(ProfilesApplicationMessages.ProfileDoesNotMatchMessage);
+            }
 
             profile.AccountId = accountId;
             profile.IsLinkedToAccount = true;
@@ -189,10 +197,26 @@ namespace Application.Services
         private static int CalculateMatchScore(PatientProfile profile, IPatientFields dto)
         {
             var score = 0;
-            if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (profile.MiddleName != null && string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (profile.DateOfBirth == dto.DateOfBirth) score += 3;
+            if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 5;
+            }
+
+            if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 5;
+            }
+
+            if (profile.MiddleName != null && string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 5;
+            }
+
+            if (profile.DateOfBirth == dto.DateOfBirth)
+            {
+                score += 3;
+            }
+
             return score;
         }
     }

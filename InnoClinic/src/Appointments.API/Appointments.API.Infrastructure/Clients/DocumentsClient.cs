@@ -1,14 +1,14 @@
-﻿using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Interfaces;
 using InnoClinic.Shared.Exceptions;
 using Microsoft.AspNetCore.Http;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace Infrastructure.Clients
 {
-    public class DocumentsClient(HttpClient httpClient): IDocumentsClient
+    public class DocumentsClient(HttpClient httpClient) : IDocumentsClient
     {
         public async Task<byte[]> DownloadAsync(string url, CancellationToken ct = default)
         {

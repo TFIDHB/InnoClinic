@@ -1,9 +1,9 @@
-﻿using System.Text;
-using InnoClinic.Shared.Settings;
+﻿using InnoClinic.Shared.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace InnoClinic.Shared.Extensions
 {

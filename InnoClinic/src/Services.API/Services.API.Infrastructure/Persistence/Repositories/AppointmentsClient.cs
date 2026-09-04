@@ -1,10 +1,10 @@
-﻿using System.Net.Http.Json;
-using Application.DTOs;
+﻿using Application.DTOs;
 using Application.Interfaces;
+using System.Net.Http.Json;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class AppointmentsClient(HttpClient httpClient): IAppointmentsClient
+    public class AppointmentsClient(HttpClient httpClient) : IAppointmentsClient
     {
         public async Task<IEnumerable<AppointmentSlotDto>> GetAppointmentsAsync(
             DateOnly date,

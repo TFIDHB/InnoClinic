@@ -7,7 +7,7 @@ namespace InnoClinic.Shared.Migrators
 {
     public class DatabaseMigrator<TContext>(
         IServiceProvider serviceProvider,
-        ILogger<DatabaseMigrator<TContext>> logger): IHostedService
+        ILogger<DatabaseMigrator<TContext>> logger) : IHostedService
         where TContext : DbContext
     {
         private const int MaxAttempts = 10;

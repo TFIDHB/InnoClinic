@@ -2,7 +2,7 @@
 
 namespace InnoClinic.Shared.Handlers
 {
-    public class AuthHeaderDelegationHandler(IHttpContextAccessor httpContextAccessor): DelegatingHandler
+    public class AuthHeaderDelegationHandler(IHttpContextAccessor httpContextAccessor) : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct = default)
         {

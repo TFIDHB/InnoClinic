@@ -1,7 +1,7 @@
-﻿using System.Text.Json;
-using InnoClinic.Shared.Exceptions;
+﻿using InnoClinic.Shared.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using System.Text.Json;
 
 namespace InnoClinic.Shared.Middleware
 {

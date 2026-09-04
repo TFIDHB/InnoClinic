@@ -1,11 +1,11 @@
-﻿using System.Net;
-using System.Net.Http.Json;
-using BLL.DTOs;
+﻿using BLL.DTOs;
 using BLL.Interfaces;
+using System.Net;
+using System.Net.Http.Json;
 
 namespace BLL.Clients
 {
-    public class ProfilesClient(HttpClient httpClient): IProfilesClient
+    public class ProfilesClient(HttpClient httpClient) : IProfilesClient
     {
         public async Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
         {

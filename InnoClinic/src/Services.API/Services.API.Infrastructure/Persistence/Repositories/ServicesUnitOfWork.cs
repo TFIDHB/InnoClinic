@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class ServicesUnitOfWork(ServicesDbContext context, IServiceProvider provider): IServicesUnitOfWork, IDisposable
+    public class ServicesUnitOfWork(ServicesDbContext context, IServiceProvider provider) : IServicesUnitOfWork, IDisposable
     {
         private IServicesRepository? _servicesRepository;
         private ISpecializationsRepository? _specializationsRepository;

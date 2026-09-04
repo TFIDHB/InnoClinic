@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DAL.Repositories
 {
-    public class AuthUnitOfWork(AuthDbContext context, IServiceProvider provider): IAuthUnitOfWork, IDisposable
+    public class AuthUnitOfWork(AuthDbContext context, IServiceProvider provider) : IAuthUnitOfWork, IDisposable
     {
         private IUserRepository? _userRepository;
 

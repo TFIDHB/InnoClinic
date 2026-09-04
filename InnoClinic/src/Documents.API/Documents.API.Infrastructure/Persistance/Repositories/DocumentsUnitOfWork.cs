@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace InnoClinic.Documents.API.Infrastructure.Persistance.Repositories
 {
-    public class DocumentsUnitOfWork(DocumentsDbContext context, IServiceProvider provider): IDocumentsUnitOfWork, IDisposable
+    public class DocumentsUnitOfWork(DocumentsDbContext context, IServiceProvider provider) : IDocumentsUnitOfWork, IDisposable
     {
         private IPhotosRepository? _photosRepository;
         private IDocumentsRepository? _documentsRepository;

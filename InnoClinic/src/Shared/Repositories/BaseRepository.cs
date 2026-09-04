@@ -1,10 +1,10 @@
-﻿using System.Linq.Expressions;
-using InnoClinic.Shared.Interfaces;
+﻿using InnoClinic.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace InnoClinic.Shared.Repositories
 {
-    public abstract class BaseRepository<TEntity, TId>(DbContext context): IRepository<TEntity, TId>
+    public abstract class BaseRepository<TEntity, TId>(DbContext context) : IRepository<TEntity, TId>
     where TEntity : class
     {
         protected readonly DbSet<TEntity> DbSet = context.Set<TEntity>();

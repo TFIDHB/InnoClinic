@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace InnoClinic.Documents.API.Infrastructure.Blob
 {
-    public class BlobService(BlobServiceClient blobServiceClient): IBlobService
+    public class BlobService(BlobServiceClient blobServiceClient) : IBlobService
     {
         private const string _documentsContainer = "documents";
         private const string _photosContainer = "photos";

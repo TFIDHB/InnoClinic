@@ -10,8 +10,7 @@ namespace Application.Services
     public class DoctorProfileService(
         IProfilesUnitOfWork unitOfWork,
         IMapper mapper,
-        IAuthClient authClient
-        ) : IDoctorProfileService
+        IAuthClient authClient): IDoctorProfileService
     {
         public async Task<DoctorProfileDto> CreateAsync(CreateDoctorProfileRequestDto dto, CancellationToken ct = default)
         {
@@ -83,12 +82,14 @@ namespace Application.Services
             var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByAccountIdAsync(id, ct);
 
             if (doctorProfile == null)
+            {
                 return null;
+            }
 
             return new AccountProfileInfoDto
             {
                 Role = "Doctor",
-                Status = doctorProfile.Status.ToString()
+                Status = doctorProfile.Status.ToString(),
             };
         }
 
@@ -102,7 +103,9 @@ namespace Application.Services
                 ?? throw new NotFoundException(nameof(DoctorProfile));
 
             if (accountOwnerId.HasValue && accountOwnerId.Value != doctorProfile.AccountId)
+            {
                 throw new ForbiddenException(ProfilesApplicationMessages.ForbiddenAccessMessage);
+            }
 
             mapper.Map(dto, doctorProfile);
             await unitOfWork.DoctorProfilesRepository.UpdateAsync(doctorProfile, ct);

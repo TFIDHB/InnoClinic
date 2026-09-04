@@ -1,11 +1,11 @@
-﻿using System.Net.Http.Headers;
-using InnoClinic.Shared.Generators;
+﻿using InnoClinic.Shared.Generators;
 using InnoClinic.Shared.Settings;
 using Microsoft.Extensions.Options;
+using System.Net.Http.Headers;
 
 namespace BLL.Handlers
 {
-    public class InternalServiceTokenHandler(IOptions<JwtSettings> jwtSettings): DelegatingHandler
+    public class InternalServiceTokenHandler(IOptions<JwtSettings> jwtSettings) : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
         {

@@ -4,7 +4,7 @@ using InnoClinic.Shared.Constants;
 
 namespace Application.Services
 {
-    public class AccountSearchService(IProfilesUnitOfWork unitOfWork): IAccountSearchService
+    public class AccountSearchService(IProfilesUnitOfWork unitOfWork) : IAccountSearchService
     {
         public async Task<AccountProfileInfoDto?> GetByAccountIdAsync(Guid accountId, CancellationToken ct = default)
         {

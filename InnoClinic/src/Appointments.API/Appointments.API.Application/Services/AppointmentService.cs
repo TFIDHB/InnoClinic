@@ -14,7 +14,7 @@ namespace Application.Services
         IMapper mapper,
         IServicesClient servicesClient,
         IProfilesClient profilesClient,
-        IOptions<WorkingHoursOptions> workingHoursOptions) : IAppointmentService
+        IOptions<WorkingHoursOptions> workingHoursOptions): IAppointmentService
     {
         private const int _atWorkStatus = 0;
 
@@ -33,7 +33,9 @@ namespace Application.Services
                     ?? throw new NotFoundException("Patient");
 
                 if (patientInfo.AccountId != patientId.Value)
+                {
                     throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+                }
             }
 
             if (doctorId.HasValue)
@@ -42,7 +44,9 @@ namespace Application.Services
                     ?? throw new NotFoundException("Doctor");
 
                 if (doctorInfo.AccountId != doctorId.Value)
+                {
                     throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+                }
             }
 
             return mapper.Map<AppointmentResponseDto>(appointment);
@@ -63,10 +67,14 @@ namespace Application.Services
                 ?? throw new NotFoundException("Doctor");
 
             if (doctorInfo.SpecializationId != dto.SpecializationId || doctorInfo.OfficeId != dto.OfficeId)
+            {
                 throw new BadRequestException(AppointmentsApiMessages.DoctorDoesNotMatchMessage);
+            }
 
             if (doctorInfo.Status != _atWorkStatus)
+            {
                 throw new BadRequestException(AppointmentsApiMessages.DoctorNotAvailableMessage);
+            }
 
             var timeSlotSize = await servicesClient.GetTimeSlotSizeAsync(dto.ServiceId, ct);
             var durationMinutes = timeSlotSize * 10;
@@ -77,7 +85,9 @@ namespace Application.Services
 
             var isOverlapping = await IsOverlappingAsync(dto.DoctorId, dto.Date, newStart, newEnd, excludeAppointmentId: null, ct);
             if (isOverlapping)
+            {
                 throw new OverlappingAppointmentException();
+            }
 
             var appointment = mapper.Map<Appointment>(dto);
             appointment.Duration = TimeSpan.FromMinutes(durationMinutes);
@@ -174,12 +184,16 @@ namespace Application.Services
             }).ToList();
 
             if (!string.IsNullOrWhiteSpace(doctorFullName))
+            {
                 enrichedAppointments = enrichedAppointments
                     .Where(e => e.DoctorFullName.Contains(doctorFullName, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
             if (!string.IsNullOrWhiteSpace(serviceName))
+            {
                 enrichedAppointments = enrichedAppointments
                     .Where(e => e.ServiceName.Contains(serviceName, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
             return enrichedAppointments
                 .OrderBy(e => e.StartTime)
@@ -257,11 +271,15 @@ namespace Application.Services
                     ?? throw new NotFoundException("Patient");
 
                 if (patientInfo.AccountId != patientId.Value)
+                {
                     throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+                }
             }
 
             if (appointment.IsApproved)
+            {
                 throw new BadRequestException(AppointmentsApiMessages.CannotBeRescheduledMessage);
+            }
 
             var newStart = dto.Time;
             var newEnd = dto.Time.Add(appointment.Duration);
@@ -270,7 +288,9 @@ namespace Application.Services
 
             var isOverlapping = await IsOverlappingAsync(dto.DoctorId, dto.Date, newStart, newEnd, appointmentId, ct);
             if (isOverlapping)
+            {
                 throw new OverlappingAppointmentException();
+            }
 
             var doctorInfo = await profilesClient.GetDoctorInfoAsync(dto.DoctorId, ct)
                 ?? throw new NotFoundException("Doctor");
@@ -305,7 +325,8 @@ namespace Application.Services
             Guid? excludeAppointmentId,
             CancellationToken ct)
         {
-            return await unitOfWork.AppointmentRepository.AnyAsync(a =>
+            return await unitOfWork.AppointmentRepository.AnyAsync(
+                a =>
                 a.DoctorId == doctorId &&
                 a.Date == date &&
                 (excludeAppointmentId == null || a.Id != excludeAppointmentId.Value) &&
@@ -317,10 +338,12 @@ namespace Application.Services
         {
             var workingHours = workingHoursOptions.Value;
             if (start < workingHours.Start || end > workingHours.End)
+            {
                 throw new BadRequestException(string.Format(
                     AppointmentsApiMessages.AppointmentBetweenMessage,
                     workingHours.Start,
                     workingHours.End));
+            }
         }
     }
 }

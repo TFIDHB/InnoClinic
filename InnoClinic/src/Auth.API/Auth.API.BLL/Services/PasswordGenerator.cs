@@ -1,5 +1,5 @@
-﻿using System.Security.Cryptography;
-using BLL.Interfaces;
+﻿using BLL.Interfaces;
+using System.Security.Cryptography;
 
 namespace BLL.Services
 {

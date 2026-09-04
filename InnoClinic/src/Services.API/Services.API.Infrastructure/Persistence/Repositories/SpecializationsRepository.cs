@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class SpecializationsRepository(ServicesDbContext context): BaseRepository<Specialization, Guid>(context), ISpecializationsRepository
+    public class SpecializationsRepository(ServicesDbContext context) : BaseRepository<Specialization, Guid>(context), ISpecializationsRepository
     {
         public async Task<Specialization?> GetByIdWithServicesAsync(Guid id, CancellationToken ct = default)
             => await context.Specializations

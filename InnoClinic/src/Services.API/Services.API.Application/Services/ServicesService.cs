@@ -9,7 +9,7 @@ namespace Application.Services
     public class ServicesService(
         IServicesUnitOfWork unitOfWork,
         IMapper mapper,
-        IAppointmentsClient appointmentsClient) : IServicesService
+        IAppointmentsClient appointmentsClient): IServicesService
     {
         private const int SlotGranularityMinutes = 10;
         private const int StartTime = 8;

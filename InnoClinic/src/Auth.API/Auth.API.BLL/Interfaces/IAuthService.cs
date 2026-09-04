@@ -1,5 +1,5 @@
-﻿using System.Security.Claims;
-using BLL.DTOs;
+﻿using BLL.DTOs;
+using System.Security.Claims;
 
 namespace BLL.Interfaces
 {

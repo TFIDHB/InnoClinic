@@ -9,7 +9,7 @@ namespace InnoClinic.Profiles.API.Controllers
     [Authorize(Roles = Roles.InternalService)]
     [ApiController]
     [Route("api/v1/accounts")]
-    public class AccountSearchController(IAccountSearchService accountSearchService): ControllerBase
+    public class AccountSearchController(IAccountSearchService accountSearchService) : ControllerBase
     {
         [HttpGet("{id}/profile-info")]
         [ProducesResponseType(StatusCodes.Status200OK)]

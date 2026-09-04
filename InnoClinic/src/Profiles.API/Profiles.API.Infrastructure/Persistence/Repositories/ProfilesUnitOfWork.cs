@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class ProfilesUnitOfWork(ProfilesDbContext context, IServiceProvider provider): IProfilesUnitOfWork, IDisposable
+    public class ProfilesUnitOfWork(ProfilesDbContext context, IServiceProvider provider) : IProfilesUnitOfWork, IDisposable
     {
         private IDoctorProfilesRepository? _doctorProfilesRepository;
         private IPatientProfilesRepository? _patientProfilesRepository;

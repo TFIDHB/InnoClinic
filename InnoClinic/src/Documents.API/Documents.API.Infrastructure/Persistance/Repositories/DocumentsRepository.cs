@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace InnoClinic.Documents.API.Infrastructure.Persistance.Repositories
 {
-    public class DocumentsRepository(DocumentsDbContext context): BaseRepository<Document, Guid>(context), IDocumentsRepository
+    public class DocumentsRepository(DocumentsDbContext context) : BaseRepository<Document, Guid>(context), IDocumentsRepository
     {
         public async Task<Document?> GetByResultIdAsync(Guid resultId, CancellationToken ct = default)
         {

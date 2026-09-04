@@ -11,7 +11,7 @@ namespace Application.Services
         IMapper mapper,
         IServicesClient servicesClient,
         IProfilesClient profilesClient,
-        IDocumentsClient documentsClient) : IResultService
+        IDocumentsClient documentsClient): IResultService
     {
         public async Task<ResultDto> CreateAsync(
             Guid appointmentId,
@@ -26,11 +26,15 @@ namespace Application.Services
                 ?? throw new NotFoundException("Doctor");
 
             if (doctorInfo.AccountId != doctorId)
+            {
                 throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+            }
 
             var existing = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointmentId, ct);
             if (existing != null)
+            {
                 throw new BadRequestException(AppointmentsApiMessages.ResultAlreadyExists);
+            }
 
             var result = mapper.Map<Result>(dto);
             result.AppointmentId = appointmentId;
@@ -57,7 +61,9 @@ namespace Application.Services
                     ?? throw new NotFoundException("Patient");
 
                 if (patientInfo.AccountId != patientId.Value)
+                {
                     throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+                }
             }
 
             var result = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointmentId, ct)
@@ -69,6 +75,7 @@ namespace Application.Services
                 var doctorInfo = await profilesClient.GetDoctorInfoAsync(appointment.DoctorId, ct);
                 canEdit = doctorInfo != null && doctorInfo.AccountId == doctorId.Value;
             }
+
             return await EnrichDtoAsync(appointment, result, canEdit, ct);
         }
 
@@ -85,7 +92,9 @@ namespace Application.Services
                 ?? throw new NotFoundException("Doctor");
 
             if (doctorInfo.AccountId != doctorId)
+            {
                 throw new ForbiddenException(AppointmentsApiMessages.ForbiddenAccessMessage);
+            }
 
             var result = await unitOfWork.ResultRepository.GetByAppointmentIdAsync(appointmentId, ct)
                 ?? throw new NotFoundException(nameof(Result));
@@ -107,7 +116,9 @@ namespace Application.Services
 
             var existingDocument = await documentsClient.GetByResultIdAsync(dto.Id, ct);
             if (existingDocument != null)
+            {
                 return await documentsClient.DownloadAsync(existingDocument.Url, ct);
+            }
 
             var pdfBytes = ResultPdfGeneratorService.Generate(dto);
             await documentsClient.UploadAsync(dto.Id, pdfBytes, $"appointment-result-{dto.Id}.pdf", ct);

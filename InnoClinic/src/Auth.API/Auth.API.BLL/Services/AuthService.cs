@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using AutoMapper;
+﻿using AutoMapper;
 using BLL.DTOs;
 using BLL.Exceptions;
 using BLL.Interfaces;
@@ -8,6 +7,7 @@ using DAL.Interfaces;
 using InnoClinic.Shared.Constants;
 using InnoClinic.Shared.Exceptions;
 using InnoClinic.Shared.Extensions;
+using System.Security.Claims;
 
 namespace BLL.Services
 {
@@ -16,7 +16,7 @@ namespace BLL.Services
         IAuthUnitOfWork unitOfWork,
         IMapper mapper,
         IProfilesClient profilesClient,
-        IPasswordGenerator passwordGenerator): IAuthService
+        IPasswordGenerator passwordGenerator) : IAuthService
     {
         public async Task RegisterAsync(RegisterRequestDto dto, CancellationToken ct = default)
         {

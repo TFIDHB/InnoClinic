@@ -9,7 +9,7 @@ namespace Application.Services
 {
     public class SpecializationsService(
         IServicesUnitOfWork unitOfWork,
-        IMapper mapper): ISpecializationsService
+        IMapper mapper) : ISpecializationsService
     {
         public async Task<SpecializationDto> CreateAsync(CreateSpecializationRequestDto dto, CancellationToken ct = default)
         {

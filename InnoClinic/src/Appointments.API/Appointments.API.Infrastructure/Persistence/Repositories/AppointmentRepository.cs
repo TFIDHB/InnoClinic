@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class AppointmentRepository(AppointmentDbContext context): BaseRepository<Appointment, Guid>(context), IAppointmentRepository
+    public class AppointmentRepository(AppointmentDbContext context) : BaseRepository<Appointment, Guid>(context), IAppointmentRepository
     {
         public async Task<IEnumerable<Appointment>> GetByDateAndDoctorAsync(
             DateOnly date,

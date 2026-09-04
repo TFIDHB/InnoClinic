@@ -7,7 +7,7 @@ namespace InnoClinic.Documents.API.Controllers
     // [Authorize]
     [ApiController]
     [Route("api/v1/photos")]
-    public class PhotosController(IPhotosService photosService): ControllerBase
+    public class PhotosController(IPhotosService photosService) : ControllerBase
     {
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]

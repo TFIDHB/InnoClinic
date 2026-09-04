@@ -14,7 +14,7 @@ namespace Auth.API.Tests.Integration
             _fixture = fixture;
         }
 
-        private AuthDbContext CreateContext() => new (_fixture.ContextOptions);
+        private AuthDbContext CreateContext() => new(_fixture.ContextOptions);
 
         [Fact]
         public async Task ExistsByEmailAsync_WhenEmailExists_ReturnsTrue()

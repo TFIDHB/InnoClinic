@@ -11,7 +11,7 @@ namespace InnoClinic.Profiles.API.Controllers
     [ApiController]
     [Route("api/v1/patients")]
     public class PatientProfileController(
-        IPatientProfileService patientProfilesService): ControllerBase
+        IPatientProfileService patientProfilesService) : ControllerBase
     {
         [HttpGet("me")]
         [Authorize(Roles = Roles.Patient)]
