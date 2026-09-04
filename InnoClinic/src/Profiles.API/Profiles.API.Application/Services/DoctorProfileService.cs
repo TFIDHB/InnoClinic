@@ -10,8 +10,7 @@ namespace Application.Services
     public class DoctorProfileService(
         IProfilesUnitOfWork unitOfWork,
         IMapper mapper,
-        IAuthClient authClient
-        ) : IDoctorProfileService
+        IAuthClient authClient): IDoctorProfileService
     {
         public async Task<DoctorProfileDto> CreateAsync(CreateDoctorProfileRequestDto dto, CancellationToken ct = default)
         {
@@ -25,7 +24,7 @@ namespace Application.Services
 
             var responseDto = mapper.Map<DoctorProfileDto>(doctorProfile);
 
-            responseDto.TemporaryFakePassword = accountResult.TemporaryFakePassword;
+            responseDto.TemporaryPassword = accountResult.TemporaryPassword;
 
             return responseDto;
         }
@@ -61,6 +60,12 @@ namespace Application.Services
             return mapper.Map<DoctorProfileDto>(doctorProfile);
         }
 
+        public async Task<IEnumerable<DoctorProfileDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
+        {
+            var doctors = await unitOfWork.DoctorProfilesRepository.GetByIdsAsync(ids, ct);
+            return mapper.Map<IEnumerable<DoctorProfileDto>>(doctors);
+        }
+
         public async Task<IEnumerable<DoctorProfileDto>> GetFilteredDoctorsAsync(
             Guid? specializationId,
             Guid? officeId,
@@ -77,12 +82,14 @@ namespace Application.Services
             var doctorProfile = await unitOfWork.DoctorProfilesRepository.GetByAccountIdAsync(id, ct);
 
             if (doctorProfile == null)
+            {
                 return null;
+            }
 
             return new AccountProfileInfoDto
             {
                 Role = "Doctor",
-                Status = doctorProfile.Status.ToString()
+                Status = doctorProfile.Status.ToString(),
             };
         }
 
@@ -96,7 +103,9 @@ namespace Application.Services
                 ?? throw new NotFoundException(nameof(DoctorProfile));
 
             if (accountOwnerId.HasValue && accountOwnerId.Value != doctorProfile.AccountId)
+            {
                 throw new ForbiddenException(ProfilesApplicationMessages.ForbiddenAccessMessage);
+            }
 
             mapper.Map(dto, doctorProfile);
             await unitOfWork.DoctorProfilesRepository.UpdateAsync(doctorProfile, ct);

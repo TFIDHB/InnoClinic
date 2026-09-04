@@ -123,13 +123,37 @@
   <data name="AppointmentInPastMessage" xml:space="preserve">
     <value>Appointment date cannot be in the past</value>
   </data>
+  <data name="CannotBeRescheduledMessage" xml:space="preserve">
+    <value>Only appointments that aren't approved can be rescheduled.</value>
+  </data>
+  <data name="ComplaintsRequiredMessage" xml:space="preserve">
+    <value>Complaints are required</value>
+  </data>
+  <data name="ConclusionIsRequiredMessage" xml:space="preserve">
+    <value>Conclusion is required</value>
+  </data>
+  <data name="DoctorDoesNotMatchMessage" xml:space="preserve">
+    <value>Selected doctor does not match the specified specialization or office</value>
+  </data>
+  <data name="DoctorNotAvailableMessage" xml:space="preserve">
+    <value>Selected doctor is not available</value>
+  </data>
+  <data name="ForbiddenAccessMessage" xml:space="preserve">
+    <value>You don't have access to this resource</value>
+  </data>
   <data name="InactiveEntityMessage" xml:space="preserve">
     <value>{0} is not active or not available.</value>
   </data>
   <data name="NotFoundMessage" xml:space="preserve">
     <value>{0} doesn't exist.</value>
   </data>
-  <data name="OverlappingAppointmentException" xml:space="preserve">
+  <data name="OverlappingAppointmentMessage" xml:space="preserve">
     <value>This time is already taken by another patient.</value>
+  </data>
+  <data name="RecommendationsAreRequiredMessage" xml:space="preserve">
+    <value>Recommendations are required</value>
+  </data>
+  <data name="ResultAlreadyExists" xml:space="preserve">
+    <value>This appointment already has a result.</value>
   </data>
 </root>

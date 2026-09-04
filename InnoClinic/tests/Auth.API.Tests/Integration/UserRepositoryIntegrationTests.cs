@@ -108,12 +108,14 @@ namespace Auth.API.Tests.Integration
 
             Assert.Null(result);
         }
+
         public async Task InitializeAsync()
         {
             using var context = new AuthDbContext(_fixture.ContextOptions);
             context.Users.RemoveRange(context.Users);
             await context.SaveChangesAsync();
         }
+
         public Task DisposeAsync() => Task.CompletedTask;
     }
 }

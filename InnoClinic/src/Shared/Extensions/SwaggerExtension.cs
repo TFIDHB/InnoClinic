@@ -29,7 +29,7 @@ namespace InnoClinic.Shared.Extensions
                         Name = "Authorization",
                         In = ParameterLocation.Header,
                         Type = SecuritySchemeType.ApiKey,
-                        Scheme = "Bearer"
+                        Scheme = "Bearer",
                     });
 
                     c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -40,16 +40,17 @@ namespace InnoClinic.Shared.Extensions
                                 Reference = new OpenApiReference
                                 {
                                     Type = ReferenceType.SecurityScheme,
-                                    Id = "Bearer"
-                                }
+                                    Id = "Bearer",
+                                },
                             },
                             Array.Empty<string>()
-                        }
+                        },
                     });
                 }
             });
             return services;
         }
+
         public static IApplicationBuilder UseAppSwagger(this IApplicationBuilder app, string title, string version = "v1")
         {
             app.UseSwagger();

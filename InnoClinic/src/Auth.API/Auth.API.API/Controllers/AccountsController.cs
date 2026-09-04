@@ -10,7 +10,6 @@ namespace InnoClinic.Auth.API.Controllers
     [Route("api/v1/accounts")]
     public class AccountsController(IAuthService authService) : ControllerBase
     {
-
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

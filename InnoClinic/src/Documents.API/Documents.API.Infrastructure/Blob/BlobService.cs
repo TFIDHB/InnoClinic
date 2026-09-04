@@ -11,6 +11,7 @@ namespace InnoClinic.Documents.API.Infrastructure.Blob
 
         public async Task<string> UploadDocumentAsync(IFormFile file, CancellationToken ct = default)
         => await UploadInternalAsync(file, _documentsContainer, ct);
+
         public async Task<string> UploadPhotoAsync(IFormFile file, CancellationToken ct = default)
             => await UploadInternalAsync(file, _photosContainer, ct);
 

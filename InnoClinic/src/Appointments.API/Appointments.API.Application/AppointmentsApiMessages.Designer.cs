@@ -22,14 +22,14 @@ namespace Application {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Messages {
+    public class AppointmentsApiMessages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Messages() {
+        internal AppointmentsApiMessages() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Application {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Application.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Application.AppointmentsApiMessages", typeof(AppointmentsApiMessages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -79,6 +79,60 @@ namespace Application {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Only appointments that aren&apos;t approved can be rescheduled..
+        /// </summary>
+        public static string CannotBeRescheduledMessage {
+            get {
+                return ResourceManager.GetString("CannotBeRescheduledMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complaints are required.
+        /// </summary>
+        public static string ComplaintsRequiredMessage {
+            get {
+                return ResourceManager.GetString("ComplaintsRequiredMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conclusion is required.
+        /// </summary>
+        public static string ConclusionIsRequiredMessage {
+            get {
+                return ResourceManager.GetString("ConclusionIsRequiredMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected doctor does not match the specified specialization or office.
+        /// </summary>
+        public static string DoctorDoesNotMatchMessage {
+            get {
+                return ResourceManager.GetString("DoctorDoesNotMatchMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Selected doctor is not available.
+        /// </summary>
+        public static string DoctorNotAvailableMessage {
+            get {
+                return ResourceManager.GetString("DoctorNotAvailableMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You don&apos;t have access to this resource.
+        /// </summary>
+        public static string ForbiddenAccessMessage {
+            get {
+                return ResourceManager.GetString("ForbiddenAccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is not active or not available..
         /// </summary>
         public static string InactiveEntityMessage {
@@ -99,9 +153,27 @@ namespace Application {
         /// <summary>
         ///   Looks up a localized string similar to This time is already taken by another patient..
         /// </summary>
-        public static string OverlappingAppointmentException {
+        public static string OverlappingAppointmentMessage {
             get {
-                return ResourceManager.GetString("OverlappingAppointmentException", resourceCulture);
+                return ResourceManager.GetString("OverlappingAppointmentMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recommendations are required.
+        /// </summary>
+        public static string RecommendationsAreRequiredMessage {
+            get {
+                return ResourceManager.GetString("RecommendationsAreRequiredMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This appointment already has a result..
+        /// </summary>
+        public static string ResultAlreadyExists {
+            get {
+                return ResourceManager.GetString("ResultAlreadyExists", resourceCulture);
             }
         }
     }

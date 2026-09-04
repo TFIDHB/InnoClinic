@@ -19,6 +19,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.UseAppSwagger("InnoClinic.Appointments.API");
 }
+
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseHttpsRedirection();
@@ -28,4 +29,5 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 app.Run();

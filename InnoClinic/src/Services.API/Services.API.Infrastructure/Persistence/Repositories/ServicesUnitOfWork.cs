@@ -10,6 +10,7 @@ namespace Infrastructure.Persistence.Repositories
 
         public IServicesRepository ServicesRepository =>
             _servicesRepository ??= provider.GetRequiredService<IServicesRepository>();
+
         public ISpecializationsRepository SpecializationsRepository =>
             _specializationsRepository ??= provider.GetRequiredService<ISpecializationsRepository>();
 

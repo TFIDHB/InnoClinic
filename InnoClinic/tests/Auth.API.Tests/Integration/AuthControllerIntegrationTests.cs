@@ -155,7 +155,7 @@ namespace Auth.API.Tests.Integration
         {
             _client.DefaultRequestHeaders.Authorization = null;
 
-            var result = await _client.PostAsJsonAsync("api/v1/auth/logout", new LogOutRequestDto { RefreshToken = "" });
+            var result = await _client.PostAsJsonAsync("api/v1/auth/logout", new LogOutRequestDto { RefreshToken = string.Empty });
 
             Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
         }

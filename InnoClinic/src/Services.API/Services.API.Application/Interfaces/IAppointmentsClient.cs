@@ -8,7 +8,9 @@ namespace Application.Interfaces
             DateOnly date,
             Guid? doctorId,
             CancellationToken ct = default);
-        Task<IEnumerable<AppointmentSlotDto>> GetAppointmentsRangeAsync(DateOnly startDate,
+
+        Task<IEnumerable<AppointmentSlotDto>> GetAppointmentsRangeAsync(
+            DateOnly startDate,
             DateOnly endDate,
             Guid? doctorId,
             CancellationToken ct = default);

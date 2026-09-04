@@ -2,7 +2,8 @@
 {
     public class UpdateSpecializationRequestDto
     {
-        public string Name { get; set; }
-        public IReadOnlyList<Guid> ServiceIds { get; set; }
+        public required string Name { get; set; }
+
+        public required IReadOnlyList<Guid> ServiceIds { get; set; }
     }
 }

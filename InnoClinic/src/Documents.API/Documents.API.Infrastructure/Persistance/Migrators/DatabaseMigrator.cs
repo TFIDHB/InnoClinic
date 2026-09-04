@@ -16,4 +16,3 @@ namespace InnoClinic.Documents.API.Infrastructure.Persistance.Migrators
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
     }
 }
-

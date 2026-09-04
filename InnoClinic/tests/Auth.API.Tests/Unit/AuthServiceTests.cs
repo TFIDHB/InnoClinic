@@ -17,6 +17,7 @@ namespace Auth.API.Tests.Unit
         private readonly Mock<IPasswordGenerator> _passwordGeneratorMock;
         private readonly Mock<IMapper> _mapperMock;
         private readonly AuthService _authService;
+
         public AuthServiceTests()
         {
             _unitOfWorkMock = new Mock<IAuthUnitOfWork>();
@@ -99,7 +100,7 @@ namespace Auth.API.Tests.Unit
             {
                 Id = Guid.NewGuid(),
                 Email = dto.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456")
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("123456"),
             };
             var role = "Patient";
 
@@ -144,7 +145,7 @@ namespace Auth.API.Tests.Unit
                 Email = "test@test",
                 PasswordHash = "placeholder",
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
-                RefreshTokenExpiry = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(10)
+                RefreshTokenExpiry = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(10),
             };
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
@@ -153,7 +154,6 @@ namespace Auth.API.Tests.Unit
             await Assert.ThrowsAsync<InvalidTokenException>(
                 async () => await _authService.LogoutAsync(dto, userId));
         }
-
 
         [Fact]
         public async Task LogoutAsync_WhenTokenIsExpired_ThrowsTokenIsInvalidException()
@@ -166,7 +166,7 @@ namespace Auth.API.Tests.Unit
                 Email = "test@test",
                 PasswordHash = "placeholder",
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
-                RefreshTokenExpiry = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc)
+                RefreshTokenExpiry = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
             };
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))
@@ -187,7 +187,7 @@ namespace Auth.API.Tests.Unit
                 Email = "test@test",
                 PasswordHash = "placeholder",
                 RefreshToken = BCrypt.Net.BCrypt.HashPassword("correct-token"),
-                RefreshTokenExpiry = new DateTime(2027, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(10)
+                RefreshTokenExpiry = new DateTime(2027, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(10),
             };
             _unitOfWorkMock
                 .Setup(e => e.UserRepository.GetByIdAsync(userId, default))

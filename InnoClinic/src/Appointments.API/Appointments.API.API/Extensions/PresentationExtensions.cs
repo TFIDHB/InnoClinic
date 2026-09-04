@@ -16,6 +16,8 @@ namespace InnoClinic.Appointments.API.Extensions
                 .AddAppSwagger("InnoClinic.Appointments.API")
                 .AddOpenApi();
 
+            services.AddJwtAuth(configuration);
+
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(policy =>

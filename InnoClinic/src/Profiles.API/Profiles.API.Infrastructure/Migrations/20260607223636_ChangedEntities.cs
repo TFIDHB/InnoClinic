@@ -80,7 +80,7 @@ namespace Infrastructure.Migrations
                 table: "PatientProfiles",
                 type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: string.Empty);
 
             migrationBuilder.AddColumn<Guid>(
                 name: "PhotoId",
@@ -110,7 +110,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "newsequentialid()"),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -124,7 +124,7 @@ namespace Infrastructure.Migrations
                 {
                     { new Guid("a1a1a1a1-a1a1-a1a1-a1a1-a1a1a1a1a1a1"), true, "Therapist" },
                     { new Guid("a2a2a2a2-a2a2-a2a2-a2a2-a2a2a2a2a2a2"), true, "Surgeon" },
-                    { new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3"), true, "Ophthalmologist" }
+                    { new Guid("a3a3a3a3-a3a3-a3a3-a3a3-a3a3a3a3a3a3"), true, "Ophthalmologist" },
                 });
 
             migrationBuilder.CreateIndex(

@@ -8,6 +8,6 @@
         SickLeave = 3,
         SelfIsolation = 4,
         LeaveWithoutPay = 5,
-        Inactive = 6
+        Inactive = 6,
     }
 }

@@ -20,7 +20,9 @@ namespace InnoClinic.Profiles.API.Controllers
             var result = await accountSearchService.GetByAccountIdAsync(id, ct);
 
             if (result == null)
+            {
                 return NotFound();
+            }
 
             return Ok(result);
         }

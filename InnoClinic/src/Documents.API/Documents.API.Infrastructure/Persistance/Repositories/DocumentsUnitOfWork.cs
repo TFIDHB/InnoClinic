@@ -10,6 +10,7 @@ namespace InnoClinic.Documents.API.Infrastructure.Persistance.Repositories
 
         public IPhotosRepository PhotosRepository =>
             _photosRepository ??= provider.GetRequiredService<IPhotosRepository>();
+
         public IDocumentsRepository DocumentsRepository =>
             _documentsRepository ??= provider.GetRequiredService<IDocumentsRepository>();
 

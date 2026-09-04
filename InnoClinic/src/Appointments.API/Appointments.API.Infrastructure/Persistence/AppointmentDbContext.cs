@@ -6,9 +6,14 @@ namespace Infrastructure.Persistence
     public class AppointmentDbContext : DbContext
     {
         public DbSet<Appointment> Appointments { get; set; }
-        public AppointmentDbContext(DbContextOptions<AppointmentDbContext> options) : base(options)
+
+        public DbSet<Result> Results { get; set; }
+
+        public AppointmentDbContext(DbContextOptions<AppointmentDbContext> options)
+            : base(options)
         {
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

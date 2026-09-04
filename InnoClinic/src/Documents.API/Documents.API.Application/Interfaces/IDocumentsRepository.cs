@@ -5,5 +5,6 @@ namespace InnoClinic.Documents.API.Application.Interfaces
 {
     public interface IDocumentsRepository : IRepository<Document, Guid>
     {
+        Task<Document?> GetByResultIdAsync(Guid resultId, CancellationToken ct = default);
     }
 }

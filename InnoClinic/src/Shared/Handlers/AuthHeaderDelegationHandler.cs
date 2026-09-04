@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Infrastructure.Handlers
+namespace InnoClinic.Shared.Handlers
 {
     public class AuthHeaderDelegationHandler(IHttpContextAccessor httpContextAccessor) : DelegatingHandler
     {

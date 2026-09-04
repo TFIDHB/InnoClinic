@@ -4,6 +4,9 @@ namespace BLL.Exceptions
 {
     public class InactiveEntityException : BadRequestException
     {
-        public InactiveEntityException() : base(BllMessages.InactiveEntityMessage) { }
+        public InactiveEntityException()
+            : base(BllMessages.InactiveEntityMessage)
+        {
+        }
     }
 }

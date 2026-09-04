@@ -25,13 +25,19 @@ namespace Infrastructure.Persistence.Repositories
             var query = context.Set<DoctorProfile>().AsQueryable();
 
             if (specializationId.HasValue)
+            {
                 query = query.Where(d => d.SpecializationId == specializationId.Value);
+            }
 
             if (officeId.HasValue)
+            {
                 query = query.Where(d => d.OfficeId == officeId.Value);
+            }
 
             if (status.HasValue)
+            {
                 query = query.Where(d => d.Status == status.Value);
+            }
 
             if (!string.IsNullOrWhiteSpace(search))
             {
@@ -47,6 +53,12 @@ namespace Infrastructure.Persistence.Repositories
             }
 
             return await query.ToListAsync(ct);
+        }
+
+        public async Task<IEnumerable<DoctorProfile>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
+        {
+            var idSet = ids.ToHashSet();
+            return await context.DoctorProfiles.Where(p => idSet.Contains(p.Id)).ToListAsync();
         }
     }
 }

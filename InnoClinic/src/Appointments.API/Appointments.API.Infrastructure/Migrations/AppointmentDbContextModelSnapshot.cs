@@ -43,6 +43,9 @@ namespace Infrastructure.Migrations
                     b.Property<TimeSpan>("Duration")
                         .HasColumnType("interval");
 
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("boolean");
+
                     b.Property<Guid>("OfficeId")
                         .HasColumnType("uuid");
 
@@ -55,16 +58,45 @@ namespace Infrastructure.Migrations
                     b.Property<Guid>("SpecializationId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<TimeOnly>("Time")
                         .HasColumnType("time");
 
                     b.HasKey("Id");
 
                     b.ToTable("Appointments");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Result", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasDefaultValueSql("gen_random_uuid()");
+
+                    b.Property<Guid>("AppointmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Complaints")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Conclusion")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Recommendations")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppointmentId")
+                        .IsUnique();
+
+                    b.ToTable("Results");
                 });
 #pragma warning restore 612, 618
         }

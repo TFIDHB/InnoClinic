@@ -21,7 +21,7 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(e => e.Duration).HasColumnType("interval").IsRequired();
 
-            builder.Property(e => e.Status).HasConversion<string>();
+            builder.Property(e => e.IsApproved);
 
             builder.Property(e => e.CreatedAt).HasDefaultValueSql("now() AT TIME ZONE 'utc'").ValueGeneratedOnAdd();
         }

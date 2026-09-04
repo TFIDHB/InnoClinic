@@ -6,7 +6,10 @@ using InnoClinic.Shared.Exceptions;
 
 namespace InnoClinic.Documents.API.Application.Services
 {
-    public class DocumentsService(IDocumentsUnitOfWork unitOfWork, IBlobService blobService, IMapper mapper) : IDocumentsService
+    public class DocumentsService(
+        IDocumentsUnitOfWork unitOfWork,
+        IBlobService blobService,
+        IMapper mapper) : IDocumentsService
     {
         public async Task DeleteAsync(Guid id, CancellationToken ct = default)
         {
@@ -31,7 +34,16 @@ namespace InnoClinic.Documents.API.Application.Services
             return mapper.Map<DocumentDto>(document);
         }
 
-        public async Task<DocumentDto> UpdateAsync(Guid id, UpdateDocumentRequestDto dto, CancellationToken ct = default)
+        public async Task<DocumentDto?> GetByResultIdAsync(Guid resultId, CancellationToken ct = default)
+        {
+            var document = await unitOfWork.DocumentsRepository.GetByResultIdAsync(resultId, ct);
+            return document == null ? null : mapper.Map<DocumentDto>(document);
+        }
+
+        public async Task<DocumentDto> UpdateAsync(
+            Guid id,
+            UpdateDocumentRequestDto dto,
+            CancellationToken ct = default)
         {
             var document = await unitOfWork.DocumentsRepository.GetByIdAsync(id, ct)
                 ?? throw new NotFoundException(nameof(Document));

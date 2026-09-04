@@ -11,6 +11,7 @@ namespace Infrastructure.Persistence.Repositories
             => await context.Specializations
             .Include(s => s.Services)
             .FirstOrDefaultAsync(s => s.Id == id, ct);
+
         public async Task<IEnumerable<Specialization>> GetAllWithServicesAsync(CancellationToken ct = default)
             => await context.Specializations
             .Include(s => s.Services)

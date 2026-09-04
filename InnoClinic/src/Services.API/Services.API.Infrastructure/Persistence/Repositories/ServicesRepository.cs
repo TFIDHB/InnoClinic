@@ -11,8 +11,10 @@ namespace Infrastructure.Persistence.Repositories
             => await context.Services
                 .Where(e => ids.Contains(e.Id))
                 .ToListAsync(ct);
+
         public async Task<bool> CategoryExistsAsync(Guid categoryId, CancellationToken ct = default)
             => await context.Set<ServiceCategory>().AnyAsync(e => e.Id == categoryId, ct);
+
         public async Task<int> GetTimeSlotSizeAsync(Guid serviceId, CancellationToken ct = default)
             => await context.Services
             .Where(s => s.Id == serviceId)

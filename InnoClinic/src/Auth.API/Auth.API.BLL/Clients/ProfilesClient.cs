@@ -12,7 +12,9 @@ namespace BLL.Clients
             var response = await httpClient.GetAsync($"/api/v1/accounts/{id}/profile-info", ct);
 
             if (response.StatusCode == HttpStatusCode.NotFound)
+            {
                 return null;
+            }
 
             response.EnsureSuccessStatusCode();
 

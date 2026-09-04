@@ -9,8 +9,7 @@ namespace Application.Services
     public class ReceptionistProfileService(
         IProfilesUnitOfWork unitOfWork,
         IMapper mapper,
-        IAuthClient authClient
-        ) : IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto>
+        IAuthClient authClient) : IProfilesService<ReceptionistProfileDto, CreateReceptionistProfileRequestDto, UpdateReceptionistProfileRequestDto>
     {
         public async Task<ReceptionistProfileDto> CreateAsync(CreateReceptionistProfileRequestDto dto, CancellationToken ct = default)
         {
@@ -24,7 +23,7 @@ namespace Application.Services
 
             var responseDto = mapper.Map<ReceptionistProfileDto>(receptionistProfile);
 
-            responseDto.TemporaryFakePassword = accountResult.TemporaryFakePassword;
+            responseDto.TemporaryPassword = accountResult.TemporaryPassword;
 
             return responseDto;
         }
@@ -57,7 +56,9 @@ namespace Application.Services
             var receptionistProfile = await unitOfWork.ReceptionistProfilesRepository.GetByAccountIdAsync(id, ct);
 
             if (receptionistProfile == null)
+            {
                 return null;
+            }
 
             return new AccountProfileInfoDto { Role = "Receptionist" };
         }

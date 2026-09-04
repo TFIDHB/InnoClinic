@@ -30,7 +30,10 @@ namespace Infrastructure.Clients
 
             var response = await httpClient.SendAsync(request, ct);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
                 return null;
+            }
+
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<UserAccountInfoDto>(ct)
@@ -41,7 +44,10 @@ namespace Infrastructure.Clients
         {
             var response = await httpClient.GetAsync($"/api/v1/auth/accounts/{userId}", ct);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
                 return null;
+            }
+
             response.EnsureSuccessStatusCode();
 
             return await response.Content.ReadFromJsonAsync<UserAccountInfoDto>(ct)

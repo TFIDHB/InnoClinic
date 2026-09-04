@@ -11,18 +11,8 @@ namespace Application.Services
     public class PatientProfileService(
         IProfilesUnitOfWork unitOfWork,
         IMapper mapper,
-        IAuthClient authClient) : IPatientProfileService
+        IAuthClient authClient): IPatientProfileService
     {
-        private static int CalculateMatchScore(PatientProfile profile, IPatientFields dto)
-        {
-            var score = 0;
-            if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (profile.MiddleName != null && string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase)) score += 5;
-            if (profile.DateOfBirth == dto.DateOfBirth) score += 3;
-            return score;
-        }
-
         public async Task<PatientProfileDto> CreateAsync(CreatePatientProfileRequestDto dto, CancellationToken ct = default)
         {
             var patientProfile = mapper.Map<PatientProfile>(dto);
@@ -105,7 +95,6 @@ namespace Application.Services
             }
 
             return dto;
-
         }
 
         public async Task<AccountProfileInfoDto?> GetProfileInfoByAccountIdAsync(Guid id, CancellationToken ct = default)
@@ -113,7 +102,9 @@ namespace Application.Services
             var patientProfile = await unitOfWork.PatientProfilesRepository.GetByAccountIdAsync(id, ct);
 
             if (patientProfile == null)
+            {
                 return null;
+            }
 
             return new AccountProfileInfoDto { Role = "Patient" };
         }
@@ -128,7 +119,9 @@ namespace Application.Services
                 ?? throw new NotFoundException(nameof(PatientProfile));
 
             if (accountOwnerId.HasValue && accountOwnerId.Value != patientProfile.AccountId)
+            {
                 throw new ForbiddenException(ProfilesApplicationMessages.ForbiddenAccessMessage);
+            }
 
             mapper.Map(dto, patientProfile);
             await unitOfWork.PatientProfilesRepository.UpdateAsync(patientProfile, ct);
@@ -154,10 +147,14 @@ namespace Application.Services
                 ?? throw new NotFoundException(nameof(PatientProfile));
 
             if (profile.IsLinkedToAccount)
+            {
                 throw new BadRequestException(ProfilesApplicationMessages.ProfileAlreadyLinkedMessage);
+            }
 
             if (CalculateMatchScore(profile, fields) < 13)
+            {
                 throw new BadRequestException(ProfilesApplicationMessages.ProfileDoesNotMatchMessage);
+            }
 
             profile.AccountId = accountId;
             profile.IsLinkedToAccount = true;
@@ -189,7 +186,38 @@ namespace Application.Services
         {
             var patients = await unitOfWork.PatientProfilesRepository.GetFilteredAsync(search, ct);
             return mapper.Map<IEnumerable<PatientProfileDto>>(patients);
+        }
 
+        public async Task<IEnumerable<PatientProfileDto>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken ct = default)
+        {
+            var patients = await unitOfWork.PatientProfilesRepository.GetByIdsAsync(ids, ct);
+            return mapper.Map<IEnumerable<PatientProfileDto>>(patients);
+        }
+
+        private static int CalculateMatchScore(PatientProfile profile, IPatientFields dto)
+        {
+            var score = 0;
+            if (string.Equals(profile.FirstName, dto.FirstName, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 5;
+            }
+
+            if (string.Equals(profile.LastName, dto.LastName, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 5;
+            }
+
+            if (profile.MiddleName != null && string.Equals(profile.MiddleName, dto.MiddleName, StringComparison.OrdinalIgnoreCase))
+            {
+                score += 5;
+            }
+
+            if (profile.DateOfBirth == dto.DateOfBirth)
+            {
+                score += 3;
+            }
+
+            return score;
         }
     }
 }

@@ -24,8 +24,43 @@ namespace Infrastructure.Persistence.Repositories
             CancellationToken ct = default)
         {
             return await context.Appointments
-                .Where(a => a.Date <= startDate && a.Date >= endDate && (doctorId == null || a.DoctorId == doctorId))
+                .Where(a => a.Date >= startDate && a.Date <= endDate && (doctorId == null || a.DoctorId == doctorId))
                 .ToListAsync(ct);
+        }
+
+        public async Task<IEnumerable<Appointment>> GetByPatientAsync(Guid patientId, CancellationToken ct = default)
+        {
+            return await context.Appointments
+                .Where(a => a.PatientId == patientId)
+                .OrderByDescending(a => a.Date)
+                .ThenBy(a => a.Time)
+                .ToListAsync(ct);
+        }
+
+        public async Task<IEnumerable<Appointment>> GetFilteredAsync(
+            DateOnly? date,
+            Guid? officeId,
+            bool? isApproved,
+            CancellationToken ct = default)
+        {
+            var query = context.Appointments.AsQueryable();
+
+            if (date != null)
+            {
+                query = query.Where(a => a.Date == date.Value);
+            }
+
+            if (officeId != null)
+            {
+                query = query.Where(a => a.OfficeId == officeId.Value);
+            }
+
+            if (isApproved != null)
+            {
+                query = query.Where(a => a.IsApproved == isApproved.Value);
+            }
+
+            return await query.ToListAsync(ct);
         }
     }
 }

@@ -7,10 +7,12 @@ namespace InnoClinic.Shared.Migrators
 {
     public class DatabaseMigrator<TContext>(
         IServiceProvider serviceProvider,
-        ILogger<DatabaseMigrator<TContext>> logger) : IHostedService where TContext : DbContext
+        ILogger<DatabaseMigrator<TContext>> logger) : IHostedService
+        where TContext : DbContext
     {
         private const int MaxAttempts = 10;
         private static readonly TimeSpan Delay = TimeSpan.FromSeconds(5);
+
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             using var scope = serviceProvider.CreateScope();
@@ -20,7 +22,8 @@ namespace InnoClinic.Shared.Migrators
             {
                 try
                 {
-                    logger.LogInformation("Applying migrations for {DbContext} (Attempt {Attempt}/{MaxAttempts})...",
+                    logger.LogInformation(
+                        "Applying migrations for {DbContext} (Attempt {Attempt}/{MaxAttempts})...",
                         typeof(TContext).Name, attempt, MaxAttempts);
 
                     await context.Database.MigrateAsync(cancellationToken);
@@ -31,7 +34,8 @@ namespace InnoClinic.Shared.Migrators
                 }
                 catch (Exception ex) when (attempt < MaxAttempts)
                 {
-                    logger.LogWarning(ex,
+                    logger.LogWarning(
+                        ex,
                         "Failed to apply migrations for {DbContext} on attempt {Attempt}/{MaxAttempts}. Retrying in {Delay} seconds...",
                         typeof(TContext).Name, attempt, MaxAttempts, Delay.TotalSeconds);
 
@@ -39,7 +43,8 @@ namespace InnoClinic.Shared.Migrators
                 }
                 catch (Exception ex)
                 {
-                    logger.LogError(ex,
+                    logger.LogError(
+                        ex,
                         "Database migration failed after {Max} attempts, giving up", MaxAttempts);
                     throw;
                 }

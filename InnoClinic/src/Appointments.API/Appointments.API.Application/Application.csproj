@@ -9,9 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper"/>
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection"/>
-    <PackageReference Include="FluentValidation.AspNetCore"/>
+    <PackageReference Include="AutoMapper" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" />
+    <PackageReference Include="FluentValidation.AspNetCore" />
+    <PackageReference Include="QuestPDF" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,17 +21,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Messages.Designer.cs">
+    <Compile Update="AppointmentsApiMessages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Messages.resx</DependentUpon>
+      <DependentUpon>AppointmentsApiMessages.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Messages.resx">
+    <EmbeddedResource Update="AppointmentsApiMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
+      <LastGenOutput>AppointmentsApiMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 

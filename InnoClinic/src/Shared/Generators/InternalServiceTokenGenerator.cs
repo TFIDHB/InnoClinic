@@ -13,7 +13,7 @@ namespace InnoClinic.Shared.Generators
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.Role, Roles.InternalService)
+                new Claim(ClaimTypes.Role, Roles.InternalService),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.Secret));
@@ -24,8 +24,7 @@ namespace InnoClinic.Shared.Generators
                 audience: settings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(1),
-                signingCredentials: credentials
-            );
+                signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

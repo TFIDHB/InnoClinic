@@ -1,6 +1,5 @@
 ﻿using BLL.Interfaces;
 using DAL.Entities;
-using InnoClinic.Shared.Generators;
 using InnoClinic.Shared.Settings;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -14,17 +13,19 @@ namespace BLL.Services
     public class TokenService : ITokenService
     {
         private readonly JwtSettings _jwtSettings;
+
         public TokenService(IOptions<JwtSettings> jwtSettings)
         {
             _jwtSettings = jwtSettings.Value;
         }
+
         public string GenerateAccessToken(User user, string role)
         {
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
@@ -36,8 +37,7 @@ namespace BLL.Services
                 audience: _jwtSettings.Audience,
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes),
-                signingCredentials: credentials
-            );
+                signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }

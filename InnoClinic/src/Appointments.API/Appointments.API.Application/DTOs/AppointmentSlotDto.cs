@@ -2,8 +2,10 @@
 {
     public class AppointmentSlotDto
     {
-        public DateOnly Date { get; set; }
-        public TimeOnly Time { get; set; }
-        public TimeSpan Duration { get; set; }
+        public required DateOnly Date { get; set; }
+
+        public required TimeOnly Time { get; set; }
+
+        public required TimeSpan Duration { get; set; }
     }
 }

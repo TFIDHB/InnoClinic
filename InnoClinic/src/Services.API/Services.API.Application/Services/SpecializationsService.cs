@@ -63,7 +63,7 @@ namespace Application.Services
                 ?? throw new NotFoundException(nameof(Specialization));
 
             mapper.Map(dto, specialization);
-            var services = (await unitOfWork.ServicesRepository.GetByIdsAsync(dto.ServiceIds, ct));
+            var services = await unitOfWork.ServicesRepository.GetByIdsAsync(dto.ServiceIds, ct);
 
             if (services.Count() != dto.ServiceIds.Count())
             {
